@@ -55,7 +55,6 @@ const readCache = async (cid: number, ep_id: number) => {
       }
     ]
   }))
-  console.log(res)
   return res
 }
 
