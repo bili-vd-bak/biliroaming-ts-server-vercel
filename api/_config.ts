@@ -10,27 +10,27 @@ export const api_playurl =
 //添加假番剧作公告板
 //标题 <em class="keyword">标签可以重点标注
 export const fs_title =
-  process.env.fs_title || '功能测试 <em class="keyword">xrz</em>';
+  process.env.fs_title || '欢迎使用 <em class="keyword">禁止宣传</em>';
 //封面
 export const fs_cover =
   process.env.fs_cover ||
   "https://i0.hdslb.com/bfs/face/046974d6dde4af386f7eb4f231b84ec08bad693b.jpg";
 //用处不明
-export const fs_uri = process.env.fs_uri || "https://xrz.cool";
+export const fs_uri = process.env.fs_uri || "https://tp.xrzyun.top/bili-vd-bak";
 //标签-副标题1
-export const fs_style = process.env.fs_style || "标签1 | 测试";
+export const fs_style = process.env.fs_style || "没有缓存";
 //标签-副标题2
-export const fs_label = process.env.fs_label || "标签2 | test";
+export const fs_label = process.env.fs_label || "请减少请求量";
 //番剧分数
-export const fs_rating = Number(process.env.fs_rating || 10);
+export const fs_rating = Number(process.env.fs_rating || 10000);
 //打分人数
-export const fs_vote = Number(process.env.fs_vote || 1);
+export const fs_vote = Number(process.env.fs_vote || 999);
 //立即观看按钮-主选项标题
 export const fs_watch_button_title =
-  process.env.fs_watch_button_title || "立即观看";
+  process.env.fs_watch_button_title || "看我主页";
 //立即观看按钮-主选项链接
 export const fs_watch_button_link =
-  process.env.fs_watch_button_link || "https://cn.bing.com";
+  process.env.fs_watch_button_link || "https://tp.xrzyun.top/bili-vd-bak";
 //追番按钮-追番
 export const fs_follow_button_title =
   process.env.fs_follow_button_title || "别点";
@@ -38,7 +38,7 @@ export const fs_follow_button_title =
 export const fs_unfollow_button_title =
   process.env.fs_unfollow_button_title || "谢邀";
 //番剧封面右上角标签
-export const fs_badges = process.env.fs_badges || "萨日朗";
+export const fs_badges = process.env.fs_badges || "好评如潮";
 //番剧剧集显示方式 grid-单行方块 horizontal-列表长条
 export const fs_selection_style =
   process.env.fs_selection_style || "horizontal";
@@ -114,7 +114,7 @@ export const whitelist_vip_enabled = Number(
 //===================获取公共黑白名单============================
 //功能开关 1-开 0-关
 export const public_blacklist_enabled = Number(
-  process.env.public_blacklist_enabled || 0
+  process.env.public_blacklist_enabled || 1
 );
 //公共黑名单地址 要求：URL后需可以直接加 UID/mid
 export const public_blacklist =
