@@ -11,7 +11,7 @@ export const query = async (db: string, require: string) => {
     },
     body: require
   })
-  if (res) return res.json()
+  if (res.ok) return res.json()
   else console.error('err')
 }
 
