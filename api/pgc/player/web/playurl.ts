@@ -1,17 +1,19 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
-import fetch from 'node-fetch'
 import * as env from '../../../_config'
-
-const api = env.api_playurl
+import * as data_parse from './_data'
 
 const main = async (req: VercelRequest, res: VercelResponse) => {
-  fetch(api + req.url, {
-    method: req.method,
-    body: req.body
-  }).then(response => response.json())
-    .then(response => {
-      res.json(response)
-    })
+  res.setHeader('Access-Control-Allow-Credentials', 'true')
+  if ((/^https?:\/\/(*.bilibili.com)$/).test(req.headers.origin as string)) res.setHeader('Access-Control-Allow-Origin', req.headers.origin as string);
+  else res.json({ code: 400 })
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
+  )
+  const continue_execute = await data_parse.middleware(req.url as string, req.headers)
+  if (continue_execute[0] == false) res.json(env.block(continue_execute[1]))
+  else res.json(await data_parse.main(req.url as string))
 }
 
 export default main

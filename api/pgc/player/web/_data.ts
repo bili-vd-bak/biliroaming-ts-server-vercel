@@ -103,6 +103,9 @@ const delCache = async (id: string) => {
  * @return {boolean} boolean
  */
 export const middleware = async (url_data: string, headers): Promise<[boolean, number]> => {
+  //请求头验证
+  if (!env.web_on) return [false, 1]
+
   //信息获取
   const url = new URL(url_data, env.api_playurl)
   if (!url.search || !url.search) return [false, 7] //缺少参数
@@ -111,10 +114,6 @@ export const middleware = async (url_data: string, headers): Promise<[boolean, n
   if (env.need_login && !data.access_key) return [false, 6]//TODO need_login强制为1
   const info = await bili.access_key2info(data.access_key as string)
   if (env.NOTION_db_log) await addNewLog({ access_key: data.access_key, UID: info.uid, vip_type: info.vip_type, url: url_data })
-
-  //请求头验证
-  if (!env.web_on && !headers['x-from-biliroaming']) return [false, 1]
-  if (env.ver_min != 0 && env.ver_min > Number(headers['build'])) return [false, 2]
 
   //黑白名单验证
   const blacklist_data = await blacklist.main(info.uid)
@@ -164,22 +163,22 @@ export const main = async (url_data: string) => {
           await delCache(i)
         }
         const res = await fetch(env.api_playurl + url_data).then(res => res.json())
-        if (res.code == 0) await addNewCache(url_data, res)
+        if (res.code == 0) await addNewCache(url_data, res?.result)
         return res
       } else {
         //缓存未过期
         if (env.need_login || env.check_vip_enabled || env.whitelist_vip_enabled) {
           const info = await bili.access_key2info(data.access_key as string)
-          if (env.whitelist_vip_enabled && (await blacklist.main(info.uid)).data?.is_whitelist) return rCache.cache
-          else if (env.check_vip_enabled && info.vip_type >= rCache.need_vip) return rCache.cache
+          if (env.whitelist_vip_enabled && (await blacklist.main(info.uid)).data?.is_whitelist) return { code: 0, message: 'success', result: rCache.cache }
+          else if (env.check_vip_enabled && info.vip_type >= rCache.need_vip) return { code: 0, message: 'success', result: rCache.cache }
           else return { code: 400 }
-        } else if (env.check_vip_enabled && rCache.need_vip == 0) return rCache.cache
+        } else if (env.check_vip_enabled && rCache.need_vip == 0) return { code: 0, message: 'success', result: rCache.cache }
         else return { code: 400 }
       }
     } else {
       //无缓存
       const res = await fetch(env.api_playurl + url_data).then(res => res.json())
-      if (res.code == 0) await addNewCache(url_data, res)
+      if (res.code == 0) await addNewCache(url_data, res?.result)
       return res
     }
     //从以下开始执行
