@@ -113,7 +113,7 @@ export const middleware = async (url_data: string, headers): Promise<[boolean, n
   if (env.NOTION_db_log) await addNewLog({ access_key: data.access_key, UID: info.uid, vip_type: info.vip_type, url: url_data })
 
   //请求头验证
-  if (!env.web_on && !headers['x-from-biliroaming']) return [false, 1]
+  if (!headers['x-from-biliroaming']) return [false, 1]
   if (env.ver_min != 0 && env.ver_min > Number(headers['build'])) return [false, 2]
 
   //黑白名单验证
