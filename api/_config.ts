@@ -125,7 +125,7 @@ export const public_blacklist =
 //要求登录 1-开 0-关
 //TODO 目前要求必须登录，禁止修改，否则程序无法运行
 export const need_login = Number(process.env.need_login || 1);
-//允许WEB版使用(不检查请求头) 1-开 0-关
+//允许WEB版使用 1-开 0-关
 export const web_on = Number(process.env.web_on || 1);
 //限制哔哩漫游最低版本(需设置 web_on = 0) 填写数字 0-不限制
 //1049为1.6.7的版本号
