@@ -2,8 +2,6 @@ import type { VercelRequest, VercelResponse } from '@vercel/node';
 import * as env from '../../../_config'
 import * as data_parse from './_data'
 
-const api = env.api_playurl
-
 const main = async (req: VercelRequest, res: VercelResponse) => {
   //res.json(req.headers)
   const continue_execute = await data_parse.middleware(req.url as string, req.headers)
