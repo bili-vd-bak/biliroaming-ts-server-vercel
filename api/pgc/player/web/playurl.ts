@@ -7,7 +7,7 @@ const main = async (req: VercelRequest, res: VercelResponse) => {
   if (!req.headers.origin) console.log('Local Debug')
   else if (new RegExp('^https?://([a-z]+.bilibili.com|bilibili.com)$', 'g').test(req.headers.origin as string)) res.setHeader('Access-Control-Allow-Origin', req.headers.origin as string);
   else { res.json({ code: 400 }); return; }
-  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,PATCH,DELETE,POST,PUT')
+  res.setHeader('Access-Control-Allow-Methods', 'GET,OPTIONS,POST')
   res.setHeader(
     'Access-Control-Allow-Headers',
     'X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version'
