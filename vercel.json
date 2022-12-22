@@ -1,14 +1,6 @@
 {
-  "rewrites": [
-    {
-      "source": "/pgc/:path(.*)",
-      "destination": "/api/pgc/:path*"
-    },
-    {
-      "source": "/x/:path(.*)",
-      "destination": "/api/x/:path*"
-    }
-  ],
   "cleanUrls": true,
-  "regions": ["hkg1"]
+  "regions": [
+    "hkg1"
+  ]
 }
