@@ -11,14 +11,38 @@
 - 搜索替换(配置中fs开头配置)
 - 自部署黑/白名单(使用NOTION作数据库)
 
-## 操作
+## 部署方法
+
+### Vercel
 
 先Fork到自己的仓库，再修改自己仓库里`api/_config.ts`，  
 注册[Vercel](https://vercel.com)，导入本项目，在设置中配置 域名和环境变量。  
 Tips: 环境变量设置后需下一次部署才可启用。  
 
-尽量自己fork，不要直接用下面的Deploy。  
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fbili-vd-bak%2Fbiliroaming-serve-ts-vercel.git&project-name=biliroaming-serve-ts)
+### 本地
+
+找到一个合适的文件夹，clone本仓库并进入。  
+
+```bash
+git clone https://github.com/bili-vd-bak/biliroaming-ts-server-vercel.git --depth 1
+cd biliroaming-ts-server-vercel
+```
+
+安装依赖(使用你想要的包管理器，推荐pnpm)。  
+
+```bash
+pnpm i
+```
+
+修改`api/_config.ts`。  
+(可以在`package.json`中修改`"start": "next start -p $PORT"`以设置端口)  
+执行`pnpm run start`。  
+使用nginx等反向代理此接口，配置SSL。  
+
+### 其它
+
+参考Vercel的部署，你可以将此项目部署至任何支持Next.js的Serverless服务商。  
+由于细节差异，不保证在其它平台上的可用性，请自行调整，也欢迎PR。  
 
 ## 已知问题
 
