@@ -38,13 +38,6 @@ export const appsign = (
 };
 
 /**
- * 获取当前UTC时间戳
- */
-export const UTC = (): number => {
-  return Math.round(new Date().getTime() / 1000);
-};
-
-/**
  * 通过access_key查询个人信息
  * @param access_key Bilibili access key
  */
@@ -52,14 +45,14 @@ export const access_key2info = async (access_key: string) => {
   return await fetch(
     env.api_search +
       "/x/v2/account/myinfo?" +
-      appsign({ access_key: access_key, ts: UTC() })
+      appsign({ access_key: access_key, ts: Date.now() })
   )
     .then((res) => res.json())
     .then((res) => {
       const data = res.data;
       return {
-        uid: data.mid,
-        vip_type: data.vip.type,
+        uid: Number(data.mid),
+        vip_type: Number(data.vip.type) as 0 | 1 | 2, //TODO 没有加类型判断校验
       };
     });
 };

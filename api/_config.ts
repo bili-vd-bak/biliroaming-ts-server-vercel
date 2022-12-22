@@ -88,10 +88,8 @@ export const NOTION_KEY =
 //为空""且不添加环境变量即禁用该功能
 export const NOTION_db_blacklist = process.env.NOTION_db_blacklist || "";
 export const NOTION_db_log = process.env.NOTION_db_log || "";
-//缓存已禁用，请勿修改或添加该变量
-export const NOTION_db_cache = ""; //process.env.NOTION_db_cache || "";
 //缓存时间 单位：分钟(min) 需打开缓存数据库
-export const cache_time = 60 * 15;
+export const cache_time = 1000 * 60 * 15;
 
 //======================黑白名单设置============================
 //黑名单模式 1-开 0-关
@@ -116,7 +114,7 @@ export const public_blacklist: string = "https://black.qimo.ink/api/users/";
 //TODO 目前要求必须登录，禁止修改，否则程序无法运行
 export const need_login: io = 1;
 //允许WEB版使用 1-开 0-关
-export const web_on: io = 0;
+export const web_on: io = 1;
 //限制哔哩漫游最低版本(需设置 web_on = 0) 填写数字 0-不限制
 //1049为1.6.7的版本号
 export const ver_min: number = 1049;

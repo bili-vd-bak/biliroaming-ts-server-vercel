@@ -6,7 +6,7 @@
 
 ## Features
 
-- 支持软件：BiliRoaming、油猴脚本、哔哩(Bili.uwp)
+- 支持软件：BiliRoaming、油猴脚本、哔哩(Bili.uwp)、BBDown
 - 代理HK地区番剧(目前Vercel仅提供HK节点)
 - 搜索替换(配置中fs开头配置)
 - 自部署黑/白名单(使用NOTION作数据库)
@@ -19,3 +19,7 @@ Tips: 环境变量设置后需下一次部署才可启用。
 
 尽量自己fork，不要直接用下面的Deploy。  
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fbili-vd-bak%2Fbiliroaming-serve-ts-vercel.git&project-name=biliroaming-serve-ts)
+
+## 已知问题
+
+Vercel无法本地缓存，故自带缓存功能仅在本地部署时有效。  
