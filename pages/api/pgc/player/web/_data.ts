@@ -157,7 +157,7 @@ export const middleware = async (
       url: url_data,
     });
     return checkBlackList(info.uid);
-  } else if (data.access_key) {
+  } /* else if (data.access_key) {
     const info = await bili.access_key2info(data.access_key as string);
     if (!info) return [false, 6]; //查询信息失败
     await addNewLog({
@@ -178,7 +178,7 @@ export const middleware = async (
 
     //黑白名单验证
     return checkBlackList(info.uid);
-  } else return [true, 0]; //TODO 配置session封锁检测
+  } */ else return [true, 0]; //TODO 配置session封锁检测
 };
 
 export const main = async (url_data: string, cookies) => {
