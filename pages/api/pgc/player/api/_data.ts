@@ -122,6 +122,7 @@ export const middleware = async (
   if (!data.access_key) return [false, 7]; //TODO 缺少参数 need_login=1才需此行
   if (env.need_login && !data.access_key) return [false, 6]; //TODO need_login强制为1
   const info = await bili.access_key2info(data.access_key as string);
+  if (!info) return [false, 6]; //查询信息失败
   await addNewLog({
     access_key: data.access_key as string,
     UID: info.uid,
