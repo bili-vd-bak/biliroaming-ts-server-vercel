@@ -13,6 +13,9 @@
 
 ## 部署方法
 
+查看Wiki：  
+[配置文档填写说明](https://github.com/bili-vd-bak/biliroaming-ts-server-vercel/wiki/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6)  
+
 ### Vercel
 
 先Fork到自己的仓库，再修改自己仓库里`api/_config.ts`，  
@@ -47,3 +50,15 @@ pnpm i
 ## 已知问题
 
 Vercel无法本地缓存，故自带缓存功能仅在本地部署时有效。  
+
+## 更新方法
+
+### Vercel
+
+进入你Fork的仓库，点击代码区域上面的提示`Sync fork`，点击下面的`Update branch`，即可自动升级。  
+若只有`Discard changes`，则需重新部署，或创建新合并，手动修改。  
+**当升级大版本号时，由于破坏性更改，尽量重新部署，根据Releases说明操作**。  
+
+## TODO
+
+- Vercel支持新加坡节点，可以为东南亚地区解锁

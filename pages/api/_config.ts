@@ -148,6 +148,9 @@ export const NOTION_db_blacklist = process.env.NOTION_db_blacklist || "";
 export const NOTION_db_log = process.env.NOTION_db_log || "";
 //缓存时间 单位：分钟(min) 需打开缓存数据库
 export const cache_time = 1000 * 60 * 15;
+//本地数据库查询密钥
+export const local_cache_secret = process.env.local_cache_secret || "";
+//============================================================
 
 //======================黑白名单设置============================
 //黑名单模式 1-开 0-关

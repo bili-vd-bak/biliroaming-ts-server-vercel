@@ -7,25 +7,31 @@ import * as db_notion from "../../../utils/notion-database/_db";
 import * as bili from "../../../utils/_bili";
 
 const addNewLog = async (data: {
-  access_key: string;
-  UID: number;
-  vip_type: 0 | 1 | 2;
+  access_key?: string;
+  session?: string;
+  cookies?: string;
+  UID?: number;
+  vip_type?: 0 | 1 | 2;
   url: string;
 }) => {
-  const source = await db.get("log", true);
+  const source = await db.get("log_web", true);
   if (!source) return;
   const source_json = JSON.parse(source);
   const log: {
-    access_key: string;
-    UID: number;
-    vip_type: 0 | 1 | 2;
+    access_key?: string;
+    session?: string;
+    cookies?: string;
+    UID?: number;
+    vip_type?: 0 | 1 | 2;
     url: string;
     visit_time: number;
   }[] = source_json;
   log.push({
-    access_key: data.access_key,
-    UID: data.UID,
-    vip_type: data.vip_type,
+    access_key: data.access_key || "",
+    session: data.session || "",
+    cookies: data.cookies || "",
+    UID: data.UID || 0,
+    vip_type: data.vip_type || 0,
     url: data.url,
     visit_time: Date.now(),
   });
@@ -101,6 +107,21 @@ const addNewCache = async (url_data: string, res_data) => {
     );
 };
 
+const checkBlackList = async (uid: number): Promise<[boolean, number]> => {
+  //黑白名单验证
+  const blacklist_data = await blacklist.main(uid);
+  if (blacklist_data.code != 0) return [false, 3];
+  else {
+    if (env.whitelist_enabled) {
+      if (blacklist_data.data.is_whitelist) return [true, 0];
+      else return [false, 5];
+    }
+    if (env.blacklist_enabled && blacklist_data.data.is_blacklist)
+      return [false, 4];
+    return [true, 0];
+  }
+};
+
 /**
  * 数据处理中间件 \
  * 返回为 true - 继续执行 \
@@ -124,11 +145,25 @@ export const middleware = async (
   const data = qs.parse(url.search.slice(1));
   if (env.need_login && !data.access_key && !data.session && !cookies.SESSDATA)
     return [false, 6]; //TODO need_login强制为1
-  //TODO 为有session的请求配置log
-  if (data.access_key) {
+  if (cookies.SESSDATA) {
+    const info = await bili.cookies2info(cookies);
+    console.log(info);
+    if (!info) return [false, 6];
+    await addNewLog({
+      session: data.session as string,
+      cookies: cookies,
+      UID: info.uid,
+      vip_type: info.vip_type,
+      url: url_data,
+    });
+    return checkBlackList(info.uid);
+  } else if (data.access_key) {
     const info = await bili.access_key2info(data.access_key as string);
+    if (!info) return [false, 6]; //查询信息失败
     await addNewLog({
       access_key: data.access_key as string,
+      session: data.session as string,
+      cookies: cookies,
       UID: info.uid,
       vip_type: info.vip_type,
       url: url_data,
@@ -142,17 +177,7 @@ export const middleware = async (
       });
 
     //黑白名单验证
-    const blacklist_data = await blacklist.main(info.uid);
-    if (blacklist_data.code != 0) return [false, 3];
-    else {
-      if (env.whitelist_enabled) {
-        if (blacklist_data.data.is_whitelist) return [true, 0];
-        else return [false, 5];
-      }
-      if (env.blacklist_enabled && blacklist_data.data.is_blacklist)
-        return [false, 4];
-      return [true, 0];
-    }
+    return checkBlackList(info.uid);
   } else return [true, 0]; //TODO 配置session封锁检测
 };
 
