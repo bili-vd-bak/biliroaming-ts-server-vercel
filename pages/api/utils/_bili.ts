@@ -39,7 +39,8 @@ export const appsign = (
 
 /**
  * 通过access_key查询个人信息
- * @param access_key Bilibili access key
+ * @param access_key Bilibili access key \
+ * 查询不到，返回为空
  */
 export const access_key2info = async (access_key: string) => {
   return await fetch(
@@ -48,13 +49,38 @@ export const access_key2info = async (access_key: string) => {
       appsign({ access_key: access_key, ts: Date.now() })
   )
     .then((res) => res.json())
-    .then((res: { data: any }) => {
-      const data = res.data;
-      return {
-        uid: Number(data.mid),
-        vip_type: Number(data.vip.type) as 0 | 1 | 2, //TODO 没有加类型判断校验
-      };
+    .then((res: { data?: any; code: number }) => {
+      if (res.code === 0) {
+        const data = res.data;
+        return {
+          uid: Number(data.mid),
+          vip_type: Number(data.vip.type) as 0 | 1 | 2, //TODO 没有加类型判断校验
+        };
+      } else return;
     });
+};
+
+/**
+ * 通过cookie查询mid/vip
+ * @param cookies Bilibili cookies \
+ * 查询不到，返回为空
+ */
+export const cookies2info = async (cookies: { SESSDATA: string }) => {
+  return await fetch(env.api_playurl + "/x/vip/web/user/info?", {
+    headers: { cookie: "SESSDATA=" + cookies.SESSDATA },
+  })
+    .then((res) => res.json())
+    .then(
+      (res: { data?: { mid: number; vip_type: 0 | 1 | 2 }; code: number }) => {
+        if (res.code === 0) {
+          const data = res.data;
+          return {
+            uid: Number(data.mid),
+            vip_type: Number(data.vip_type) as 0 | 1 | 2, //TODO 没有加类型判断校验
+          };
+        } else return;
+      }
+    );
 };
 
 /**
