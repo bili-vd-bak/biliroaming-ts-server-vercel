@@ -4,7 +4,7 @@ import fetch from "node-fetch";
 import * as env from "../../../_config";
 import { getCookies } from "../../../utils/_bili";
 
-const api = env.api_playurl;
+const api = env.api.main.web.search;
 const basic_res = {
   type: "media_bangumi",
   media_id: 1,
