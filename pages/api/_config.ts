@@ -14,17 +14,27 @@ export const api = {
     web: {
       playurl: "https://api.bilibili.com",
       search: "https://api.bilibili.com",
+      season_info: "https://api.bilibili.com",
+      user_info: "https://api.bilibili.com",
     },
     app: {
       playurl: "https://api.bilibili.com",
       search: "https://app.bilibili.com",
+      season_info: "https://api.bilibili.com",
+      user_info: "https://app.bilibili.com",
     },
   },
   intl: {
-    playurl: "https://api.global.bilibili.com",
-    subtitle: "https://app.global.bilibili.com",
-    search: "https://app.global.bilibili.com",
+    playurl: "https://app.biliintl.com",
+    subtitle: "https://app.biliintl.com",
+    search: "https://app.biliintl.com",
+    season_info: "https://app.biliintl.com",
   },
+};
+//OAuth用API
+export const api_oauth = {
+  main: "https://passport.bilibili.com/x/passport-login/oauth2/refresh_token",
+  intl: "https://passport.biliintl.com/x/intl/passport-login/oauth2/refresh_token",
 };
 //==============================================================================
 
@@ -200,6 +210,12 @@ export const ver_min: number = 1084;
 //锁区，填写的是支持的地区 cn-中国大陆 hk-中国香港 tw-中国台湾 th-泰国/新加坡/东南亚地区
 //TODO 暂时未加地区检测，访问不支持地区由B站服务器提示错误。
 export const block_region: _block_region = ["hk"];
+//============================================================
+
+//=====================获取非官方泰区字幕========================
+//为空则禁用
+//字幕获取地址 要求：URL={th_subtitle_api}{season_id}/subtitle.json?id={当集ID}
+export const th_subtitle_api: string = "";
 //============================================================
 
 //===================封锁类型(不用改)===========================
