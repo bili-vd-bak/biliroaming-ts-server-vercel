@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import fetch from "node-fetch";
 import * as env from "../../../_config";
 
-const api = env.api_search;
+const api = env.api.main.app.search;
 const basic_res = {
   area: "漫游",
   badge: "公告",

@@ -5,9 +5,27 @@ type _block_region = ["cn" | "hk" | "tw" | "th"];
 
 //==============================API区(不用改)====================================
 //搜索、信息查询等APP端功能
-export const api_search: string = "https://app.bilibili.com";
+//export const api_search: string = "https://app.bilibili.com";
 //playurl等主要功能 api
-export const api_playurl: string = "https://api.bilibili.com";
+//export const api_playurl: string = "https://api.bilibili.com";
+//main 为 主站API(大陆+港澳台) ;intl 为 海外版API(东南亚)
+export const api = {
+  main: {
+    web: {
+      playurl: "https://api.bilibili.com",
+      search: "https://api.bilibili.com",
+    },
+    app: {
+      playurl: "https://api.bilibili.com",
+      search: "https://app.bilibili.com",
+    },
+  },
+  intl: {
+    playurl: "https://api.global.bilibili.com",
+    subtitle: "https://app.global.bilibili.com",
+    search: "https://app.global.bilibili.com",
+  },
+};
 //==============================================================================
 
 //===========================替换搜索 Fuck Search================================
@@ -180,6 +198,7 @@ export const web_on: io = 1;
 //1084为1.6.8的版本号
 export const ver_min: number = 1084;
 //锁区，填写的是支持的地区 cn-中国大陆 hk-中国香港 tw-中国台湾 th-泰国/新加坡/东南亚地区
+//TODO 暂时未加地区检测，访问不支持地区由B站服务器提示错误。
 export const block_region: _block_region = ["hk"];
 //============================================================
 

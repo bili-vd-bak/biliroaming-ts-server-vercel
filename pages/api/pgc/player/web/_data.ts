@@ -90,7 +90,7 @@ const readCache = async (cid: number, ep_id: number, access_key: string) => {
 
 const addNewCache = async (url_data: string, res_data) => {
   const need_vip = res_data.has_paid ? 1 : 0;
-  const url = new URL(url_data, env.api_playurl);
+  const url = new URL(url_data, env.api.main.web.playurl);
   const data = qs.parse(url.search.slice(1));
 
   if (need_vip)
@@ -140,7 +140,7 @@ export const middleware = async (
   if (!env.web_on) return [false, 1];
 
   //信息获取
-  const url = new URL(url_data, env.api_playurl);
+  const url = new URL(url_data, env.api.main.web.playurl);
   if (!url.search || !url.search) return [false, 7]; //缺少参数
   const data = qs.parse(url.search.slice(1));
   if (env.need_login && !data.access_key && !data.session && !cookies.SESSDATA)
@@ -183,7 +183,7 @@ export const middleware = async (
 
 export const main = async (url_data: string, cookies) => {
   //信息获取
-  const url = new URL(url_data, env.api_playurl);
+  const url = new URL(url_data, env.api.main.web.playurl);
   const data = qs.parse(url.search.slice(1));
   if (data.access_key) {
     const rCache = await readCache(
@@ -193,15 +193,15 @@ export const main = async (url_data: string, cookies) => {
     );
     if (rCache) return rCache;
     else {
-      const res = (await fetch(env.api_playurl + url_data).then((res) =>
-        res.json()
+      const res = (await fetch(env.api.main.web.playurl + url_data).then(
+        (res) => res.json()
       )) as { code: number; result: object };
       if (res.code === 0) await addNewCache(url_data, res?.result);
       return res;
     }
   } else {
     //TODO cookie/session方式不读缓存
-    const res = (await fetch(env.api_playurl + url_data, {
+    const res = (await fetch(env.api.main.web.playurl + url_data, {
       headers: { cookie: "SESSDATA=" + cookies.SESSDATA },
     }).then((res) => res.json())) as { code: number; result: object };
     if (res.code === 0) await addNewCache(url_data, res?.result);

@@ -84,7 +84,7 @@ const readCache = async (cid: number, ep_id: number, access_key: string) => {
 
 const addNewCache = async (url_data: string, res_data) => {
   const need_vip = res_data.has_paid ? 1 : 0;
-  const url = new URL(url_data, env.api_playurl);
+  const url = new URL(url_data, env.api.main.app.playurl);
   const data = qs.parse(url.search.slice(1));
 
   if (need_vip)
@@ -116,7 +116,7 @@ export const middleware = async (
   headers
 ): Promise<[boolean, number]> => {
   //信息获取
-  const url = new URL(url_data, env.api_playurl);
+  const url = new URL(url_data, env.api.main.app.playurl);
   if (!url.search || !url.search) return [false, 7]; //缺少参数
   const data = qs.parse(url.search.slice(1));
   if (!data.access_key) return [false, 7]; //TODO 缺少参数 need_login=1才需此行
@@ -158,7 +158,7 @@ export const middleware = async (
 
 export const main = async (url_data: string) => {
   //信息获取
-  const url = new URL(url_data, env.api_playurl);
+  const url = new URL(url_data, env.api.main.app.playurl);
   const data = qs.parse(url.search.slice(1));
   const rCache = await readCache(
     Number(data.cid),
@@ -167,7 +167,7 @@ export const main = async (url_data: string) => {
   );
   if (rCache) return rCache;
   else {
-    const res = (await fetch(env.api_playurl + url_data).then((res) =>
+    const res = (await fetch(env.api.main.app.playurl + url_data).then((res) =>
       res.json()
     )) as { code: number };
     if (res.code === 0) await addNewCache(url_data, res);
