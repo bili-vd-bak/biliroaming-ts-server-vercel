@@ -44,7 +44,7 @@ export const appsign = (
  */
 export const access_key2info = async (access_key: string) => {
   return await fetch(
-    env.api_search +
+    env.api.main.app.user_info +
       "/x/v2/account/myinfo?" +
       appsign({ access_key: access_key, ts: Date.now() })
   )
@@ -66,7 +66,7 @@ export const access_key2info = async (access_key: string) => {
  * 查询不到，返回为空
  */
 export const cookies2info = async (cookies: { SESSDATA: string }) => {
-  return await fetch(env.api_playurl + "/x/vip/web/user/info?", {
+  return await fetch(env.api.main.web.user_info + "/x/vip/web/user/info?", {
     headers: { cookie: "SESSDATA=" + cookies.SESSDATA },
   })
     .then((res) => res.json())

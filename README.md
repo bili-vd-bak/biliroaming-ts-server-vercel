@@ -1,6 +1,6 @@
 # biliroaming-serve-ts-vercel
 
-本服务部署在Vercel香港/新加坡节点上。  
+本服务部署在Vercel香港节点上。  
 配置修改在 `api/_config.ts` 中，可以直接改里面的配置文本，也可在Vercel里添加对应名称变量。  
 使用环境变量更安全。  
 
@@ -13,6 +13,7 @@
 
 ## 部署方法
 
+请看完整篇README文档再动手。  
 查看Wiki：  
 [配置文档填写说明](https://github.com/bili-vd-bak/biliroaming-ts-server-vercel/wiki/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6)  
 **注**：每个服务只可代理一个地区，若需代理多个地区，请再部署一个相同的服务修改配置。  
@@ -65,4 +66,4 @@ pnpm i
 
 ## TODO
 
-- [BETA]Vercel支持新加坡节点，可以为东南亚地区解锁
+- [BETA]Vercel支持新加坡节点，可以为东南亚地区解锁。(然后就被风控用不了了)  
