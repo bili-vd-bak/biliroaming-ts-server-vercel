@@ -185,7 +185,7 @@ export const main = async (url_data: string, cookies) => {
   //信息获取
   const url = new URL(url_data, env.api.main.web.playurl);
   const data = qs.parse(url.search.slice(1));
-  if (data.access_key) {
+  /* if (data.access_key) {
     const rCache = await readCache(
       Number(data.cid),
       Number(data.ep_id),
@@ -199,7 +199,7 @@ export const main = async (url_data: string, cookies) => {
       if (res.code === 0) await addNewCache(url_data, res?.result);
       return res;
     }
-  } else {
+  } else */ {
     //TODO cookie/session方式不读缓存
     const res = (await fetch(env.api.main.web.playurl + url_data, {
       headers: { cookie: "SESSDATA=" + cookies.SESSDATA },
