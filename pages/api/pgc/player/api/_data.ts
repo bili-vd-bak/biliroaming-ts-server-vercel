@@ -71,15 +71,15 @@ const addNewLog_notion = async (data: any) => {
 
 const readCache = async (cid: number, ep_id: number, access_key: string) => {
   const info = await bili.access_key2info(access_key);
-  if (await db.get(`c-vip-${cid}-${ep_id}`)) {
+  const c_vip = await db.get(`c-vip-${cid}-${ep_id}`);
+  if (c_vip) {
     if (
       env.whitelist_vip_enabled &&
       (await blacklist.main(info.uid).data?.is_whitelist)
     )
-      return await db.get(`c-vip-${cid}-${ep_id}`);
+      return c_vip;
     if (info.vip_type !== 0) return await db.get(`c-vip-${cid}-${ep_id}`);
-  }
-  return await db.get(`c-${cid}-${ep_id}`);
+  } else return await db.get(`c-${cid}-${ep_id}`);
 };
 
 const addNewCache = async (url_data: string, res_data) => {
