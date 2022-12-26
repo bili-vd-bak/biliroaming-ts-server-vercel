@@ -17,6 +17,8 @@
 查看Wiki：  
 [配置文档填写说明](https://github.com/bili-vd-bak/biliroaming-ts-server-vercel/wiki/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6)  
 **注**：每个服务只可代理一个地区，若需代理多个地区，请再部署一个相同的服务修改配置。  
+查寻缓存和日志请访问`https://{yourDomain}/api/admin/clean?s=${配置填写的secret}`  
+清理缓存和日志请访问`https://{yourDomain}/api/admin/clean?s=${配置填写的secret}`  
 
 ### Vercel
 
