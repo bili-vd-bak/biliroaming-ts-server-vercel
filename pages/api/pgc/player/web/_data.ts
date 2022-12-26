@@ -200,14 +200,14 @@ export const main = async (url_data: string, cookies) => {
     const rCache = await readCache(Number(data.cid), Number(data.ep_id), info);
     if (rCache) return rCache;
     else {
-      const res = (await fetch(env.api.main.web.playurl + url_data).then(
-        (res) => res.json()
-      )) as { code: number; result: object };
+      const res = (await fetch(env.api.main.web.playurl + url_data, {
+        headers: { cookie: bili.cookies2usable(cookies) },
+      }).then((res) => res.json())) as { code: number; result: object };
       if (res.code === 0) await addNewCache(url_data, res?.result);
       return res;
     }
   } else
-    return await fetch(env.api.main.web.playurl + url_data).then((res) =>
-      res.json()
-    );
+    return await fetch(env.api.main.web.playurl + url_data, {
+      headers: { cookie: bili.cookies2usable(cookies) },
+    }).then((res) => res.json());
 };
