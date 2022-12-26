@@ -75,8 +75,11 @@ const addNewLog_notion = async (data: any) => {
   return res;
 };
 
-const readCache = async (cid: number, ep_id: number, access_key: string) => {
-  const info = await bili.access_key2info(access_key);
+const readCache = async (
+  cid: number,
+  ep_id: number,
+  info: { uid: number; vip_type: number }
+) => {
   if (await db.get(`c-vip-${cid}-${ep_id}`)) {
     if (
       env.whitelist_vip_enabled &&
@@ -145,19 +148,9 @@ export const middleware = async (
   const data = qs.parse(url.search.slice(1));
   if (env.need_login && !data.access_key && !data.session && !cookies.SESSDATA)
     return [false, 6]; //TODO need_login强制为1
-  if (cookies.SESSDATA) {
-    const info = await bili.cookies2info(cookies);
-    console.log(info);
-    if (!info) return [false, 6];
-    await addNewLog({
-      session: data.session as string,
-      cookies: cookies,
-      UID: info.uid,
-      vip_type: info.vip_type,
-      url: url_data,
-    });
-    return checkBlackList(info.uid);
-  } /* else if (data.access_key) {
+
+  //仅允许access_key或cookies鉴权
+  if (data.access_key) {
     const info = await bili.access_key2info(data.access_key as string);
     if (!info) return [false, 6]; //查询信息失败
     await addNewLog({
@@ -178,19 +171,33 @@ export const middleware = async (
 
     //黑白名单验证
     return checkBlackList(info.uid);
-  } */ else return [true, 0]; //TODO 配置session封锁检测
+  } else if (cookies.SESSDATA) {
+    if (!cookies.DedeUserID) return [false, 6];
+    const info = await bili.cookies2info(cookies);
+    console.log(info);
+    if (!info) return [false, 6];
+    await addNewLog({
+      session: data.session as string,
+      cookies: cookies,
+      UID: info.uid,
+      vip_type: info.vip_type,
+      url: url_data,
+    });
+    return checkBlackList(info.uid);
+  } else return [true, 0];
 };
 
 export const main = async (url_data: string, cookies) => {
   //信息获取
   const url = new URL(url_data, env.api.main.web.playurl);
   const data = qs.parse(url.search.slice(1));
-  /* if (data.access_key) {
-    const rCache = await readCache(
-      Number(data.cid),
-      Number(data.ep_id),
-      data.access_key as string
-    );
+  //有access_key优先，否则若有cookies用cookies
+  if (data.access_key || cookies) {
+    let info: { uid: number; vip_type: number };
+    if (data.access_key)
+      info = await bili.access_key2info(data.access_key as string);
+    else if (cookies) info = await bili.cookies2info(cookies);
+    const rCache = await readCache(Number(data.cid), Number(data.ep_id), info);
     if (rCache) return rCache;
     else {
       const res = (await fetch(env.api.main.web.playurl + url_data).then(
@@ -199,12 +206,8 @@ export const main = async (url_data: string, cookies) => {
       if (res.code === 0) await addNewCache(url_data, res?.result);
       return res;
     }
-  } else */ {
-    //TODO cookie/session方式不读缓存
-    const res = (await fetch(env.api.main.web.playurl + url_data, {
-      headers: { cookie: "SESSDATA=" + cookies.SESSDATA },
-    }).then((res) => res.json())) as { code: number; result: object };
-    if (res.code === 0) await addNewCache(url_data, res?.result);
-    return res;
-  }
+  } else
+    return await fetch(env.api.main.web.playurl + url_data).then((res) =>
+      res.json()
+    );
 };

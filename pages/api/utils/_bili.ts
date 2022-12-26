@@ -19,15 +19,15 @@ const sorted = (params) => {
 };
 
 /**
- * BilibiliAPI签名
+ * Bilibili APP API签名
  * @param params JSON 原请求数据
  * @param appkey 可不填
  * @param appsec 可不填
  */
 export const appsign = (
   params: any,
-  appkey = "1d8b6e7d45233436",
-  appsec = "560c52ccd288fed045859ed18bffd973"
+  appkey = "27eb53fc9058f8c3",
+  appsec = "c2ed53a74eeefe3cf99fbd01d8c9c375"
 ): string => {
   params.appkey = appkey;
   params = sorted(params);
@@ -35,6 +35,63 @@ export const appsign = (
   const sign = md5(query + appsec);
   params.sign = sign;
   return qs.stringify(params);
+};
+
+/**
+ * 通过WEB端Cookies获取APP端access_key
+ * @param cookies WEB端Cookies
+ */
+
+export const cookies2access_key = async (cookies: {
+  SESSDATA: string;
+  DedeUserID: string;
+}) => {
+  if (!cookies.SESSDATA) return;
+  if (!cookies.DedeUserID) return;
+  /* const sign = md5(
+    "api=http://link.acg.tv/forum.php" + "c2ed53a74eeefe3cf99fbd01d8c9c375"
+  ); */
+  const uri = await fetch(
+    env.api.main.web.third_login +
+      "/login/app/third?appkey=27eb53fc9058f8c3&api=http://link.acg.tv/forum.php&sign=67ec798004373253d60114caaad89a8c",
+    {
+      headers: {
+        cookie: `DedeUserID=${cookies.DedeUserID}; SESSDATA=${cookies.SESSDATA}`,
+      },
+    }
+  )
+    .then((res) => res.json())
+    .then(
+      (res: {
+        code: number;
+        status: boolean;
+        ts: number;
+        data: {
+          api_host: string;
+          has_login: 0 | 1;
+          direct_login?: 0 | 1;
+          user_info?: { mid: string; uname: string; face: string };
+          confirm_uri?: string;
+        };
+      }) => {
+        if (res.code !== 0) return;
+        if (!res.data) return;
+        if (!res.data.confirm_uri) return;
+        return res.data.confirm_uri;
+      }
+    );
+  if (!uri) return;
+  return await fetch(uri, {
+    redirect: "manual",
+    headers: {
+      cookie: `DedeUserID=${cookies.DedeUserID}; SESSDATA=${cookies.SESSDATA}`,
+    },
+  }).then((res) => {
+    const url = res.headers.get("Location");
+    if (!url) return;
+    const params = new URL(url).searchParams.get("access_key");
+    return params;
+  });
 };
 
 /**
@@ -66,6 +123,7 @@ export const access_key2info = async (access_key: string) => {
  * 查询不到，返回为空
  */
 export const cookies2info = async (cookies: { SESSDATA: string }) => {
+  if (!cookies.SESSDATA) return;
   return await fetch(env.api.main.web.user_info + "/x/vip/web/user/info?", {
     headers: { cookie: "SESSDATA=" + cookies.SESSDATA },
   })
@@ -84,10 +142,12 @@ export const cookies2info = async (cookies: { SESSDATA: string }) => {
 };
 
 /**
- * 获取Bilibili网页版游客Cookies
+ * 获取Bilibili网页版Cookies \
+ * 默认：游客Cookies \
+ * @param link 欲获取Cookies之链接
  */
-export const getCookies = async () => {
-  return await fetch("https://www.bilibili.com/").then((res) => {
+export const getCookies = async (uri = "https://www.bilibili.com/") => {
+  return await fetch(uri).then((res) => {
     //代码来源
     /*本文作者： cylee'贝尔塔猫
       本文链接： https://www.cnblogs.com/CyLee/p/16170228.html
