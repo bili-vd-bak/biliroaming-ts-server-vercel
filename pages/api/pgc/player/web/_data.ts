@@ -187,9 +187,9 @@ export const main = async (url_data: string, cookies) => {
     if (rCache) return JSON.parse(rCache);
     else {
       const res = (await fetch(
-        env.api.main.web.playurl + url_data + access_key
-          ? "&access_key=" + access_key
-          : ""
+        env.api.main.web.playurl +
+          url_data +
+          (access_key ? "&access_key=" + access_key : "")
       ).then((res) => res.json())) as { code: number; result: object };
       if (res.code === 0) await addNewCache(url_data, res?.result);
       return res;
