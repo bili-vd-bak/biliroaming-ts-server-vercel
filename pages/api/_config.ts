@@ -16,6 +16,7 @@ export const api = {
       search: "https://api.bilibili.com",
       season_info: "https://api.bilibili.com",
       user_info: "https://api.bilibili.com",
+      third_login: "https://passport.bilibili.com",
     },
     app: {
       playurl: "https://api.bilibili.com",
