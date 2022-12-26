@@ -7,31 +7,25 @@ import * as db_notion from "../../../utils/notion-database/_db";
 import * as bili from "../../../utils/_bili";
 
 const addNewLog = async (data: {
-  access_key?: string;
-  session?: string;
-  cookies?: string;
-  UID?: number;
-  vip_type?: 0 | 1 | 2;
+  access_key: string;
+  UID: number;
+  vip_type: 0 | 1 | 2;
   url: string;
 }) => {
-  const source = await db.get("log_web", true);
+  const source = await db.get("log", true);
   if (!source) return;
   const source_json = JSON.parse(source);
   const log: {
-    access_key?: string;
-    session?: string;
-    cookies?: string;
-    UID?: number;
-    vip_type?: 0 | 1 | 2;
+    access_key: string;
+    UID: number;
+    vip_type: 0 | 1 | 2;
     url: string;
     visit_time: number;
   }[] = source_json;
   log.push({
-    access_key: data.access_key || "",
-    session: data.session || "",
-    cookies: data.cookies || "",
-    UID: data.UID || 0,
-    vip_type: data.vip_type || 0,
+    access_key: data.access_key,
+    UID: data.UID,
+    vip_type: data.vip_type,
     url: data.url,
     visit_time: Date.now(),
   });
@@ -146,45 +140,36 @@ export const middleware = async (
   const url = new URL(url_data, env.api.main.web.playurl);
   if (!url.search || !url.search) return [false, 7]; //缺少参数
   const data = qs.parse(url.search.slice(1));
-  if (env.need_login && !data.access_key && !data.session && !cookies.SESSDATA)
+  if (env.need_login && !data.access_key && !cookies.SESSDATA)
     return [false, 6]; //TODO need_login强制为1
 
   //仅允许access_key或cookies鉴权
-  if (data.access_key) {
-    const info = await bili.access_key2info(data.access_key as string);
-    if (!info) return [false, 6]; //查询信息失败
-    await addNewLog({
-      access_key: data.access_key as string,
-      session: data.session as string,
-      cookies: cookies,
+  let access_key: string;
+  if (cookies.SESSDATA) {
+    //拯救一下只传cookies的BBDown
+    if (!cookies.DedeUserID) return [false, 6]; //FIXME DedeUserID处理问题
+    access_key = await bili.cookies2access_key(cookies);
+  }
+  const info = await bili.access_key2info(
+    (data.access_key as string) || access_key
+  );
+  if (!info) return [false, 6]; //查询信息失败
+  await addNewLog({
+    access_key: (data.access_key as string) || access_key,
+    UID: info.uid,
+    vip_type: info.vip_type,
+    url: url_data,
+  });
+  if (env.NOTION_db_log)
+    await addNewLog_notion({
+      access_key: (data.access_key as string) || access_key,
       UID: info.uid,
       vip_type: info.vip_type,
       url: url_data,
     });
-    if (env.NOTION_db_log)
-      await addNewLog_notion({
-        access_key: data.access_key as string,
-        UID: info.uid,
-        vip_type: info.vip_type,
-        url: url_data,
-      });
 
-    //黑白名单验证
-    return checkBlackList(info.uid);
-  } else if (cookies.SESSDATA) {
-    if (!cookies.DedeUserID) return [false, 6];
-    const info = await bili.cookies2info(cookies);
-    console.log(info);
-    if (!info) return [false, 6];
-    await addNewLog({
-      session: data.session as string,
-      cookies: cookies,
-      UID: info.uid,
-      vip_type: info.vip_type,
-      url: url_data,
-    });
-    return checkBlackList(info.uid);
-  } else return [true, 0];
+  //黑白名单验证
+  return checkBlackList(info.uid);
 };
 
 export const main = async (url_data: string, cookies) => {
@@ -193,16 +178,17 @@ export const main = async (url_data: string, cookies) => {
   const data = qs.parse(url.search.slice(1));
   //有access_key优先，否则若有cookies用cookies
   if (data.access_key || cookies) {
-    let info: { uid: number; vip_type: number };
-    if (data.access_key)
-      info = await bili.access_key2info(data.access_key as string);
-    else if (cookies) info = await bili.cookies2info(cookies);
+    let info: { uid: number; vip_type: number }, access_key: string;
+    if (cookies) access_key = await bili.cookies2access_key(cookies);
+    info = await bili.access_key2info(
+      (data.access_key as string) || access_key
+    );
     const rCache = await readCache(Number(data.cid), Number(data.ep_id), info);
-    if (rCache) return rCache;
+    if (rCache) return JSON.parse(rCache);
     else {
-      const res = (await fetch(env.api.main.web.playurl + url_data, {
-        headers: { cookie: bili.cookies2usable(cookies) },
-      }).then((res) => res.json())) as { code: number; result: object };
+      const res = (await fetch(env.api.main.web.playurl + url_data).then(
+        (res) => res.json()
+      )) as { code: number; result: object };
       if (res.code === 0) await addNewCache(url_data, res?.result);
       return res;
     }
