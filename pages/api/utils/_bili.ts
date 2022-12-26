@@ -1,3 +1,18 @@
+//Next Type Begin
+/**
+ * Make all properties in T optional
+ */
+type Partial<T> = {
+  [P in keyof T]?: T[P];
+};
+/**
+ * Object of `cookies` from header
+ */
+type cookies = Partial<{
+  [key: string]: string;
+}>;
+//Next Type End
+
 import fetch from "node-fetch";
 import qs from "qs";
 import md5 from "js-md5";
@@ -163,4 +178,12 @@ export const getCookies = async (uri = "https://www.bilibili.com/") => {
       .trim();
     return real_cookie;
   });
+};
+
+export const cookies2usable = (cookies: cookies) => {
+  let usable_cookies: string;
+  for (const [key, val] of Object.entries(cookies)) {
+    usable_cookies += key + "=" + val + ";";
+  }
+  return usable_cookies;
 };
