@@ -181,7 +181,7 @@ export const getCookies = async (uri = "https://www.bilibili.com/") => {
 };
 
 export const cookies2usable = (cookies: cookies) => {
-  let usable_cookies: string;
+  let usable_cookies = "";
   for (const [key, val] of Object.entries(cookies)) {
     usable_cookies += key + "=" + val + ";";
   }
