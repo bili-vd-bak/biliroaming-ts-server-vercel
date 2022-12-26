@@ -54,7 +54,6 @@ pnpm i
 ## 已知问题
 
 - Vercel无法本地缓存，故自带缓存功能仅在本地部署时有效。  
-- WEB端的access_key貌似无法使用，暂时禁用WEB端playurl的access_key检查。  
 
 ## 更新方法
 
