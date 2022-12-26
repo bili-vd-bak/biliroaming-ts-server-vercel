@@ -86,20 +86,20 @@ const readCache = async (
 };
 
 const addNewCache = async (url_data: string, res_data) => {
-  const need_vip = res_data.has_paid ? 1 : 0;
+  const need_vip = res_data.result.has_paid ? 1 : 0;
   const url = new URL(url_data, env.api.main.web.playurl);
   const data = qs.parse(url.search.slice(1));
 
   if (need_vip)
     db.set(
       `c-vip-${Number(data.cid)}-${Number(data.ep_id)}`,
-      JSON.stringify(res_data),
+      JSON.stringify(res_data.result),
       Date.now() + env.cache_time
     );
   else
     db.set(
       `c-${Number(data.cid)}-${Number(data.ep_id)}`,
-      JSON.stringify(res_data),
+      JSON.stringify(res_data.result),
       Date.now() + env.cache_time
     );
 };
@@ -184,7 +184,8 @@ export const main = async (url_data: string, cookies) => {
       (data.access_key as string) || access_key
     );
     const rCache = await readCache(Number(data.cid), Number(data.ep_id), info);
-    if (rCache) return JSON.parse(rCache);
+    if (rCache)
+      return { code: 0, message: "success", result: JSON.parse(rCache) };
     else {
       const res = (await fetch(
         env.api.main.web.playurl +
