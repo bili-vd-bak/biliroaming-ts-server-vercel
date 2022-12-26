@@ -165,7 +165,7 @@ export const main = async (url_data: string) => {
     Number(data.ep_id),
     data.access_key as string
   );
-  if (rCache) return rCache;
+  if (rCache) return JSON.parse(rCache);
   else {
     const res = (await fetch(env.api.main.app.playurl + url_data).then((res) =>
       res.json()

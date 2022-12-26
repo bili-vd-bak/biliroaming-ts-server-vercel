@@ -7,7 +7,7 @@
 ## Features
 
 - 支持软件：BiliRoaming、油猴脚本、哔哩(Bili.uwp)、BBDown
-- 代理HK/TH地区番剧(目前Vercel仅提供`hkg1``sin1`节点)
+- 代理HK/TH地区番剧(目前Vercel仅提供`hkg1` `sin1`节点)
 - 搜索替换(配置中fs开头配置)
 - 自部署黑/白名单(使用NOTION作数据库)
 
