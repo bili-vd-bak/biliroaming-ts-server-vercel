@@ -69,8 +69,11 @@ const addNewLog_notion = async (data: any) => {
   return res;
 };
 
-const readCache = async (cid: number, ep_id: number, access_key: string) => {
-  const info = await bili.access_key2info(access_key);
+const readCache = async (
+  cid: number,
+  ep_id: number,
+  info: { uid: number; vip_type: number }
+) => {
   const c_vip = await db.get(`c-vip-${cid}-${ep_id}`);
   if (c_vip) {
     if (
@@ -121,7 +124,7 @@ export const middleware = async (
   const data = qs.parse(url.search.slice(1));
   if (!data.access_key) return [false, 7]; //TODO 缺少参数 need_login=1才需此行
   if (env.need_login && !data.access_key) return [false, 6]; //TODO need_login强制为1
-  const info = await bili.access_key2info(data.access_key as string);
+  const info = await bili.access_keyParams2info(url.search);
   if (!info) return [false, 6]; //查询信息失败
   await addNewLog({
     access_key: data.access_key as string,
@@ -160,11 +163,8 @@ export const main = async (url_data: string) => {
   //信息获取
   const url = new URL(url_data, env.api.main.app.playurl);
   const data = qs.parse(url.search.slice(1));
-  const rCache = await readCache(
-    Number(data.cid),
-    Number(data.ep_id),
-    data.access_key as string
-  );
+  const info = await bili.access_keyParams2info(url.search);
+  const rCache = await readCache(Number(data.cid), Number(data.ep_id), info);
   if (rCache) return JSON.parse(rCache);
   else {
     const res = (await fetch(env.api.main.app.playurl + url_data).then((res) =>
