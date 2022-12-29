@@ -53,7 +53,7 @@ export const appsign = (
 };
 
 /**
- * 通过WEB端Cookies获取APP端access_key
+ * 通过WEB端Cookies获取APP端access_key(IOS APPKEY)
  * @param cookies WEB端Cookies
  */
 
@@ -119,6 +119,27 @@ export const access_key2info = async (access_key: string) => {
     env.api.main.app.user_info +
       "/x/v2/account/myinfo?" +
       appsign({ access_key: access_key, ts: Date.now() })
+  )
+    .then((res) => res.json())
+    .then((res: { data?: any; code: number }) => {
+      if (res.code === 0) {
+        const data = res.data;
+        return {
+          uid: Number(data.mid),
+          vip_type: Number(data.vip.type) as 0 | 1 | 2, //TODO 没有加类型判断校验
+        };
+      } else return;
+    });
+};
+
+/**
+ * 通过含access_key及sign的Params查询个人信息
+ * @param params 字符串的params，如 ?access_key=xxx&sign=xxx \
+ * 查询不到，返回为空
+ */
+export const access_keyParams2info = async (params: string) => {
+  return await fetch(
+    env.api.main.app.user_info + "/x/v2/account/myinfo" + params
   )
     .then((res) => res.json())
     .then((res: { data?: any; code: number }) => {
