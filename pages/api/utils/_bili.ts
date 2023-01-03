@@ -112,7 +112,7 @@ export const cookies2access_key = async (cookies: {
 /**
  * 通过access_key查询个人信息
  * @param access_key Bilibili access key \
- * 查询不到，返回为空
+ * 查询不到，返回为 无会员(0,0)
  */
 export const access_key2info = async (access_key: string) => {
   return await fetch(
@@ -128,14 +128,18 @@ export const access_key2info = async (access_key: string) => {
           uid: Number(data.mid),
           vip_type: Number(data.vip.type) as 0 | 1 | 2, //TODO 没有加类型判断校验
         };
-      } else return;
+      } else
+        return {
+          uid: 0,
+          vip_type: 0 as 0,
+        };
     });
 };
 
 /**
  * 通过含access_key及sign的Params查询个人信息
  * @param params 字符串的params，如 ?access_key=xxx&sign=xxx \
- * 查询不到，返回为空
+ * 查询不到，返回为 无会员(0,0)
  */
 export const access_keyParams2info = async (params: string) => {
   return await fetch(
@@ -149,14 +153,18 @@ export const access_keyParams2info = async (params: string) => {
           uid: Number(data.mid),
           vip_type: Number(data.vip.type) as 0 | 1 | 2, //TODO 没有加类型判断校验
         };
-      } else return;
+      } else
+        return {
+          uid: 0,
+          vip_type: 0 as 0,
+        };
     });
 };
 
 /**
  * 通过cookie查询mid/vip
  * @param cookies Bilibili cookies \
- * 查询不到，返回为空
+ * 查询不到，返回为 无会员(0,0)
  */
 export const cookies2info = async (cookies: { SESSDATA: string }) => {
   if (!cookies.SESSDATA) return;
@@ -172,7 +180,11 @@ export const cookies2info = async (cookies: { SESSDATA: string }) => {
             uid: Number(data.mid),
             vip_type: Number(data.vip_type) as 0 | 1 | 2, //TODO 没有加类型判断校验
           };
-        } else return;
+        } else
+          return {
+            uid: 0,
+            vip_type: 0 as 0,
+          };
       }
     );
 };
