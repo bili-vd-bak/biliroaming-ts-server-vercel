@@ -72,7 +72,7 @@ const addNewLog_notion = async (data: any) => {
 const readCache = async (
   cid: number,
   ep_id: number,
-  info: { uid: number; vip_type: number }
+  info: { uid: number; vip_type: 0 | 1 | 2 }
 ) => {
   const c_vip = await db.get(`c-vip-${cid}-${ep_id}`);
   if (c_vip) {
@@ -104,6 +104,14 @@ const addNewCache = async (url_data: string, res_data) => {
     );
 };
 
+const fetchDataFromBiliAndCache = async (url_data: string) => {
+  const res = (await fetch(env.api.main.app.playurl + url_data).then((res) =>
+    res.json()
+  )) as { code: number };
+  if (res.code === 0) await addNewCache(url_data, res);
+  return res;
+};
+
 /**
  * 数据处理中间件 \
  * 返回为 true - 继续执行 \
@@ -118,14 +126,24 @@ export const middleware = async (
   url_data: string,
   headers
 ): Promise<[boolean, number]> => {
+  //请求头验证
+  if (!headers["x-from-biliroaming"]) return [false, 1];
+  if (env.ver_min != 0 && env.ver_min >= Number(headers["build"]))
+    return [false, 2];
   //信息获取
   const url = new URL(url_data, env.api.main.app.playurl);
   if (!url.search || !url.search) return [false, 7]; //缺少参数
-  const data = qs.parse(url.search.slice(1));
-  if (!data.access_key) return [false, 7]; //TODO 缺少参数 need_login=1才需此行
-  if (env.need_login && !data.access_key) return [false, 6]; //TODO need_login强制为1
+  //免登陆
   const info = await bili.access_keyParams2info(url.search);
-  if (!info) return [false, 6]; //查询信息失败
+  if (info.uid === 0) {
+    //查询信息失败
+    if (!env.need_login) return [true, 0];
+    else return [false, 6];
+  }
+  //信息获取
+  const data = qs.parse(url.search.slice(1));
+  if (!data.access_key) return [false, 7]; //缺少参数 need_login=1才需此行
+  if (env.need_login && !data.access_key) return [false, 6]; //need_login强制为1
   await addNewLog({
     access_key: data.access_key as string,
     UID: info.uid,
@@ -139,12 +157,6 @@ export const middleware = async (
       vip_type: info.vip_type,
       url: url_data,
     });
-
-  //请求头验证
-  if (!headers["x-from-biliroaming"]) return [false, 1];
-  if (env.ver_min != 0 && env.ver_min > Number(headers["build"]))
-    return [false, 2];
-
   //黑白名单验证
   const blacklist_data = await blacklist.main(info.uid);
   if (blacklist_data.code != 0) return [false, 3];
@@ -164,13 +176,8 @@ export const main = async (url_data: string) => {
   const url = new URL(url_data, env.api.main.app.playurl);
   const data = qs.parse(url.search.slice(1));
   const info = await bili.access_keyParams2info(url.search);
+  if (env.need_login && info.uid === 0) return env.block(6);
   const rCache = await readCache(Number(data.cid), Number(data.ep_id), info);
   if (rCache) return JSON.parse(rCache);
-  else {
-    const res = (await fetch(env.api.main.app.playurl + url_data).then((res) =>
-      res.json()
-    )) as { code: number };
-    if (res.code === 0) await addNewCache(url_data, res);
-    return res;
-  }
+  else return fetchDataFromBiliAndCache(url_data);
 };

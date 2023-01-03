@@ -201,7 +201,6 @@ export const public_blacklist: string = "https://black.qimo.ink/api/users/";
 
 //=====================限制API调用=============================
 //要求登录 1-开 0-关
-//TODO 目前要求必须登录，禁止修改，否则程序无法运行
 export const need_login: io = 1;
 //允许WEB版使用 1-开 0-关
 export const web_on: io = 1;

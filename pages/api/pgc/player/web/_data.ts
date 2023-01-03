@@ -140,8 +140,10 @@ export const middleware = async (
   const url = new URL(url_data, env.api.main.web.playurl);
   if (!url.search || !url.search) return [false, 7]; //缺少参数
   const data = qs.parse(url.search.slice(1));
-  if (env.need_login && !data.access_key && !cookies.SESSDATA)
-    return [false, 6]; //TODO need_login强制为1
+  if (env.need_login && !data.access_key && !cookies.SESSDATA) {
+    if (!env.need_login) return [true, 0]; //免登陆
+    else return [false, 6]; //要求登录
+  }
 
   //仅允许access_key或cookies鉴权
   let access_key: string;
@@ -195,8 +197,11 @@ export const main = async (url_data: string, cookies) => {
       if (res.code === 0) await addNewCache(url_data, res?.result);
       return res;
     }
-  } else
-    return await fetch(env.api.main.web.playurl + url_data, {
+  } else {
+    const res = (await fetch(env.api.main.web.playurl + url_data, {
       headers: { cookie: bili.cookies2usable(cookies) },
-    }).then((res) => res.json());
+    }).then((res) => res.json())) as { code: number; result: object };
+    if (res.code === 0) await addNewCache(url_data, res?.result);
+    return res;
+  }
 };
