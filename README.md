@@ -68,3 +68,11 @@ pnpm i
 ## TODO
 
 - [BETA]Vercel支持新加坡节点，可以为东南亚地区解锁。(然后就被风控用不了了)  
+
+## 开源信息
+
+- [Next.js](https://nextjs.org/)
+- js-md5
+- qs
+- node-fetch
+- @beetcb/sstore
