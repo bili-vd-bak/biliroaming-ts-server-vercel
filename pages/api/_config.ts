@@ -31,6 +31,15 @@ export const api = {
     search: "https://app.biliintl.com",
     season_info: "https://app.biliintl.com",
   },
+  grpc: {
+    web: {
+      playurl: "https://grpc.biliapi.net",
+    },
+    app: {
+      playurl: "https://app.bilibili.com",
+      subtitle: "https://app.bilibili.com",
+    },
+  },
 };
 //OAuth用API
 export const api_oauth = {
@@ -205,8 +214,8 @@ export const need_login: io = 1;
 //允许WEB版使用 1-开 0-关
 export const web_on: io = 1;
 //限制哔哩漫游最低版本(需设置 web_on = 0) 填写数字 0-不限制
-//1084为1.6.8的版本号
-export const ver_min: number = 1084;
+//1097为1.6.9的版本号
+export const ver_min: number = 1097;
 //锁区，填写的是支持的地区 cn-中国大陆 hk-中国香港 tw-中国台湾 th-泰国/新加坡/东南亚地区
 //TODO 暂时未加地区检测，访问不支持地区由B站服务器提示错误。
 export const block_region: _block_region = ["hk"];
@@ -223,15 +232,17 @@ export enum block_type {
   "web_on已关闭，请使用BiliRoaming" = 1,
   "BiliRoaming版本过低，请更新",
   "黑/白名单数据获取错误，请稍后再试",
-  "宁已进入黑名单",
+  "宁已进入黑名单，请不要再传播漫游",
   "白名单模式已启用，您未在白名单中",
-  "请登录",
+  "已设置登录可用，请登录",
   "缺少参数",
 }
 export const block = (code: number) => {
   return {
     code: Number(`-${code}`),
-    message: `${block_type[code]}(E=${code})`,
+    message: `${
+      block_type[code] + (code === 2 ? `至${ver_min}(版本号)以上` : "")
+    }(E=${code})`,
   };
 };
 //============================================================
