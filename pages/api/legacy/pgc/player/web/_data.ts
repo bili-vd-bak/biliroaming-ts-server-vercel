@@ -133,6 +133,7 @@ export const middleware = async (
   url_data: string,
   cookies
 ): Promise<[boolean, number]> => {
+  console.log(cookies);
   //请求头验证
   if (!env.web_on) return [false, 1];
 
@@ -156,6 +157,14 @@ export const middleware = async (
     (data.access_key as string) || access_key
   );
   if (!info) return [false, 6]; //查询信息失败
+  console.log(
+    JSON.stringify({
+      access_key: (data.access_key as string) || access_key,
+      UID: info.uid,
+      vip_type: info.vip_type,
+      url: url_data,
+    })
+  );
   await addNewLog({
     access_key: (data.access_key as string) || access_key,
     UID: info.uid,

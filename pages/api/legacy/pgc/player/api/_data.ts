@@ -126,6 +126,7 @@ export const middleware = async (
   url_data: string,
   headers
 ): Promise<[boolean, number]> => {
+  console.log(headers);
   //请求头验证
   if (!headers["x-from-biliroaming"]) return [false, 1];
   if (env.ver_min != 0 && env.ver_min >= Number(headers["build"]))
@@ -144,6 +145,14 @@ export const middleware = async (
   const data = qs.parse(url.search.slice(1));
   if (!data.access_key) return [false, 7]; //缺少参数 need_login=1才需此行
   if (env.need_login && !data.access_key) return [false, 6]; //need_login强制为1
+  console.log(
+    JSON.stringify({
+      access_key: data.access_key as string,
+      UID: info.uid,
+      vip_type: info.vip_type,
+      url: url_data,
+    })
+  );
   await addNewLog({
     access_key: data.access_key as string,
     UID: info.uid,
