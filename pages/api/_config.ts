@@ -33,10 +33,10 @@ export const api = {
   },
   grpc: {
     web: {
-      playurl: "https://grpc.biliapi.net",
+      playurl: "https://app.bilibili.com",
     },
     app: {
-      playurl: "https://app.bilibili.com",
+      playurl: "https://grpc.biliapi.net",
       subtitle: "https://app.bilibili.com",
     },
   },
