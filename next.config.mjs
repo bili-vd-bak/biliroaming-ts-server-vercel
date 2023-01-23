@@ -24,15 +24,15 @@ const nextConfig = {
       },
       {
         source: "/bilibili.app.playurl.v1.PlayURL/:path(.*)",
-        destination: "/api/grpc/bilibili.app.playurl.v1.PlayURL/:path*",
+        destination: "https://grpc.biliapi.net/api/grpc/bilibili.app.playurl.v1.PlayURL/:path*",
       },
       {
         source: "/bilibili.pgc.gateway.player.v1.PlayURL/:path(.*)",
-        destination: "/api/grpc/bilibili.pgc.gateway.player.v1.PlayURL/:path*",
+        destination: "https://app.bilibili.com/api/grpc/bilibili.pgc.gateway.player.v1.PlayURL/:path*",
       },
       {
         source: "/bilibili.community.service.dm.v1.DM/:path(.*)",
-        destination: "/api/grpc/bilibili.community.service.dm.v1.DM/:path*",
+        destination: "https://app.bilibili.com/api/grpc/bilibili.community.service.dm.v1.DM/:path*",
       },
     ];
   },
