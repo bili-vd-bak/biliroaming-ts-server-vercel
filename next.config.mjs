@@ -8,15 +8,31 @@ const nextConfig = {
     return [
       {
         source: "/pgc/:path(.*)",
-        destination: "/api/pgc/:path*",
+        destination: "/api/legacy/pgc/:path*",
       },
       {
         source: "/x/:path(.*)",
-        destination: "/api/x/:path*",
+        destination: "/api/legacy/x/:path*",
       },
       {
         source: "/intl/:path(.*)",
-        destination: "/api/intl/:path*",
+        destination: "/api/legacy/intl/:path*",
+      },
+      {
+        source: "/api/server_info(.*)",
+        destination: "/api/legacy/server_info",
+      },
+      {
+        source: "/bilibili.app.playurl.v1.PlayURL/:path(.*)",
+        destination: "/api/grpc/bilibili.app.playurl.v1.PlayURL/:path*",
+      },
+      {
+        source: "/bilibili.pgc.gateway.player.v1.PlayURL/:path(.*)",
+        destination: "/api/grpc/bilibili.pgc.gateway.player.v1.PlayURL/:path*",
+      },
+      {
+        source: "/bilibili.community.service.dm.v1.DM/:path(.*)",
+        destination: "/api/grpc/bilibili.community.service.dm.v1.DM/:path*",
       },
     ];
   },
