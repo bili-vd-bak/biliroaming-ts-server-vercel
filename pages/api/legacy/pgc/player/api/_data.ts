@@ -129,7 +129,7 @@ export const middleware = async (
   console.log(headers);
   //请求头验证
   if (!headers["x-from-biliroaming"]) return [false, 1];
-  if (env.ver_min != 0 && env.ver_min >= Number(headers["build"]))
+  if (env.ver_min !== 0 && env.ver_min > Number(headers["build"]))
     return [false, 2];
   //信息获取
   const url = new URL(url_data, env.api.main.app.playurl);
