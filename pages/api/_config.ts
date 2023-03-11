@@ -213,7 +213,7 @@ export const public_blacklist: string = "https://black.qimo.ink/api/users/";
 export const need_login: io = 1;
 //允许WEB版使用 1-开 0-关
 export const web_on: io = 1;
-//限制哔哩漫游最低版本(需设置 web_on = 0) 填写数字 0-不限制
+//限制哔哩漫游最低版本 填写数字 0-不限制
 //1110为1.6.10的版本号
 export const ver_min: number = 1110;
 //锁区，填写的是支持的地区 cn-中国大陆 hk-中国香港 tw-中国台湾 th-泰国/新加坡/东南亚地区
