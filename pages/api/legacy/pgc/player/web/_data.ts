@@ -12,6 +12,7 @@ const addNewLog = async (data: {
   vip_type: 0 | 1 | 2;
   url: string;
 }) => {
+  if (!env.db_local_enabled) return;
   const source = await db.get("log", true);
   if (!source) return;
   const source_json = JSON.parse(source);
@@ -33,10 +34,11 @@ const addNewLog = async (data: {
 };
 
 const addNewLog_notion = async (data: any) => {
+  if (!env.db_NOTION_log) return;
   const res = await db_notion.update(
-    env.NOTION_db_log,
+    env.db_NOTION_log,
     JSON.stringify({
-      parent: { database_id: env.NOTION_db_log },
+      parent: { database_id: env.db_NOTION_log },
       properties: {
         access_key: {
           id: "title",
@@ -74,6 +76,7 @@ const readCache = async (
   ep_id: number,
   info: { uid: number; vip_type: number }
 ) => {
+  if (!env.db_local_enabled) return;
   const c_vip = await db.get(`c-vip-${cid}-${ep_id}`);
   if (c_vip) {
     if (
@@ -86,6 +89,8 @@ const readCache = async (
 };
 
 const addNewCache = async (url_data: string, res_data) => {
+  if (!env.db_local_enabled) return;
+
   const need_vip = res_data.has_paid ? 1 : 0;
   const url = new URL(url_data, env.api.main.web.playurl);
   const data = qs.parse(url.search.slice(1));
@@ -171,13 +176,12 @@ export const middleware = async (
     vip_type: info.vip_type,
     url: url_data,
   });
-  if (env.NOTION_db_log)
-    await addNewLog_notion({
-      access_key: (data.access_key as string) || access_key,
-      UID: info.uid,
-      vip_type: info.vip_type,
-      url: url_data,
-    });
+  await addNewLog_notion({
+    access_key: (data.access_key as string) || access_key,
+    UID: info.uid,
+    vip_type: info.vip_type,
+    url: url_data,
+  });
 
   //黑白名单验证
   return checkBlackList(info.uid);
