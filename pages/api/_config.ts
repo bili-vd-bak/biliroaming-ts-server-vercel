@@ -176,18 +176,23 @@ export const fs_episodes_web = [
 ];
 //============================================================
 
-//===================NOTION 数据库=============================
+//===========================数据库============================
+//支持 本地模式(日志、缓存)、NOTION(日志、黑名单)、bit.io(TODO)
+//缓存时间 单位：分钟(min) 需打开缓存数据库
+export const cache_time = 1000 * 60 * 15;
+//本地模式设置
+//本地模式开关
+export const db_local_enabled: io = 1;
+//本地数据库查询密钥
+export const local_cache_secret = process.env.local_cache_secret || "";
+//NOTION数据库配置
 //NOTION KEY
 export const NOTION_KEY =
   process.env.NOTION_KEY || "secret_***BUrz1***********eknk*****gm";
 //NOTION DATABASES
 //为空""且不添加环境变量即禁用该功能
-export const NOTION_db_blacklist = process.env.NOTION_db_blacklist || "";
-export const NOTION_db_log = process.env.NOTION_db_log || "";
-//缓存时间 单位：分钟(min) 需打开缓存数据库
-export const cache_time = 1000 * 60 * 15;
-//本地数据库查询密钥
-export const local_cache_secret = process.env.local_cache_secret || "";
+export const db_NOTION_blacklist = process.env.NOTION_db_blacklist || "";
+export const db_NOTION_log = process.env.NOTION_db_log || "";
 //============================================================
 
 //======================黑白名单设置============================

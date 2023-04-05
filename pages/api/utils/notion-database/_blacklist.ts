@@ -5,7 +5,7 @@ import * as bili from "../_bili";
 
 export const query = async (UID: number) => {
   const res = await db.query(
-    env.NOTION_db_blacklist,
+    env.db_NOTION_blacklist,
     JSON.stringify({
       filter: {
         and: [
@@ -29,9 +29,9 @@ export const addNewUser = async (
   ban_until = 0
 ) => {
   const res = await db.update(
-    env.NOTION_db_blacklist,
+    env.db_NOTION_blacklist,
     JSON.stringify({
-      parent: { database_id: env.NOTION_db_blacklist },
+      parent: { database_id: env.db_NOTION_blacklist },
       properties: {
         UID: {
           id: "title",
@@ -107,7 +107,7 @@ export const checkIfFinishBan = async (data): Promise<boolean> => {
 };
 
 export const main = async (UID: number) => {
-  if (!env.NOTION_db_blacklist) {
+  if (!env.db_NOTION_blacklist) {
     if (env.public_blacklist_enabled) {
       return await fetch(env.public_blacklist + UID)
         .then((res) => res.json())
