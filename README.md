@@ -9,7 +9,7 @@
 - 支持软件：BiliRoaming、油猴脚本、哔哩(Bili.uwp)、BBDown
 - 代理HK/TH地区番剧(目前Vercel仅提供`hkg1` `sin1`节点)
 - 搜索替换(配置中fs开头配置)
-- 自部署黑/白名单(使用NOTION作数据库)
+- 自部署黑/白名单(使用NOTION/bit.io作数据库)
 
 ## 部署方法
 
@@ -17,8 +17,9 @@
 查看Wiki：  
 [配置文档填写说明](https://github.com/bili-vd-bak/biliroaming-ts-server-vercel/wiki/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6)  
 **注**：每个服务只可代理一个地区，若需代理多个地区，请再部署一个相同的服务修改配置。  
-查寻缓存和日志请访问`https://{yourDomain}/api/admin/log?s=${配置填写的secret}`  
-清理缓存和日志请访问`https://{yourDomain}/api/admin/clean?s=${配置填写的secret}`  
+查寻本地缓存和日志请访问`https://{yourDomain}/api/admin/log?s=${配置填写的secret}`  
+清理本地缓存和日志请访问`https://{yourDomain}/api/admin/clean?s=${配置填写的secret}`  
+**注**: 本地缓存和日志在Vercel环境里无法长期存储，你可以查看Vercel自带的函数日志。  
 
 ### Vercel
 
