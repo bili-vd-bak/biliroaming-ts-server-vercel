@@ -114,7 +114,7 @@ export const main = async (UID: number) => {
         .catch((err) => console.error(err));
     } else
       return {
-        code: 0,
+        code: -1,
         message: "未启用黑名单数据库",
         data: {
           uid: UID,

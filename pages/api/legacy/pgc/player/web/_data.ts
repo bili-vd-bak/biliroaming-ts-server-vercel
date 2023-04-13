@@ -33,6 +33,20 @@ const addNewLog = async (data: {
   return db.set("log", JSON.stringify(log));
 };
 
+const addNewLog_bitio = async (data: {
+  access_key: string;
+  UID: number;
+  vip_type: 0 | 1 | 2;
+  url: string;
+}) => {
+  if (!env.db_bitio_enabled) return;
+  await env.db_bitio_pool.query(
+    "INSERT INFO log (access_key,uid,vip_type,url,visit_time) VALUES ($1,$2,$3,$4,$5)",
+    [data.access_key, data.UID, data.vip_type, data.url, Date.now()]
+  );
+  return;
+};
+
 const addNewLog_notion = async (data: any) => {
   if (!env.db_NOTION_log) return;
   const res = await db_notion.update(
@@ -74,39 +88,70 @@ const addNewLog_notion = async (data: any) => {
 const readCache = async (
   cid: number,
   ep_id: number,
-  info: { uid: number; vip_type: number }
+  info: { uid: number; vip_type: 0 | 1 | 2 }
 ) => {
-  if (!env.db_local_enabled) return;
-  const c_vip = await db.get(`c-vip-${cid}-${ep_id}`);
+  let c_vip: Object | null | undefined;
+  if (env.db_local_enabled) c_vip = await db.get(`c-vip-${cid}-${ep_id}`);
+  else if (env.db_bitio_enabled)
+    c_vip = await env.db_bitio_pool
+      .query(
+        "SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 1 AND (cid = $2 OR ep = $3)",
+        [Date.now(), cid, ep_id]
+      )
+      .then((res) => res.rows[0].data);
   if (c_vip) {
-    if (
+    if (info.vip_type !== 0) return c_vip;
+    else if (
       env.whitelist_vip_enabled &&
       (await blacklist.main(info.uid).data?.is_whitelist)
     )
       return c_vip;
-    if (info.vip_type !== 0) return await db.get(`c-vip-${cid}-${ep_id}`);
-  } else return await db.get(`c-${cid}-${ep_id}`);
+  } else {
+    let c_normal: Object | null | undefined;
+    if (env.db_local_enabled) c_normal = await db.get(`c-${cid}-${ep_id}`);
+    else if (env.db_bitio_enabled)
+      c_normal = await env.db_bitio_pool
+        .query(
+          "SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 0 AND (cid = $2 OR ep = $3)",
+          [Date.now(), cid, ep_id]
+        )
+        .then((res) => res.rows[0].data);
+    return c_normal;
+  }
 };
 
 const addNewCache = async (url_data: string, res_data) => {
-  if (!env.db_local_enabled) return;
+  if (!env.db_local_enabled && !env.db_bitio_enabled) return;
 
   const need_vip = res_data.has_paid ? 1 : 0;
-  const url = new URL(url_data, env.api.main.web.playurl);
+  const url = new URL(url_data, env.api.main.app.playurl);
   const data = qs.parse(url.search.slice(1));
 
-  if (need_vip)
-    db.set(
-      `c-vip-${Number(data.cid)}-${Number(data.ep_id)}`,
-      JSON.stringify(res_data),
-      Date.now() + env.cache_time
+  if (env.db_local_enabled) {
+    if (need_vip)
+      db.set(
+        `c-vip-${Number(data.cid)}-${Number(data.ep_id)}`,
+        JSON.stringify(res_data),
+        Date.now() + env.cache_time
+      );
+    else
+      db.set(
+        `c-${Number(data.cid)}-${Number(data.ep_id)}`,
+        JSON.stringify(res_data),
+        Date.now() + env.cache_time
+      );
+  } else if (env.db_bitio_enabled) {
+    await env.db_bitio_pool.query(
+      "INSERT INTO cache (need_vip,exp,cid,ep,data) VALUES ($1,$2,$3,$4,$5)",
+      [
+        need_vip,
+        Date.now() + env.cache_time,
+        Number(data.cid),
+        Number(data.ep_id),
+        res_data,
+      ]
     );
-  else
-    db.set(
-      `c-${Number(data.cid)}-${Number(data.ep_id)}`,
-      JSON.stringify(res_data),
-      Date.now() + env.cache_time
-    );
+  }
 };
 
 const checkBlackList = async (uid: number): Promise<[boolean, number]> => {
@@ -176,6 +221,12 @@ export const middleware = async (
     vip_type: info.vip_type,
     url: url_data,
   });
+  await addNewLog_bitio({
+    access_key: (data.access_key as string) || access_key,
+    UID: info.uid,
+    vip_type: info.vip_type,
+    url: url_data,
+  });
   await addNewLog_notion({
     access_key: (data.access_key as string) || access_key,
     UID: info.uid,
@@ -193,14 +244,13 @@ export const main = async (url_data: string, cookies) => {
   const data = qs.parse(url.search.slice(1));
   //有access_key优先，否则若有cookies用cookies
   if (data.access_key || cookies) {
-    let info: { uid: number; vip_type: number }, access_key: string;
+    let info: { uid: number; vip_type: 0 | 1 | 2 }, access_key: string;
     if (cookies) access_key = await bili.cookies2access_key(cookies);
     info = await bili.access_key2info(
       (data.access_key as string) || access_key
     );
     const rCache = await readCache(Number(data.cid), Number(data.ep_id), info);
-    if (rCache)
-      return { code: 0, message: "success", result: JSON.parse(rCache) };
+    if (rCache) return { code: 0, message: "success", result: rCache };
     else {
       const res = (await fetch(
         env.api.main.web.playurl +
