@@ -177,7 +177,8 @@ export const fs_episodes_web = [
 //============================================================
 
 //===========================数据库============================
-//支持 本地模式(日志、缓存)、NOTION(日志、黑名单)、bit.io(TODO)
+//支持 本地模式(日志、缓存)、NOTION(日志、黑名单)、PostgreSOL(日志、缓存、黑名单)
+//注：本地模式 与 PostgreSQL 优先本地
 //缓存时间 单位：分钟(min) 需打开缓存数据库
 export const cache_time = 1000 * 60 * 15;
 //本地模式设置
@@ -185,7 +186,7 @@ export const cache_time = 1000 * 60 * 15;
 export const db_local_enabled: io = 1;
 //本地数据库查询密钥
 export const local_cache_secret = process.env.local_cache_secret || "";
-//bit.io配置(数据由bit.io控制面板获取,需Read/Write权限)
+//PostgreSQL配置(需Read/Write权限)
 import { Pool } from "pg"; //导入(不用改)
 export const db_bitio_enabled: io = 0;
 export const db_bitio_pool = new Pool({
@@ -228,7 +229,7 @@ export const public_blacklist: string = "https://black.qimo.ink/api/users/";
 //要求登录 1-开 0-关
 export const need_login: io = 1;
 //允许WEB版使用 1-开 0-关
-export const web_on: io = 1;
+export const web_on: io = 0;
 //限制哔哩漫游最低版本 填写数字 0-不限制
 //1110为1.6.10的版本号
 export const ver_min: number = 1110;
@@ -268,4 +269,8 @@ export const log = {
   str: (info: string, data: string) => console.log(info, data),
   obj: (info: string, data: Object) => console.log(info, JSON.stringify(data)),
 };
+//============================================================
+
+//===================信息展示(不用改)===========================
+export const version = "2.2.3"
 //============================================================
