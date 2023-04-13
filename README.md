@@ -1,15 +1,16 @@
 # biliroaming-serve-ts-vercel
 
-本服务部署在Vercel香港节点上。  
+本服务部署在Vercel香港节点上，同时支持Next.js本地部署。  
 配置修改在 `pages/api/_config.ts` 中，可以直接改里面的配置文本，也可在Vercel里添加对应名称变量。  
 使用环境变量更安全。  
 
 ## Features
 
 - 支持软件：BiliRoaming、油猴脚本、哔哩(Bili.uwp)、BBDown
-- 代理HK/TH地区番剧(目前Vercel仅提供`hkg1` `sin1`节点)
+- 支持仅Cookie鉴权(目前未发现其他支持此功能服务)
+- 代理HK地区番剧(目前Vercel仅提供`hkg1`节点)
 - 搜索替换(配置中fs开头配置)
-- 自部署黑/白名单(使用NOTION/bit.io作数据库)
+- 自部署黑/白名单(使用NOTION/PostgreSQL作数据库)
 
 ## 部署方法
 
