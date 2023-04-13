@@ -1,37 +1,10 @@
 import qs from "qs";
 import fetch from "node-fetch";
 import * as env from "../../../../_config";
-import * as blacklist from "../../../../utils/notion-database/_blacklist";
+import * as blacklist from "../../../../utils/_blacklist";
 import * as db from "../../../../utils/_sstore";
 import * as db_notion from "../../../../utils/notion-database/_db";
 import * as bili from "../../../../utils/_bili";
-
-const addNewLog = async (data: {
-  access_key: string;
-  UID: number;
-  vip_type: 0 | 1 | 2;
-  url: string;
-}) => {
-  if (!env.db_local_enabled) return;
-  const source = await db.get("log", true);
-  if (!source) return;
-  const source_json = JSON.parse(source);
-  const log: {
-    access_key: string;
-    UID: number;
-    vip_type: 0 | 1 | 2;
-    url: string;
-    visit_time: number;
-  }[] = source_json;
-  log.push({
-    access_key: data.access_key,
-    UID: data.UID,
-    vip_type: data.vip_type,
-    url: data.url,
-    visit_time: Date.now(),
-  });
-  return db.set("log", JSON.stringify(log));
-};
 
 const addNewLog_bitio = async (data: {
   access_key: string;
@@ -41,7 +14,7 @@ const addNewLog_bitio = async (data: {
 }) => {
   if (!env.db_bitio_enabled) return;
   await env.db_bitio_pool.query(
-    "INSERT INFO log (access_key,uid,vip_type,url,visit_time) VALUES ($1,$2,$3,$4,$5)",
+    "INSERT INTO log (access_key,uid,vip_type,url,visit_time) VALUES ($1,$2,$3,$4,$5)",
     [data.access_key, data.UID, data.vip_type, data.url, Date.now()]
   );
   return;
@@ -90,6 +63,7 @@ const readCache = async (
   ep_id: number,
   info: { uid: number; vip_type: 0 | 1 | 2 }
 ) => {
+  env.log.str("读取缓存", "尝试中");
   let c_vip: Object | null | undefined;
   if (env.db_local_enabled) c_vip = await db.get(`c-vip-${cid}-${ep_id}`);
   else if (env.db_bitio_enabled)
@@ -98,12 +72,12 @@ const readCache = async (
         "SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 1 AND (cid = $2 OR ep = $3)",
         [Date.now(), cid, ep_id]
       )
-      .then((res) => res.rows[0].data);
+      .then((res) => res.rows[0]?.data || undefined);
   if (c_vip) {
     if (info.vip_type !== 0) return c_vip;
     else if (
       env.whitelist_vip_enabled &&
-      (await blacklist.main(info.uid).data?.is_whitelist)
+      (await blacklist.main(info.uid)).data?.is_whitelist
     )
       return c_vip;
   } else {
@@ -115,7 +89,7 @@ const readCache = async (
           "SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 0 AND (cid = $2 OR ep = $3)",
           [Date.now(), cid, ep_id]
         )
-        .then((res) => res.rows[0].data);
+        .then((res) => res.rows[0]?.data || undefined);
     return c_normal;
   }
 };
@@ -181,9 +155,9 @@ const checkBlackList = async (uid: number): Promise<[boolean, number]> => {
  */
 export const middleware = async (
   url_data: string,
-  cookies
+  cookies: any //FIXME 未添加完整类型
 ): Promise<[boolean, number]> => {
-  console.log(cookies);
+  env.log.obj("用户Cookies", cookies);
   //请求头验证
   if (!env.web_on) return [false, 1];
 
@@ -207,16 +181,8 @@ export const middleware = async (
     (data.access_key as string) || access_key
   );
   if (!info) return [false, 6]; //查询信息失败
-  console.log(
-    JSON.stringify({
-      access_key: (data.access_key as string) || access_key,
-      UID: info.uid,
-      vip_type: info.vip_type,
-      url: url_data,
-    })
-  );
-  await addNewLog({
-    access_key: (data.access_key as string) || access_key,
+  env.log.obj("用户信息", {
+    access_key: data.access_key as string,
     UID: info.uid,
     vip_type: info.vip_type,
     url: url_data,

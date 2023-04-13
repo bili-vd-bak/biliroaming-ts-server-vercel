@@ -187,20 +187,12 @@ export const db_local_enabled: io = 1;
 export const local_cache_secret = process.env.local_cache_secret || "";
 //bit.io配置(数据由bit.io控制面板获取,需Read/Write权限)
 import { Pool } from "pg"; //导入(不用改)
-export const db_bitio_enabled: io = 1;
-// export const db_bitio_pool = new Pool({
-//   user: "GettingStarted",
-//   host: "db.bit.io",
-//   database: "dliden/2020_Census_Reapportionment", // public database
-//   password: "<bitio_key>", // key from bit.io database page connect menu
-//   port: 5432,
-//   ssl: true,
-// });
+export const db_bitio_enabled: io = 0;
 export const db_bitio_pool = new Pool({
-  user: "biliroaming",
+  user: "GettingStarted",
   host: "db.bit.io",
-  database: "xrzyy/biliroaming", // public database
-  password: "v2_42mWu_pUNiJPQpvPZeM89ZapFV8hf", // key from bit.io database page connect menu
+  database: "dliden/2020_Census_Reapportionment", // public database
+  password: "<bitio_key>", // key from bit.io database page connect menu
   port: 5432,
   ssl: true,
 });
@@ -268,5 +260,12 @@ export const block = (code: number) => {
       block_type[code] + (code === 2 ? `至${ver_min}(版本号)以上` : "")
     }(E=${code})`,
   };
+};
+//============================================================
+
+//===================日志函数(不用改)===========================
+export const log = {
+  str: (info: string, data: string) => console.log(info, data),
+  obj: (info: string, data: Object) => console.log(info, JSON.stringify(data)),
 };
 //============================================================

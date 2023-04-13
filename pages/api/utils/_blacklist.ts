@@ -18,13 +18,14 @@ export const format_bitio = async (UID: number) => {
   const data = await env.db_bitio_pool
     .query("SELECT * FROM blacklist WHERE uid = $1", [UID])
     .then((res) => res.rows[0]);
-  console.log(data)
+  console.log(data);
   if (data) {
     if (data.type == 1)
-      await env.db_bitio_pool.query(
-        "DELETE FROM blacklist WHERE ban_until <= $1 AND type = 1",
-        [Date.now()]
-      ).then(res=>console.log(res));
+      await env.db_bitio_pool
+        .query("DELETE FROM blacklist WHERE ban_until <= $1 AND type = 1", [
+          Date.now(),
+        ])
+        .then((res) => console.log(res));
     return {
       code: 0,
       message: "",
@@ -63,8 +64,10 @@ export const main = async (UID: number) => {
         },
       };
   }
-  const res_notion = await blacklist_notion.main(UID);
-  if (res_notion.code === 0) return res_notion;
+  if (env.db_NOTION_blacklist) {
+    const res_notion = await blacklist_notion.main(UID);
+    if (res_notion.code === 0) return res_notion;
+  }
   const res = await format_bitio(UID);
   if (res.code === 0) return res;
   else if (/^[1-9]\d*$/.test(UID.toString())) {
