@@ -119,7 +119,7 @@ export const fs_episodes_app = [
   },
 ];
 //番剧剧集数据(WEB端API) 在官方WEB中，long_title与index_title设置可能无效，显示的为title (显示为：index_title空格long_title) ；cover不显示
-//此处参考 https://github.com/SocialSisterYi/bilibili-API-collect/blob/master/search/search_response.md#%E5%AF%B9%E8%B1%A1%E7%B1%BB%E5%9E%8B2-%E7%BB%93%E6%9E%9C%E4%B8%BA%E7%95%AA%E5%89%A7%E5%BD%B1%E8%A7%86
+//此处参考 https://socialsisteryi.github.io/bilibili-API-collect/docs/search/search_response.html#%E5%AF%B9%E8%B1%A1%E7%B1%BB%E5%9E%8B2-%E7%BB%93%E6%9E%9C%E4%B8%BA%E7%95%AA%E5%89%A7-%E5%BD%B1%E8%A7%86
 export const fs_episodes_web = [
   {
     id: 1,
@@ -189,14 +189,16 @@ export const local_cache_secret = process.env.local_cache_secret || "";
 //PostgreSQL配置(需Read/Write权限)
 import { Pool } from "pg"; //导入(不用改)
 export const db_bitio_enabled: io = 0;
-export const db_bitio_pool = new Pool({
-  user: "GettingStarted",
-  host: "db.bit.io",
-  database: "dliden/2020_Census_Reapportionment", // public database
-  password: "<bitio_key>", // key from bit.io database page connect menu
-  port: 5432,
-  ssl: true,
-});
+export const db_bitio_pool = new Pool(
+  JSON.parse(process.env.db_bitio_pool) || {
+    user: "GettingStarted",
+    host: "db.bit.io",
+    database: "dliden/2020_Census_Reapportionment", // public database
+    password: "<bitio_key>", // key from bit.io database page connect menu
+    port: 5432,
+    ssl: true,
+  }
+);
 //NOTION数据库配置
 //NOTION KEY
 export const NOTION_KEY =
@@ -272,5 +274,5 @@ export const log = {
 //============================================================
 
 //===================信息展示(不用改)===========================
-export const version = "2.2.3"
+export const version = "2.2.3";
 //============================================================
