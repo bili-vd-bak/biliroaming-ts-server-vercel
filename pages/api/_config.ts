@@ -185,6 +185,25 @@ export const cache_time = 1000 * 60 * 15;
 export const db_local_enabled: io = 1;
 //本地数据库查询密钥
 export const local_cache_secret = process.env.local_cache_secret || "";
+//bit.io配置(数据由bit.io控制面板获取,需Read/Write权限)
+import { Pool } from "pg"; //导入(不用改)
+export const db_bitio_enabled: io = 1;
+// export const db_bitio_pool = new Pool({
+//   user: "GettingStarted",
+//   host: "db.bit.io",
+//   database: "dliden/2020_Census_Reapportionment", // public database
+//   password: "<bitio_key>", // key from bit.io database page connect menu
+//   port: 5432,
+//   ssl: true,
+// });
+export const db_bitio_pool = new Pool({
+  user: "biliroaming",
+  host: "db.bit.io",
+  database: "xrzyy/biliroaming", // public database
+  password: "v2_42mWu_pUNiJPQpvPZeM89ZapFV8hf", // key from bit.io database page connect menu
+  port: 5432,
+  ssl: true,
+});
 //NOTION数据库配置
 //NOTION KEY
 export const NOTION_KEY =
