@@ -28,7 +28,7 @@ function HomePage() {
         </a>
         <br />
         <h2>支持黑/白名单查询</h2>
-        访问 <code>/users/&#123;uid&#125;</code> 即可查询
+        访问 <code>/api/users/&#123;uid&#125;</code> 即可查询
       </div>
       <footer className="footer">
         <a

@@ -14,19 +14,20 @@
   "license": "GPL-3.0",
   "devDependencies": {
     "@types/js-md5": "^0.4.3",
-    "@types/node-fetch": "^2.6.2",
+    "@types/node-fetch": "^2.6.3",
     "@types/pg": "^8.6.6",
     "@types/qs": "^6.9.7",
     "@types/react": "18.0.26",
-    "@vercel/node": "^2.8.15"
+    "@vercel/node": "^2.10.3",
+    "typescript": "^5.0.4"
   },
   "dependencies": {
     "@beetcb/sstore": "^0.3.0",
     "js-md5": "^0.7.3",
-    "next": "^13.1.4",
-    "node-fetch": "^3.3.0",
+    "next": "^13.3.0",
+    "node-fetch": "^3.3.1",
     "pg": "^8.10.0",
-    "qs": "^6.11.0",
+    "qs": "^6.11.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   }
