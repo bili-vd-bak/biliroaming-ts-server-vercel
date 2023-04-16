@@ -251,3 +251,5 @@ export const block = (code: number) => {
   };
 };
 //============================================================
+
+export const version = "2.1.2-opt"
