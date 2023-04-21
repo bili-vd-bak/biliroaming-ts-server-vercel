@@ -73,7 +73,9 @@ const readCache = async (
         "SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 1 AND (cid = $2 OR ep = $3)",
         [Date.now(), cid, ep_id]
       )
-      .then((res) => JSON.parse(res.rows[0]?.data) || undefined);
+      .then((res) =>
+        res.rows[0]?.data ? JSON.parse(res.rows[0]?.data) : undefined
+      );
   if (c_vip) {
     if (info.vip_type !== 0) return c_vip;
     else if (
@@ -90,7 +92,9 @@ const readCache = async (
           "SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 0 AND (cid = $2 OR ep = $3)",
           [Date.now(), cid, ep_id]
         )
-        .then((res) => JSON.parse(res.rows[0]?.data) || undefined);
+        .then((res) =>
+          res.rows[0]?.data ? JSON.parse(res.rows[0]?.data) : undefined
+        );
     return c_normal;
   }
 };
