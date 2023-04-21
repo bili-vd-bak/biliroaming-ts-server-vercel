@@ -104,30 +104,31 @@ const addNewCache = async (
   const need_vip = res_data.has_paid ? 1 : 0;
   const url = new URL(url_data, env.api.main.app.playurl);
   const data = qs.parse(url.search.slice(1));
+  const res_data_str = env.try_unblock_CDN_speed_enabled
+    ? JSON.stringify(res_data).replace(/bw=[^&]*/g, "bw=1280000")
+    : JSON.stringify(res_data); //尝试解除下载速度限制
+  const deadline = Number(
+    (res_data_str.match(/deadline=[^&]*/) || [""])[0].slice(9) ||
+      Date.now() + env.cache_time
+  );
 
   if (env.db_local_enabled) {
     if (need_vip)
       db.set(
         `c-vip-${Number(data.cid)}-${Number(data.ep_id)}`,
-        JSON.stringify(res_data),
-        Date.now() + env.cache_time
+        res_data_str,
+        deadline
       );
     else
       db.set(
         `c-${Number(data.cid)}-${Number(data.ep_id)}`,
-        JSON.stringify(res_data),
-        Date.now() + env.cache_time
+        res_data_str,
+        deadline
       );
   } else if (env.db_bitio_enabled) {
     await env.db_bitio_pool.query(
       "INSERT INTO cache (need_vip,exp,cid,ep,data) VALUES ($1,$2,$3,$4,$5)",
-      [
-        need_vip,
-        Date.now() + env.cache_time,
-        Number(data.cid),
-        Number(data.ep_id),
-        res_data,
-      ]
+      [need_vip, deadline, Number(data.cid), Number(data.ep_id), res_data]
     );
   }
 };
@@ -139,7 +140,9 @@ const fetchDataFromBiliAndCache = async (url_data: string) => {
   )) as { code: number };
   if (res.code === 0) await addNewCache(url_data, res);
   else env.log.obj("从BiliBili获取数据错误", res);
-  return res;
+  return env.try_unblock_CDN_speed_enabled
+    ? JSON.parse(JSON.stringify(res).replace(/bw=[^&]*/g, "bw=1280000"))
+    : res; //尝试解除下载速度限制
 };
 
 /**
