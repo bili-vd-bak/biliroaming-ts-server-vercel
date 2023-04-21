@@ -159,11 +159,12 @@ const checkBlackList = async (uid: number): Promise<[boolean, number]> => {
  */
 export const middleware = async (
   url_data: string,
-  cookies: any //FIXME 未添加完整类型
+  cookies: any, //FIXME 未添加完整类型
+  PassWebOnCheck: 0 | 1
 ): Promise<[boolean, number]> => {
   env.log.obj("用户Cookies", cookies);
   //请求头验证
-  if (!env.web_on) return [false, 1];
+  if (!env.web_on && PassWebOnCheck === 0) return [false, 1];
 
   //信息获取
   const url = new URL(url_data, env.api.main.web.playurl);
