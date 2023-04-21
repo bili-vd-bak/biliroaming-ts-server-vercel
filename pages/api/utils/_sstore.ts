@@ -13,13 +13,13 @@ export async function isExpired(key: string) {
 export async function get(
   key: string,
   ignoreMaxAge = false
-): Promise<string | undefined> {
+): Promise<string | Object | undefined> {
   if (ignoreMaxAge !== true && (await isExpired(key))) {
     ss.del(key);
     return;
   }
   const item = await ss.get(key);
-  return item && item.data;
+  return item && item.data && JSON.parse(item.data);
 }
 
 export function set(key: string, val: string, maxAge = 0) {
