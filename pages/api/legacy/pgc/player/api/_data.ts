@@ -71,7 +71,7 @@ const readCache = async (
     c_vip = await env.db_bitio_pool
       .query(
         "SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 1 AND (cid = $2 OR ep = $3)",
-        [Date.now() / 1000, cid, ep_id]
+        [Math.round(Number(new Date()) / 1000), cid, ep_id]
       )
       .then((res) =>
         res.rows[0]?.data ? JSON.parse(res.rows[0]?.data) : undefined
@@ -90,7 +90,7 @@ const readCache = async (
       c_normal = await env.db_bitio_pool
         .query(
           "SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 0 AND (cid = $2 OR ep = $3)",
-          [Date.now() / 1000, cid, ep_id]
+          [Math.round(Number(new Date()) / 1000), cid, ep_id]
         )
         .then((res) =>
           res.rows[0]?.data ? JSON.parse(res.rows[0]?.data) : undefined
@@ -113,7 +113,7 @@ const addNewCache = async (
     : JSON.stringify(res_data); //尝试解除下载速度限制
   const deadline = Number(
     (res_data_str.match(/deadline=[^&]*/) || [""])[0].slice(9) ||
-      (Date.now() + env.cache_time) / 1000
+      Math.round((Number(new Date()) + env.cache_time) / 1000)
   );
 
   if (env.db_local_enabled) {
