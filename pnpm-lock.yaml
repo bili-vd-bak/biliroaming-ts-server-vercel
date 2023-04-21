@@ -4,9 +4,18 @@ dependencies:
   '@beetcb/sstore':
     specifier: ^0.3.0
     version: registry.npmmirror.com/@beetcb/sstore@0.3.0
+  dns:
+    specifier: file:./dns
+    version: file:dns
+  fs:
+    specifier: file:./fs
+    version: file:fs
   js-md5:
     specifier: ^0.7.3
     version: registry.npmmirror.com/js-md5@0.7.3
+  net:
+    specifier: file:./net
+    version: file:net
   next:
     specifier: ^13.3.0
     version: registry.npmmirror.com/next@13.3.0(react-dom@18.2.0)(react@18.2.0)
@@ -15,7 +24,10 @@ dependencies:
     version: registry.npmmirror.com/node-fetch@3.3.1
   pg:
     specifier: ^8.10.0
-    version: registry.npmmirror.com/pg@8.10.0
+    version: registry.npmmirror.com/pg@8.10.0(pg-native@undefined)
+  pg-native:
+    specifier: file:./pg-native
+    version: file:pg-native
   qs:
     specifier: ^6.11.1
     version: registry.npmmirror.com/qs@6.11.1
@@ -25,6 +37,9 @@ dependencies:
   react-dom:
     specifier: ^18.2.0
     version: registry.npmmirror.com/react-dom@18.2.0(react@18.2.0)
+  tls:
+    specifier: file:./tls
+    version: file:tls
 
 devDependencies:
   '@types/js-md5':
@@ -50,6 +65,31 @@ devDependencies:
     version: registry.npmmirror.com/typescript@5.0.4
 
 packages:
+
+  file:dns:
+    resolution: {directory: dns, type: directory}
+    name: dns
+    dev: false
+
+  file:fs:
+    resolution: {directory: fs, type: directory}
+    name: fs
+    dev: false
+
+  file:net:
+    resolution: {directory: net, type: directory}
+    name: net
+    dev: false
+
+  file:pg-native:
+    resolution: {directory: pg-native, type: directory}
+    name: pg-native
+    dev: false
+
+  file:tls:
+    resolution: {directory: tls, type: directory}
+    name: tls
+    dev: false
 
   registry.npmmirror.com/@beetcb/sstore@0.3.0:
     resolution: {integrity: sha512-WcdBaYkLCwsHxi25b8ApREeeYcYowWLqtjEWXmraEg7Y90L7+NUn/rh3ycJ0vKUqXo8gidqPrgZGRRZYpIRt0A==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@beetcb/sstore/-/sstore-0.3.0.tgz}
@@ -2062,7 +2102,7 @@ packages:
     peerDependencies:
       pg: '>=8.0'
     dependencies:
-      pg: registry.npmmirror.com/pg@8.10.0
+      pg: registry.npmmirror.com/pg@8.10.0(pg-native@undefined)
     dev: false
 
   registry.npmmirror.com/pg-protocol@1.6.0:
@@ -2082,8 +2122,9 @@ packages:
       postgres-date: registry.npmmirror.com/postgres-date@1.0.7
       postgres-interval: registry.npmmirror.com/postgres-interval@1.2.0
 
-  registry.npmmirror.com/pg@8.10.0:
+  registry.npmmirror.com/pg@8.10.0(pg-native@undefined):
     resolution: {integrity: sha512-ke7o7qSTMb47iwzOSaZMfeR7xToFdkE71ifIipOAAaLIM0DYzfOAXlgFFmYUIE2BcJtvnVlGCID84ZzCegE8CQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/pg/-/pg-8.10.0.tgz}
+    id: registry.npmmirror.com/pg/8.10.0
     name: pg
     version: 8.10.0
     engines: {node: '>= 8.0.0'}
@@ -2096,6 +2137,7 @@ packages:
       buffer-writer: registry.npmmirror.com/buffer-writer@2.0.0
       packet-reader: registry.npmmirror.com/packet-reader@1.0.0
       pg-connection-string: registry.npmmirror.com/pg-connection-string@2.5.0
+      pg-native: file:pg-native
       pg-pool: registry.npmmirror.com/pg-pool@3.6.0(pg@8.10.0)
       pg-protocol: registry.npmmirror.com/pg-protocol@1.6.0
       pg-types: registry.npmmirror.com/pg-types@2.2.0

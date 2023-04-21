@@ -4,7 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
     "lint": "next lint"
@@ -26,6 +26,11 @@
     "js-md5": "^0.7.3",
     "next": "^13.3.0",
     "node-fetch": "^3.3.1",
+    "pg-native": "file:./pg-native",
+    "net": "file:./net",
+    "tls": "file:./tls",
+    "fs": "file:./fs",
+    "dns": "file:./dns",
     "pg": "^8.10.0",
     "qs": "^6.11.1",
     "react": "^18.2.0",

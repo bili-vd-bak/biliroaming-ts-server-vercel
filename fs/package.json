@@ -1,0 +1,5 @@
+{
+  "name": "fs",
+  "private": true,
+  "main": "index.js"
+}
