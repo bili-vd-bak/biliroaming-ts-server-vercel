@@ -8,6 +8,7 @@
 
 - 支持软件：BiliRoaming、油猴脚本、哔哩(Bili.uwp)、BBDown
 - 支持仅Cookie鉴权(目前未发现其他支持此功能服务)
+- 尝试解除下载速度限制(方法见[BiliRoaming](https://github.com/yujincheng08/BiliRoaming/pull/1045/commits/bb8bbc5bd0fdb2b61b23f957658ebf7cb064e30f))
 - 代理HK地区番剧(目前Vercel仅提供`hkg1`节点)
 - 搜索替换(配置中fs开头配置)
 - 自部署黑/白名单(使用NOTION/PostgreSQL作数据库)
@@ -69,6 +70,7 @@ pnpm i
 
 ## TODO
 
+- 提供自动初始化数据库能力
 - [BETA]Vercel支持新加坡节点，可以为东南亚地区解锁。(然后就被风控用不了了)  
 
 ## 开源信息

@@ -176,10 +176,15 @@ export const fs_episodes_web = [
 ];
 //============================================================
 
+//===========================小工具============================
+//尝试解除下载速度限制(替换下载链接中bw=1280000),略影响性能
+export const try_unblock_CDN_speed_enabled: io = 0;
+//============================================================
+
 //===========================数据库============================
 //支持 本地模式(日志、缓存)、NOTION(日志、黑名单)、PostgreSOL(日志、缓存、黑名单)
 //注：本地模式 与 PostgreSQL 优先本地
-//缓存时间 单位：分钟(min) 需打开缓存数据库
+//缓存时间 单位：15分钟(min) 需打开缓存数据库 仅当deadline不存在时生效
 export const cache_time = 1000 * 60 * 15;
 //本地模式设置
 //本地模式开关
@@ -188,7 +193,7 @@ export const db_local_enabled: io = 1;
 export const local_cache_secret = process.env.local_cache_secret || "";
 //PostgreSQL配置(需Read/Write权限)
 import { Pool } from "pg"; //导入(不用改)
-export const db_bitio_enabled: io = 1; //启用postgresql数据库
+export const db_bitio_enabled: io = 0; //启用postgresql数据库
 const connectionString =
   process.env.db_bitio_pool ||
   "postgresql://用户名:秘钥@服务器域名:端口/数据库名"; //配置数据库链接
@@ -225,7 +230,7 @@ export const public_blacklist: string = "https://black.qimo.ink/api/users/";
 //要求登录 1-开 0-关
 export const need_login: io = 1;
 //允许WEB版使用 1-开 0-关
-export const web_on: io = 1;
+export const web_on: io = 0;
 //限制哔哩漫游最低版本 填写数字 0-不限制
 //1110为1.6.10的版本号
 export const ver_min: number = 1110;
@@ -268,5 +273,5 @@ export const log = {
 //============================================================
 
 //===================信息展示(不用改)===========================
-export const version = "2.2.3";
+export const version = "2.2.5";
 //============================================================
