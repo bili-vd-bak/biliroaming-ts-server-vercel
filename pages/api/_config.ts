@@ -188,17 +188,11 @@ export const db_local_enabled: io = 1;
 export const local_cache_secret = process.env.local_cache_secret || "";
 //PostgreSQL配置(需Read/Write权限)
 import { Pool } from "pg"; //导入(不用改)
-export const db_bitio_enabled: io = 0;
-export const db_bitio_pool = new Pool(
-  JSON.parse(process.env.db_bitio_pool) || {
-    user: "GettingStarted",
-    host: "db.bit.io",
-    database: "dliden/2020_Census_Reapportionment", // public database
-    password: "<bitio_key>", // key from bit.io database page connect menu
-    port: 5432,
-    ssl: true,
-  }
-);
+export const db_bitio_enabled: io = 1; //启用postgresql数据库
+const connectionString =
+  process.env.db_bitio_pool ||
+  "postgresql://用户名:秘钥@服务器域名:端口/数据库名"; //配置数据库链接
+export const db_bitio_pool = new Pool({ connectionString, ssl: true }); //导出(不用改)
 //NOTION数据库配置
 //NOTION KEY
 export const NOTION_KEY =
@@ -231,7 +225,7 @@ export const public_blacklist: string = "https://black.qimo.ink/api/users/";
 //要求登录 1-开 0-关
 export const need_login: io = 1;
 //允许WEB版使用 1-开 0-关
-export const web_on: io = 0;
+export const web_on: io = 1;
 //限制哔哩漫游最低版本 填写数字 0-不限制
 //1110为1.6.10的版本号
 export const ver_min: number = 1110;
