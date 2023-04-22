@@ -1,6 +1,5 @@
 //import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { NextApiRequest, NextApiResponse } from "next";
-import fetch from "node-fetch";
 
 const api = "https://api.bilibili.com";
 
