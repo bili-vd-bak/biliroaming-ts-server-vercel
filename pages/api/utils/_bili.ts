@@ -13,7 +13,6 @@ type cookies = Partial<{
 }>;
 //Next Type End
 
-import fetch from "node-fetch";
 import qs from "qs";
 import md5 from "js-md5";
 import * as env from "../_config";
