@@ -1,4 +1,3 @@
-import fetch from 'node-fetch'
 import * as env from '../../_config'
 
 export const query = async (db: string, require: string) => {
