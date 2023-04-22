@@ -17,21 +17,21 @@
     "@types/pg": "^8.6.6",
     "@types/qs": "^6.9.7",
     "@types/react": "18.0.26",
-    "@vercel/node": "^2.10.3",
+    "@vercel/node": "^2.12.0",
     "typescript": "^5.0.4"
   },
   "dependencies": {
     "@beetcb/sstore": "^0.3.0",
-    "dns": "file:./dns",
-    "fs": "file:./fs",
+    "dns": "file:dns",
+    "fs": "file:fs",
     "js-md5": "^0.7.3",
-    "net": "file:./net",
-    "next": "^13.3.0",
+    "net": "file:net",
+    "next": "^13.3.1",
     "pg": "^8.10.0",
-    "pg-native": "file:./pg-native",
+    "pg-native": "file:pg-native",
     "qs": "^6.11.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "tls": "file:./tls"
+    "tls": "file:tls"
   }
 }
