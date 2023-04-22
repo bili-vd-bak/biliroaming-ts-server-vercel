@@ -1,136 +1,10 @@
 import qs from "qs";
-import fetch from "node-fetch";
 import * as env from "../../../../_config";
 import * as blacklist from "../../../../utils/_blacklist";
 import * as db from "../../../../utils/_sstore";
 import * as db_notion from "../../../../utils/notion-database/_db";
 import * as bili from "../../../../utils/_bili";
-
-const addNewLog_bitio = async (data: {
-  access_key: string;
-  UID: number;
-  vip_type: 0 | 1 | 2;
-  url: string;
-}) => {
-  if (!env.db_bitio_enabled) return;
-  await env.db_bitio_pool.query(
-    "INSERT INTO log (access_key,uid,vip_type,url,visit_time) VALUES ($1,$2,$3,$4,$5)",
-    [data.access_key, data.UID, data.vip_type, data.url, Date.now()]
-  );
-  return;
-};
-
-const addNewLog_notion = async (data: any) => {
-  if (!env.db_NOTION_log) return;
-  const res = await db_notion.update(
-    env.db_NOTION_log,
-    JSON.stringify({
-      parent: { database_id: env.db_NOTION_log },
-      properties: {
-        access_key: {
-          id: "title",
-          type: "title",
-          title: [
-            {
-              type: "text",
-              text: { content: data.access_key },
-              plain_text: data.access_key,
-            },
-          ],
-        },
-        UID: {
-          number: data.UID,
-        },
-        vip_type: {
-          number: data.vip_type,
-        },
-        url: {
-          rich_text: [
-            { type: "text", text: { content: data.url }, plain_text: data.url },
-          ],
-        },
-        visit_time: {
-          number: Date.now(),
-        },
-      },
-    })
-  );
-  return res;
-};
-
-const readCache = async (
-  cid: number,
-  ep_id: number,
-  info: { uid: number; vip_type: 0 | 1 | 2 }
-) => {
-  env.log.str("读取缓存", "尝试中");
-  let c_vip: Object | null | undefined;
-  if (env.db_local_enabled) c_vip = await db.get(`c-vip-${cid}-${ep_id}`);
-  else if (env.db_bitio_enabled)
-    c_vip = await env.db_bitio_pool
-      .query(
-        "SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 1 AND (cid = $2 OR ep = $3)",
-        [Math.round(Number(new Date()) / 1000), cid, ep_id]
-      )
-      .then((res) => res.rows[0]?.data || undefined);
-  if (c_vip) {
-    if (info.vip_type !== 0) return c_vip;
-    else if (
-      env.whitelist_vip_enabled &&
-      (await blacklist.main(info.uid)).data?.is_whitelist
-    )
-      return c_vip;
-  } else {
-    let c_normal: Object | null | undefined;
-    if (env.db_local_enabled) c_normal = await db.get(`c-${cid}-${ep_id}`);
-    else if (env.db_bitio_enabled)
-      c_normal = await env.db_bitio_pool
-        .query(
-          "SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 0 AND (cid = $2 OR ep = $3)",
-          [Math.round(Number(new Date()) / 1000), cid, ep_id]
-        )
-        .then((res) => res.rows[0]?.data || undefined);
-    return c_normal;
-  }
-};
-
-const addNewCache = async (
-  url_data: string,
-  res_data: { code?: number; has_paid?: any }
-) => {
-  if (!env.db_local_enabled && !env.db_bitio_enabled) return;
-
-  const need_vip = res_data.has_paid ? 1 : 0;
-  const url = new URL(url_data, env.api.main.app.playurl);
-  const data = qs.parse(url.search.slice(1));
-  const res_data_str = env.try_unblock_CDN_speed_enabled
-    ? JSON.stringify(res_data).replace(/bw=[^&]*/g, "bw=1280000")
-    : JSON.stringify(res_data); //尝试解除下载速度限制
-  const deadline = Number(
-    (res_data_str.match(/deadline=[^&]*/) || [""])[0].slice(9) ||
-      Math.round((Number(new Date()) + env.cache_time) / 1000)
-  );
-
-  if (env.db_local_enabled) {
-    if (need_vip)
-      db.set(
-        `c-vip-${Number(data.cid)}-${Number(data.ep_id)}`,
-        res_data_str,
-        deadline
-      );
-    else
-      db.set(
-        `c-${Number(data.cid)}-${Number(data.ep_id)}`,
-        res_data_str,
-        deadline
-      );
-  } else if (env.db_bitio_enabled) {
-    await env.db_bitio_pool.query(
-      "INSERT INTO cache (need_vip,exp,cid,ep,data) VALUES ($1,$2,$3,$4,$5)",
-      [need_vip, deadline, Number(data.cid), Number(data.ep_id), res_data]
-    );
-  }
-};
+import * as playerUtil from "../../../../utils/_player";
 
 const checkBlackList = async (uid: number): Promise<[boolean, number]> => {
   //黑白名单验证
@@ -192,13 +66,13 @@ export const middleware = async (
     vip_type: info.vip_type,
     url: url_data,
   });
-  await addNewLog_bitio({
+  await playerUtil.addNewLog_bitio({
     access_key: (data.access_key as string) || access_key,
     UID: info.uid,
     vip_type: info.vip_type,
     url: url_data,
   });
-  await addNewLog_notion({
+  await playerUtil.addNewLog_notion({
     access_key: (data.access_key as string) || access_key,
     UID: info.uid,
     vip_type: info.vip_type,
@@ -220,7 +94,11 @@ export const main = async (url_data: string, cookies) => {
     info = await bili.access_key2info(
       (data.access_key as string) || access_key
     );
-    const rCache = await readCache(Number(data.cid), Number(data.ep_id), info);
+    const rCache = await playerUtil.readCache(
+      Number(data.cid),
+      Number(data.ep_id),
+      info
+    );
     if (rCache) return { code: 0, message: "success", result: rCache };
     else {
       const res = (await fetch(
@@ -228,7 +106,7 @@ export const main = async (url_data: string, cookies) => {
           url_data +
           (access_key ? "&access_key=" + access_key : "")
       ).then((res) => res.json())) as { code: number; result: object };
-      if (res.code === 0) await addNewCache(url_data, res?.result);
+      if (res.code === 0) await playerUtil.addNewCache(url_data, res?.result);
       return env.try_unblock_CDN_speed_enabled
         ? JSON.parse(JSON.stringify(res).replace(/bw=[^&]*/g, "bw=1280000"))
         : res; //尝试解除下载速度限制
@@ -237,7 +115,7 @@ export const main = async (url_data: string, cookies) => {
     const res = (await fetch(env.api.main.web.playurl + url_data, {
       headers: { cookie: bili.cookies2usable(cookies) },
     }).then((res) => res.json())) as { code: number; result: object };
-    if (res.code === 0) await addNewCache(url_data, res?.result);
+    if (res.code === 0) await playerUtil.addNewCache(url_data, res?.result);
     return env.try_unblock_CDN_speed_enabled
       ? JSON.parse(JSON.stringify(res).replace(/bw=[^&]*/g, "bw=1280000"))
       : res; //尝试解除下载速度限制

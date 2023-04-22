@@ -1,5 +1,4 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import fetch from "node-fetch";
 import * as env from "../../../../../_config";
 
 const api = env.api.main.app.season_info;
