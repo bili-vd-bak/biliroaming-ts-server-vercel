@@ -1,6 +1,5 @@
 // import type { VercelRequest, VercelResponse } from "@vercel/node";
 import type { NextApiRequest, NextApiResponse } from "next";
-import fetch from "node-fetch";
 import * as env from "../../../../_config";
 import { getCookies } from "../../../../utils/_bili";
 
