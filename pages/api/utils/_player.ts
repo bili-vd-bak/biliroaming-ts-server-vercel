@@ -88,6 +88,7 @@ export const readCache = async (
           [Math.round(Number(new Date()) / 1000), cid, ep_id]
         )
         .then((res) => res.rows[0]?.data || undefined);
+    if (!c_normal) await delExpCache(cid, ep_id); //删除过时缓存
     return c_normal;
   }
 };
@@ -128,4 +129,24 @@ export const addNewCache = async (
       [need_vip, deadline, Number(data.cid), Number(data.ep_id), res_data]
     );
   }
+};
+
+export const delExpCache = async (
+  cid?: number | undefined | null,
+  ep_id?: number | undefined | null
+) => {
+  if (cid || ep_id)
+    await env.db_bitio_pool
+      .query("DELETE FROM cache WHERE exp <= $1 AND (cid = $2 OR ep = $3)", [
+        Math.round(Number(new Date()) / 1000),
+        Number(cid),
+        Number(ep_id),
+      ])
+      .then(() => env.log.str("删除过时缓存", `cid:${cid},ep_id:${ep_id}`));
+  else
+    await env.db_bitio_pool
+      .query("DELETE FROM cache WHERE exp <= $1", [
+        Math.round(Number(new Date()) / 1000),
+      ])
+      .then(() => env.log.str("删除所有过时缓存", "尝试中"));
 };
