@@ -135,18 +135,9 @@ export const delExpCache = async (
   cid?: number | undefined | null,
   ep_id?: number | undefined | null
 ) => {
-  if (cid || ep_id)
-    await env.db_bitio_pool
-      .query("DELETE FROM cache WHERE exp <= $1 AND (cid = $2 OR ep = $3)", [
-        Math.round(Number(new Date()) / 1000),
-        Number(cid),
-        Number(ep_id),
-      ])
-      .then(() => env.log.str("删除过时缓存", `cid:${cid},ep_id:${ep_id}`));
-  else
-    await env.db_bitio_pool
-      .query("DELETE FROM cache WHERE exp <= $1", [
-        Math.round(Number(new Date()) / 1000),
-      ])
-      .then(() => env.log.str("删除所有过时缓存", "尝试中"));
+  await env.db_bitio_pool
+    .query("DELETE FROM cache WHERE exp <= $1", [
+      Math.round(Number(new Date()) / 1000),
+    ])
+    .then(() => env.log.str("删除所有过时缓存", "尝试中"));
 };
