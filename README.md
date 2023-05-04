@@ -71,6 +71,8 @@ pnpm i
 
 ## TODO
 
+- Vercel Storage 的 Redis KV支持
+- pg管理数据库(管理黑白名单、查看日志)接口
 - [BETA]Vercel支持新加坡节点，可以为东南亚地区解锁。(然后就被风控用不了了)  
 
 ## 开源信息
