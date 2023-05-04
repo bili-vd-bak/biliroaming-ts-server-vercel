@@ -28,6 +28,7 @@
 先Fork到自己的仓库，再修改自己仓库里`pages/api/_config.ts`，  
 修改`vercel.json`的`regions`：若需代理hk香港地区，则填写`hkg1`(默认)；若需代理th东南亚地区(只有泰国地区可完整解锁)，则填写`sin1`。  
 注册[Vercel](https://vercel.com)，导入本项目，在设置中配置 域名和环境变量。  
+若需使用Vercel Storage的Postgresql数据库，请连接至此项目；或使用其它pg数据库。重部署后访问`https://{yourDomain}/api/admin/init?s=${配置填写的secret}`，并检查数据库是否已有`blacklist` `cache` `log`三个表。
 Tips: 环境变量设置后需下一次部署才可启用，故推荐导入时提前设置。  
 
 ### 本地
@@ -70,7 +71,6 @@ pnpm i
 
 ## TODO
 
-- 提供自动初始化数据库能力
 - [BETA]Vercel支持新加坡节点，可以为东南亚地区解锁。(然后就被风控用不了了)  
 
 ## 开源信息

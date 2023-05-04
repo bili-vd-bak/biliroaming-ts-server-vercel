@@ -194,8 +194,9 @@ export const local_cache_secret = process.env.local_cache_secret || "";
 //PostgreSQL配置(需Read/Write权限)
 import { Pool } from "pg"; //导入(不用改)
 export const db_bitio_enabled: io = 0; //启用postgresql数据库
-const connectionString =
-  process.env.db_bitio_pool ||
+const connectionString = //三种配置方法
+  process.env.POSTGRES_URL || //在Vercel项目Storage里连接数据库，并将上方 db_bitio_enabled 设为1
+  process.env.db_bitio_pool || //配置环境变量 db_bitio_pool 为下方格式
   "postgresql://用户名:秘钥@服务器域名:端口/数据库名"; //配置数据库链接
 export const db_bitio_pool = new Pool({ connectionString, ssl: true }); //导出(不用改)
 //NOTION数据库配置
