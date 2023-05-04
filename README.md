@@ -76,7 +76,7 @@ pnpm i
 ## 开源信息
 
 - [Next.js](https://nextjs.org/)
+- pg
 - js-md5
 - qs
-- node-fetch
 - @beetcb/sstore
