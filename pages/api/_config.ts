@@ -232,6 +232,9 @@ export const public_blacklist: string = "https://black.qimo.ink/api/users/";
 export const need_login: io = 1;
 //允许WEB版使用(B站官网可直接请求,无需开启此选项) 1-开 0-关
 export const web_on: io = 0;
+//允许Referer为 https://www.bilibili.com 的请求而无需打开web_on (解决BBDown问题) 1-开 0-关
+//用BBDown的打开此选项
+export const pass_web_on_check: io = 1;
 //限制哔哩漫游最低版本 填写数字 0-不限制
 //1110为1.6.10的版本号
 export const ver_min: number = 1110;
