@@ -22,16 +22,12 @@
   },
   "dependencies": {
     "@beetcb/sstore": "^0.3.0",
-    "dns": "file:dns",
-    "fs": "file:fs",
+    "@neondatabase/serverless": "^0.4.20",
     "js-md5": "^0.7.3",
     "net": "file:net",
     "next": "^13.4.7",
-    "pg": "^8.11.0",
-    "pg-native": "file:pg-native",
     "qs": "^6.11.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "tls": "file:tls"
+    "react-dom": "^18.2.0"
   }
 }
