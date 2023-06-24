@@ -24,7 +24,6 @@
     "@beetcb/sstore": "^0.3.0",
     "@neondatabase/serverless": "^0.4.20",
     "js-md5": "^0.7.3",
-    "net": "file:net",
     "next": "^13.4.7",
     "qs": "^6.11.2",
     "react": "^18.2.0",
