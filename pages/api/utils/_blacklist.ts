@@ -7,25 +7,22 @@ export const addNewUser = async (
   reason = "",
   ban_until = 0
 ) => {
-  const res = await env.db_bitio_pool.query(
-    "INSERT INTO blacklist (uid,type,reason,ban_until) VALUES ($1,$2,$3,$4)",
-    [UID, type, reason, ban_until]
-  );
+  const res =
+    await env.db_bitio_pool`INSERT INTO blacklist (uid,type,reason,ban_until) VALUES (${UID},${type},${reason},${ban_until})`;
   return res;
 };
 
 export const format_bitio = async (UID: number) => {
-  const data = await env.db_bitio_pool
-    .query("SELECT * FROM blacklist WHERE uid = $1", [UID])
-    .then((res) => res.rows[0]);
+  const data =
+    await env.db_bitio_pool`SELECT * FROM blacklist WHERE uid = ${UID}`.then(
+      (res) => res[0]
+    );
   console.log(data);
   if (data) {
     if (data.type == 1)
-      await env.db_bitio_pool
-        .query("DELETE FROM blacklist WHERE ban_until <= $1 AND type = 1", [
-          Date.now(),
-        ])
-        .then((res) => console.log(res));
+      await env.db_bitio_pool`DELETE FROM blacklist WHERE ban_until <= ${Date.now()} AND type = 1`.then(
+        (res) => console.log(res)
+      );
     return {
       code: 0,
       message: "",

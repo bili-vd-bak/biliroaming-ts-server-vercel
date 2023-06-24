@@ -11,10 +11,9 @@ export const addNewLog_bitio = async (data: {
   url: string;
 }) => {
   if (!env.db_bitio_enabled) return;
-  await env.db_bitio_pool.query(
-    "INSERT INTO log (access_key,uid,vip_type,url,visit_time) VALUES ($1,$2,$3,$4,$5)",
-    [data.access_key, data.UID, data.vip_type, data.url, Date.now()]
-  );
+  await env.db_bitio_pool`INSERT INTO log (access_key,uid,vip_type,url,visit_time) VALUES (${
+    data.access_key
+  },${data.UID},${data.vip_type},${data.url},${Date.now()})`;
   return;
 };
 
@@ -65,12 +64,12 @@ export const readCache = async (
   let c_vip: Object | null | undefined;
   if (env.db_local_enabled) c_vip = await db.get(`c-vip-${cid}-${ep_id}`);
   else if (env.db_bitio_enabled)
-    c_vip = await env.db_bitio_pool
-      .query(
-        "SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 1 AND (cid = $2 OR ep = $3)",
-        [Math.round(Number(new Date()) / 1000), cid, ep_id]
-      )
-      .then((res) => res.rows[0]?.data || undefined);
+    c_vip =
+      await env.db_bitio_pool`SELECT (data) FROM cache WHERE exp >= ${Math.round(
+        Number(new Date()) / 1000
+      )} AND need_vip = 1 AND (cid = ${cid} OR ep = ${ep_id})`.then(
+        (res) => res[0]?.data || undefined
+      );
   if (c_vip) {
     if (info.vip_type !== 0) return c_vip;
     else if (
@@ -82,12 +81,12 @@ export const readCache = async (
     let c_normal: Object | null | undefined;
     if (env.db_local_enabled) c_normal = await db.get(`c-${cid}-${ep_id}`);
     else if (env.db_bitio_enabled)
-      c_normal = await env.db_bitio_pool
-        .query(
-          "SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 0 AND (cid = $2 OR ep = $3)",
-          [Math.round(Number(new Date()) / 1000), cid, ep_id]
-        )
-        .then((res) => res.rows[0]?.data || undefined);
+      c_normal =
+        await env.db_bitio_pool`SELECT (data) FROM cache WHERE exp >= ${Math.round(
+          Number(new Date()) / 1000
+        )} AND need_vip = 0 AND (cid = ${cid} OR ep = ${ep_id})`.then(
+          (res) => res[0]?.data || undefined
+        );
     if (!c_normal) await delExpCache(cid, ep_id); //删除过时缓存
     return c_normal;
   }
@@ -124,9 +123,10 @@ export const addNewCache = async (
         deadline
       );
   } else if (env.db_bitio_enabled) {
-    await env.db_bitio_pool.query(
-      "INSERT INTO cache (need_vip,exp,cid,ep,data) VALUES ($1,$2,$3,$4,$5)",
-      [need_vip, deadline, Number(data.cid), Number(data.ep_id), res_data]
+    await env.db_bitio_pool.unsafe(
+      `INSERT INTO cache (need_vip,exp,cid,ep,data) VALUES (${need_vip},${deadline},${Number(
+        data.cid
+      )},${Number(data.ep_id)},${res_data})`
     );
   }
 };
@@ -135,9 +135,7 @@ export const delExpCache = async (
   cid?: number | undefined | null,
   ep_id?: number | undefined | null
 ) => {
-  await env.db_bitio_pool
-    .query("DELETE FROM cache WHERE exp <= $1", [
-      Math.round(Number(new Date()) / 1000),
-    ])
-    .then(() => env.log.str("删除所有过时缓存", "尝试中"));
+  await env.db_bitio_pool`DELETE FROM cache WHERE exp <= ${Math.round(
+    Number(new Date()) / 1000
+  )}`.then(() => env.log.str("删除所有过时缓存", "尝试中"));
 };

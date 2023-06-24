@@ -8,9 +8,6 @@ dependencies:
   '@beetcb/sstore':
     specifier: ^0.3.0
     version: registry.npmmirror.com/@beetcb/sstore@0.3.0
-  dns:
-    specifier: file:dns
-    version: file:dns
   fs:
     specifier: file:fs
     version: file:fs
@@ -23,12 +20,9 @@ dependencies:
   next:
     specifier: ^13.4.7
     version: registry.npmmirror.com/next@13.4.7(react-dom@18.2.0)(react@18.2.0)
-  pg:
-    specifier: ^8.11.0
-    version: registry.npmmirror.com/pg@8.11.0(pg-native@undefined)
-  pg-native:
-    specifier: file:pg-native
-    version: file:pg-native
+  postgres:
+    specifier: ^3.3.5
+    version: registry.npmmirror.com/postgres@3.3.5
   qs:
     specifier: ^6.11.2
     version: registry.npmmirror.com/qs@6.11.2
@@ -64,11 +58,6 @@ devDependencies:
 
 packages:
 
-  file:dns:
-    resolution: {directory: dns, type: directory}
-    name: dns
-    dev: false
-
   file:fs:
     resolution: {directory: fs, type: directory}
     name: fs
@@ -77,11 +66,6 @@ packages:
   file:net:
     resolution: {directory: net, type: directory}
     name: net
-    dev: false
-
-  file:pg-native:
-    resolution: {directory: pg-native, type: directory}
-    name: pg-native
     dev: false
 
   file:tls:
@@ -753,13 +737,6 @@ packages:
     resolution: {integrity: sha512-VO9Ht/+p3SN7SKWqcrgEzjGbRSJYTx+Q1pTQC0wrWqHx0vpJraQ6GtHx8tvcg1rlK1byhU5gccxgOgj7B0TDkQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/buffer-crc32/-/buffer-crc32-0.2.13.tgz}
     name: buffer-crc32
     version: 0.2.13
-    dev: false
-
-  registry.npmmirror.com/buffer-writer@2.0.0:
-    resolution: {integrity: sha512-a7ZpuTZU1TRtnwyCNW3I5dc0wWNC3VR9S++Ewyk2HHZdrO3CQJqSpd+95Us590V6AL7JqUAH2IwZ/398PmNFgw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/buffer-writer/-/buffer-writer-2.0.0.tgz}
-    name: buffer-writer
-    version: 2.0.0
-    engines: {node: '>=4'}
     dev: false
 
   registry.npmmirror.com/buffer@5.7.1:
@@ -2064,12 +2041,6 @@ packages:
     engines: {node: '>=6'}
     dev: false
 
-  registry.npmmirror.com/packet-reader@1.0.0:
-    resolution: {integrity: sha512-HAKu/fG3HpHFO0AA8WE8q2g+gBJaZ9MG7fcKk+IJPLTGAD6Psw4443l+9DGRbOIh3/aXr7Phy0TjilYivJo5XQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/packet-reader/-/packet-reader-1.0.0.tgz}
-    name: packet-reader
-    version: 1.0.0
-    dev: false
-
   registry.npmmirror.com/parse-ms@2.1.0:
     resolution: {integrity: sha512-kHt7kzLoS9VBZfUsiKjv43mr91ea+U05EyKkEtqp7vNbHxmaVuEqN7XxeEVnGrMtYOAxGrDElSi96K7EgO1zCA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/parse-ms/-/parse-ms-2.1.0.tgz}
     name: parse-ms
@@ -2116,25 +2087,12 @@ packages:
     version: 2.1.0
     dev: false
 
-  registry.npmmirror.com/pg-cloudflare@1.1.0:
-    resolution: {integrity: sha512-tGM8/s6frwuAIyRcJ6nWcIvd3+3NmUKIs6OjviIm1HPPFEt5MzQDOTBQyhPWg/m0kCl95M6gA1JaIXtS8KovOA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/pg-cloudflare/-/pg-cloudflare-1.1.0.tgz}
-    name: pg-cloudflare
-    version: 1.1.0
-    requiresBuild: true
-    dev: false
-    optional: true
-
-  registry.npmmirror.com/pg-connection-string@2.6.0:
-    resolution: {integrity: sha512-x14ibktcwlHKoHxx9X3uTVW9zIGR41ZB6QNhHb21OPNdCCO3NaRnpJuwKIQSR4u+Yqjx4HCvy7Hh7VSy1U4dGg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/pg-connection-string/-/pg-connection-string-2.6.0.tgz}
-    name: pg-connection-string
-    version: 2.6.0
-    dev: false
-
   registry.npmmirror.com/pg-int8@1.0.1:
     resolution: {integrity: sha512-WCtabS6t3c8SkpDBUlb1kjOs7l66xsGdKpIPZsg4wR+B3+u9UAum2odSsF9tnvxg80h4ZxLWMy4pRjOsFIqQpw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/pg-int8/-/pg-int8-1.0.1.tgz}
     name: pg-int8
     version: 1.0.1
     engines: {node: '>=4.0.0'}
+    dev: true
 
   registry.npmmirror.com/pg-numeric@1.0.2:
     resolution: {integrity: sha512-BM/Thnrw5jm2kKLE5uJkXqqExRUY/toLHda65XgFTBTFYZyopbKjBe29Ii3RbkvlsMoFwD+tHeGaCjjv0gHlyw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/pg-numeric/-/pg-numeric-1.0.2.tgz}
@@ -2143,34 +2101,11 @@ packages:
     engines: {node: '>=4'}
     dev: true
 
-  registry.npmmirror.com/pg-pool@3.6.0(pg@8.11.0):
-    resolution: {integrity: sha512-clFRf2ksqd+F497kWFyM21tMjeikn60oGDmqMT8UBrynEwVEX/5R5xd2sdvdo1cZCFlguORNpVuqxIj+aK4cfQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/pg-pool/-/pg-pool-3.6.0.tgz}
-    id: registry.npmmirror.com/pg-pool/3.6.0
-    name: pg-pool
-    version: 3.6.0
-    peerDependencies:
-      pg: '>=8.0'
-    dependencies:
-      pg: registry.npmmirror.com/pg@8.11.0(pg-native@undefined)
-    dev: false
-
   registry.npmmirror.com/pg-protocol@1.6.0:
     resolution: {integrity: sha512-M+PDm637OY5WM307051+bsDia5Xej6d9IR4GwJse1qA1DIhiKlksvrneZOYQq42OM+spubpcNYEo2FcKQrDk+Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/pg-protocol/-/pg-protocol-1.6.0.tgz}
     name: pg-protocol
     version: 1.6.0
-
-  registry.npmmirror.com/pg-types@2.2.0:
-    resolution: {integrity: sha512-qTAAlrEsl8s4OiEQY69wDvcMIdQN6wdz5ojQiOy6YRMuynxenON0O5oCpJI6lshc6scgAY8qvJ2On/p+CXY0GA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/pg-types/-/pg-types-2.2.0.tgz}
-    name: pg-types
-    version: 2.2.0
-    engines: {node: '>=4'}
-    dependencies:
-      pg-int8: registry.npmmirror.com/pg-int8@1.0.1
-      postgres-array: registry.npmmirror.com/postgres-array@2.0.0
-      postgres-bytea: registry.npmmirror.com/postgres-bytea@1.0.0
-      postgres-date: registry.npmmirror.com/postgres-date@1.0.7
-      postgres-interval: registry.npmmirror.com/postgres-interval@1.2.0
-    dev: false
+    dev: true
 
   registry.npmmirror.com/pg-types@4.0.1:
     resolution: {integrity: sha512-hRCSDuLII9/LE3smys1hRHcu5QGcLs9ggT7I/TCs0IE+2Eesxi9+9RWAAwZ0yaGjxoWICF/YHLOEjydGujoJ+g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/pg-types/-/pg-types-4.0.1.tgz}
@@ -2186,38 +2121,6 @@ packages:
       postgres-interval: registry.npmmirror.com/postgres-interval@3.0.0
       postgres-range: registry.npmmirror.com/postgres-range@1.1.3
     dev: true
-
-  registry.npmmirror.com/pg@8.11.0(pg-native@undefined):
-    resolution: {integrity: sha512-meLUVPn2TWgJyLmy7el3fQQVwft4gU5NGyvV0XbD41iU9Jbg8lCH4zexhIkihDzVHJStlt6r088G6/fWeNjhXA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/pg/-/pg-8.11.0.tgz}
-    id: registry.npmmirror.com/pg/8.11.0
-    name: pg
-    version: 8.11.0
-    engines: {node: '>= 8.0.0'}
-    peerDependencies:
-      pg-native: '>=3.0.1'
-    peerDependenciesMeta:
-      pg-native:
-        optional: true
-    dependencies:
-      buffer-writer: registry.npmmirror.com/buffer-writer@2.0.0
-      packet-reader: registry.npmmirror.com/packet-reader@1.0.0
-      pg-connection-string: registry.npmmirror.com/pg-connection-string@2.6.0
-      pg-native: file:pg-native
-      pg-pool: registry.npmmirror.com/pg-pool@3.6.0(pg@8.11.0)
-      pg-protocol: registry.npmmirror.com/pg-protocol@1.6.0
-      pg-types: registry.npmmirror.com/pg-types@2.2.0
-      pgpass: registry.npmmirror.com/pgpass@1.0.5
-    optionalDependencies:
-      pg-cloudflare: registry.npmmirror.com/pg-cloudflare@1.1.0
-    dev: false
-
-  registry.npmmirror.com/pgpass@1.0.5:
-    resolution: {integrity: sha512-FdW9r/jQZhSeohs1Z3sI1yxFQNFvMcnmfuj4WBMUTxOrAyLMaTcE1aAMBiTlbMNaXvBCQuVi0R7hd8udDSP7ug==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/pgpass/-/pgpass-1.0.5.tgz}
-    name: pgpass
-    version: 1.0.5
-    dependencies:
-      split2: registry.npmmirror.com/split2@4.2.0
-    dev: false
 
   registry.npmmirror.com/picocolors@1.0.0:
     resolution: {integrity: sha512-1fygroTLlHu66zi26VoTDv8yRgm0Fccecssto+MhsZ0D/DGW2sm8E8AjW7NU5VVTRt5GxbeZ5qBuJr+HyLYkjQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/picocolors/-/picocolors-1.0.0.tgz}
@@ -2250,26 +2153,12 @@ packages:
       source-map-js: registry.npmmirror.com/source-map-js@1.0.2
     dev: false
 
-  registry.npmmirror.com/postgres-array@2.0.0:
-    resolution: {integrity: sha512-VpZrUqU5A69eQyW2c5CA1jtLecCsN2U/bD6VilrFDWq5+5UIEVO7nazS3TEcHf1zuPYO/sqGvUvW62g86RXZuA==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/postgres-array/-/postgres-array-2.0.0.tgz}
-    name: postgres-array
-    version: 2.0.0
-    engines: {node: '>=4'}
-    dev: false
-
   registry.npmmirror.com/postgres-array@3.0.2:
     resolution: {integrity: sha512-6faShkdFugNQCLwucjPcY5ARoW1SlbnrZjmGl0IrrqewpvxvhSLHimCVzqeuULCbG0fQv7Dtk1yDbG3xv7Veog==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/postgres-array/-/postgres-array-3.0.2.tgz}
     name: postgres-array
     version: 3.0.2
     engines: {node: '>=12'}
     dev: true
-
-  registry.npmmirror.com/postgres-bytea@1.0.0:
-    resolution: {integrity: sha512-xy3pmLuQqRBZBXDULy7KbaitYqLcmxigw14Q5sj8QBVLqEwXfeybIKVWiqAXTlcvdvb0+xkOtDbfQMOf4lST1w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/postgres-bytea/-/postgres-bytea-1.0.0.tgz}
-    name: postgres-bytea
-    version: 1.0.0
-    engines: {node: '>=0.10.0'}
-    dev: false
 
   registry.npmmirror.com/postgres-bytea@3.0.0:
     resolution: {integrity: sha512-CNd4jim9RFPkObHSjVHlVrxoVQXz7quwNFpz7RY1okNNme49+sVyiTvTRobiLV548Hx/hb1BG+iE7h9493WzFw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/postgres-bytea/-/postgres-bytea-3.0.0.tgz}
@@ -2280,28 +2169,12 @@ packages:
       obuf: registry.npmmirror.com/obuf@1.1.2
     dev: true
 
-  registry.npmmirror.com/postgres-date@1.0.7:
-    resolution: {integrity: sha512-suDmjLVQg78nMK2UZ454hAG+OAW+HQPZ6n++TNDUX+L0+uUlLywnoxJKDou51Zm+zTCjrCl0Nq6J9C5hP9vK/Q==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/postgres-date/-/postgres-date-1.0.7.tgz}
-    name: postgres-date
-    version: 1.0.7
-    engines: {node: '>=0.10.0'}
-    dev: false
-
   registry.npmmirror.com/postgres-date@2.0.1:
     resolution: {integrity: sha512-YtMKdsDt5Ojv1wQRvUhnyDJNSr2dGIC96mQVKz7xufp07nfuFONzdaowrMHjlAzY6GDLd4f+LUHHAAM1h4MdUw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/postgres-date/-/postgres-date-2.0.1.tgz}
     name: postgres-date
     version: 2.0.1
     engines: {node: '>=12'}
     dev: true
-
-  registry.npmmirror.com/postgres-interval@1.2.0:
-    resolution: {integrity: sha512-9ZhXKM/rw350N1ovuWHbGxnGh/SNJ4cnxHiM0rxE4VN41wsg8P8zWn9hv/buK00RP4WvlOyr/RBDiptyxVbkZQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/postgres-interval/-/postgres-interval-1.2.0.tgz}
-    name: postgres-interval
-    version: 1.2.0
-    engines: {node: '>=0.10.0'}
-    dependencies:
-      xtend: registry.npmmirror.com/xtend@4.0.2
-    dev: false
 
   registry.npmmirror.com/postgres-interval@3.0.0:
     resolution: {integrity: sha512-BSNDnbyZCXSxgA+1f5UU2GmwhoI0aU5yMxRGO8CdFEcY2BQF9xm/7MqKnYoM1nJDk8nONNWDk9WeSmePFhQdlw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/postgres-interval/-/postgres-interval-3.0.0.tgz}
@@ -2315,6 +2188,12 @@ packages:
     name: postgres-range
     version: 1.1.3
     dev: true
+
+  registry.npmmirror.com/postgres@3.3.5:
+    resolution: {integrity: sha512-+JD93VELV9gHkqpV5gdL5/70HdGtEw4/XE1S4BC8f1mcPmdib3K5XsKVbnR1XcAyC41zOnifJ+9YRKxdIsXiUw==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/postgres/-/postgres-3.3.5.tgz}
+    name: postgres
+    version: 3.3.5
+    dev: false
 
   registry.npmmirror.com/pretty-bytes@5.6.0:
     resolution: {integrity: sha512-FFw039TmrBqFK8ma/7OL3sDz/VytdtJr044/QUJtH0wK9lb9jLq9tJyIxUwtQJHwar2BqtiA4iCWSwo9JLkzFg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/pretty-bytes/-/pretty-bytes-5.6.0.tgz}
@@ -2573,13 +2452,6 @@ packages:
     name: split-on-first
     version: 1.1.0
     engines: {node: '>=6'}
-    dev: false
-
-  registry.npmmirror.com/split2@4.2.0:
-    resolution: {integrity: sha512-UcjcJOWknrNkF6PLX83qcHM6KHgVKNkV62Y8a5uYDVv9ydGQVwAHMKqHdJje1VTWpljG0WYpCDhrCdAOYH4TWg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/split2/-/split2-4.2.0.tgz}
-    name: split2
-    version: 4.2.0
-    engines: {node: '>= 10.x'}
     dev: false
 
   registry.npmmirror.com/sshpk@1.17.0:
@@ -2884,13 +2756,6 @@ packages:
     name: xmlbuilder
     version: 11.0.1
     engines: {node: '>=4.0'}
-    dev: false
-
-  registry.npmmirror.com/xtend@4.0.2:
-    resolution: {integrity: sha512-LKYU1iAXJXUgAXn9URjiu+MWhyUXHsvfp7mcuYm9dSUKK0/CjtrUwFAxD82/mCWbtLsGjFIad0wIsod4zrTAEQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/xtend/-/xtend-4.0.2.tgz}
-    name: xtend
-    version: 4.0.2
-    engines: {node: '>=0.4'}
     dev: false
 
   registry.npmmirror.com/yallist@4.0.0:
