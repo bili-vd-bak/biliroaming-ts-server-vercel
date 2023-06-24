@@ -1,8 +1,6 @@
 import qs from "qs";
 import * as env from "../../../../_config";
 import * as blacklist from "../../../../utils/_blacklist";
-import * as db from "../../../../utils/_sstore";
-import * as db_notion from "../../../../utils/notion-database/_db";
 import * as bili from "../../../../utils/_bili";
 import * as playerUtil from "../../../../utils/_player";
 
