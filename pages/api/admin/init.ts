@@ -23,7 +23,7 @@ export default async function (req: VercelRequest, res: VercelResponse) {
     await db_bitio_pool
       .query(
         `CREATE TABLE cache(
-      cid INT PRIMARY KEY,
+      cid             INT8,
       ep              INT8,
       need_vip        INT8,
       exp             INT8,
@@ -34,7 +34,7 @@ export default async function (req: VercelRequest, res: VercelResponse) {
     await db_bitio_pool
       .query(
         `CREATE TABLE log(
-      uid INT PRIMARY KEY,
+      uid             INT8,
       vip_type        INT8,
       access_key      TEXT,
       url             TEXT,
