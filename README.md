@@ -16,6 +16,7 @@
 ## 部署方法
 
 请看完整篇README文档再动手。  
+**请配置Postgresql数据库以减少B站API请求，防止Vercel IP过多请求被禁。**  
 查看Wiki：  
 [配置文档填写说明](https://github.com/bili-vd-bak/biliroaming-ts-server-vercel/wiki/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6)  
 **注**：每个服务只可代理一个地区，若需代理多个地区，请再部署一个相同的服务修改配置。  
@@ -60,6 +61,7 @@ pnpm i
 ## 已知问题
 
 - Vercel无法本地缓存，故自带缓存功能仅在本地部署时有效。  
+- 使用`pnpm dev`开发时，所有搜索API内`req.url`会错误获取`next.config.mjs`中`rewrites`后的函数路径，导致错误。(`pnpm build`产物正常)(错误由nextjs框架导致)
 
 ## 更新方法
 
