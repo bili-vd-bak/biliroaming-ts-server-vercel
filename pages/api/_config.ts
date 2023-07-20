@@ -46,6 +46,10 @@ export const api_oauth = {
   main: "https://passport.bilibili.com/x/passport-login/oauth2/refresh_token",
   intl: "https://passport.biliintl.com/x/intl/passport-login/oauth2/refresh_token",
 };
+//调用API所用UA
+export const UA =
+  "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/114.0.0.0 Safari/537.36 Edg/114.0.1823.82";
+export const fetch_config_UA = { headers: { "User-Agent": UA } };
 //==============================================================================
 
 //===========================替换搜索 Fuck Search================================
@@ -277,5 +281,5 @@ export const log = {
 //============================================================
 
 //===================信息展示(不用改)===========================
-export const version = "2.3.7";
+export const version = "2.3.8";
 //============================================================
