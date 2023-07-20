@@ -68,13 +68,20 @@ const basic_res = {
 
 // const main = async (req: VercelRequest, res: VercelResponse) => {
 const main = async (req: NextApiRequest, res: NextApiResponse) => {
-  const cookies = await getCookies();
-  await fetch(api + req.url, {
-    method: req.method,
-    headers: {
-      cookie: cookies,
-    },
-  })
+  const cookies = (await getCookies()) || "";
+  // console.log(
+  //   api + "/x/web-interface/search/type" + new URL(req.url, api).search
+  // );
+  await fetch(
+    api + req.url,
+    {
+      method: req.method,
+      headers: {
+        "User-Agent": env.UA,
+        cookie: cookies,
+      },
+    }
+  )
     .then((response) => response.json())
     .then(
       (response: {

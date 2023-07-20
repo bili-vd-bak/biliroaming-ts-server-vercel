@@ -70,6 +70,7 @@ export const cookies2access_key = async (cookies: {
       "/login/app/third?appkey=27eb53fc9058f8c3&api=http://link.acg.tv/forum.php&sign=67ec798004373253d60114caaad89a8c",
     {
       headers: {
+        "User-Agent": env.UA,
         cookie: `DedeUserID=${cookies.DedeUserID}; SESSDATA=${cookies.SESSDATA}`,
       },
     }
@@ -117,7 +118,8 @@ export const access_key2info = async (access_key: string) => {
   return await fetch(
     env.api.main.app.user_info +
       "/x/v2/account/myinfo?" +
-      appsign({ access_key: access_key, ts: Date.now() })
+      appsign({ access_key: access_key, ts: Date.now() }),
+    env.fetch_config_UA
   )
     .then((res) => res.json())
     .then((res: { data?: any; code: number }) => {
@@ -142,7 +144,8 @@ export const access_key2info = async (access_key: string) => {
  */
 export const access_keyParams2info = async (params: string) => {
   return await fetch(
-    env.api.main.app.user_info + "/x/v2/account/myinfo" + params
+    env.api.main.app.user_info + "/x/v2/account/myinfo" + params,
+    env.fetch_config_UA
   )
     .then((res) => res.json())
     .then((res: { data?: any; code: number }) => {
@@ -168,7 +171,7 @@ export const access_keyParams2info = async (params: string) => {
 export const cookies2info = async (cookies: { SESSDATA: string }) => {
   if (!cookies.SESSDATA) return;
   return await fetch(env.api.main.web.user_info + "/x/vip/web/user/info?", {
-    headers: { cookie: "SESSDATA=" + cookies.SESSDATA },
+    headers: { "User-Agent": env.UA, cookie: "SESSDATA=" + cookies.SESSDATA },
   })
     .then((res) => res.json())
     .then(
@@ -194,22 +197,29 @@ export const cookies2info = async (cookies: { SESSDATA: string }) => {
  * @param link 欲获取Cookies之链接
  */
 export const getCookies = async (uri = "https://www.bilibili.com/") => {
-  return await fetch(uri).then((res) => {
-    //代码来源
-    /*本文作者： cylee'贝尔塔猫
+  return await fetch(uri, env.fetch_config_UA)
+    .then((res) => {
+      //代码来源
+      /*本文作者： cylee'贝尔塔猫
       本文链接： https://www.cnblogs.com/CyLee/p/16170228.html
       关于博主： 评论和私信会在第一时间回复。或者直接私信我。
       版权声明： 本博客所有文章除特别声明外，均采用 BY-NC-SA 许可协议。转载请注明出处！*/
 
-    // 获取 cookie
-    const cookie = res.headers.get("set-cookie") || "";
-    // 清理一下 cookie 的格式，移除过期时间，只保留基础的键值对才能正常使用
-    const real_cookie = cookie
-      .replace(/expires=(.+?);\s/gi, "")
-      .replace(/path=\/(,?)(\s?)/gi, "")
-      .trim();
-    return real_cookie;
-  });
+      // 获取 cookie
+      const cookie = res.headers.get("set-cookie") || "";
+      // 清理一下 cookie 的格式，移除过期时间，只保留基础的键值对才能正常使用
+      const real_cookie = cookie
+        .replace(/(;?)( ?)expires=(.+?);\s/gi, "")
+        .replace(/(;?)( ?)path=\/(,?)(\s?)/gi, "")
+        .replace(
+          /(;?)( ?)domain=(.?)([a-zA-Z0-9][-a-zA-Z0-9]{0,62}(\.[a-zA-Z0-9][-a-zA-Z0-9]{0,62})+\.?)/gi,
+          ""
+        )
+        .replace(/,/gi, ";")
+        .trim();
+      return real_cookie;
+    })
+    .catch((err) => console.error(err));
 };
 
 export const cookies2usable = (cookies: cookies) => {
