@@ -25,7 +25,7 @@ export const format_bitio = async (UID: number) => {
         .query("DELETE FROM blacklist WHERE ban_until <= $1 AND type = 1", [
           Date.now(),
         ])
-        .then((res) => console.log(res));
+        .then((res) => console.log(res)); //TODO 修改为标准log(pino)
     return {
       code: 0,
       message: "",
