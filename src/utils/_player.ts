@@ -4,6 +4,8 @@ import * as db from "./_sstore";
 import * as db_notion from "./notion-database/_db";
 import * as blacklist from "./_blacklist";
 
+const loggerc = env.logger.child({ action: "调用组件(_player)" });
+
 export const addNewLog_bitio = async (data: {
   access_key: string;
   UID: number;
@@ -61,36 +63,54 @@ export const readCache = async (
   ep_id: number,
   info: { uid: number; vip_type: 0 | 1 | 2 }
 ) => {
-  env.log.str("读取缓存", "尝试中");
+  if (!env.db_local_enabled && !env.db_bitio_enabled) return;
+  const log = loggerc.child({
+    module: "读取缓存",
+  });
+  let log_data = { cache_way: "unknown" },
+    to_return = {};
+
   let c_vip: Object | null | undefined;
-  if (env.db_local_enabled) c_vip = await db.get(`c-vip-${cid}-${ep_id}`);
-  else if (env.db_bitio_enabled)
+  if (env.db_local_enabled) {
+    log_data.cache_way = "db_local";
+    c_vip = await db.get({ key: `c-vip-${cid}-${ep_id}` });
+  } else if (env.db_bitio_enabled) {
+    log_data.cache_way = "db_pg";
     c_vip = await env.db_bitio_pool
       .query(
         "SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 1 AND (cid = $2 OR ep = $3)",
         [Math.round(Number(new Date()) / 1000), cid, ep_id]
       )
       .then((res) => res.rows[0]?.data || undefined);
+  }
   if (c_vip) {
-    if (info.vip_type !== 0) return c_vip;
+    if (info.vip_type !== 0) to_return = c_vip;
     else if (
       env.whitelist_vip_enabled &&
       (await blacklist.main(info.uid)).data?.is_whitelist
     )
-      return c_vip;
+      to_return = c_vip;
   } else {
     let c_normal: Object | null | undefined;
-    if (env.db_local_enabled) c_normal = await db.get(`c-${cid}-${ep_id}`);
-    else if (env.db_bitio_enabled)
+    if (env.db_local_enabled) {
+      log_data.cache_way = "db_local";
+      c_normal = await db.get({ key: `c-${cid}-${ep_id}` });
+    } else if (env.db_bitio_enabled) {
+      log_data.cache_way = "db_pg";
       c_normal = await env.db_bitio_pool
         .query(
           "SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 0 AND (cid = $2 OR ep = $3)",
           [Math.round(Number(new Date()) / 1000), cid, ep_id]
         )
         .then((res) => res.rows[0]?.data || undefined);
+    }
     if (!c_normal) await delExpCache(cid, ep_id); //删除过时缓存
-    return c_normal;
+    to_return = c_normal;
   }
+  const log2 = log.child(log_data);
+  log2.info({});
+  log2.debug({ context: to_return });
+  return to_return;
 };
 
 export const addNewCache = async (
@@ -98,6 +118,11 @@ export const addNewCache = async (
   res_data: { code?: number; has_paid?: any }
 ) => {
   if (!env.db_local_enabled && !env.db_bitio_enabled) return;
+  const log = loggerc.child({
+    module: "添加缓存",
+  });
+  let log_data = { cache_way: "unknown" },
+    to_return = {};
 
   const need_vip = res_data.has_paid ? 1 : 0;
   const url = new URL(url_data, env.api.main.app.playurl);
@@ -111,6 +136,7 @@ export const addNewCache = async (
   );
 
   if (env.db_local_enabled) {
+    log_data.cache_way = "db_local";
     if (need_vip)
       db.set(
         `c-vip-${Number(data.cid)}-${Number(data.ep_id)}`,
@@ -124,20 +150,27 @@ export const addNewCache = async (
         deadline
       );
   } else if (env.db_bitio_enabled) {
+    log_data.cache_way = "db_pg";
     await env.db_bitio_pool.query(
       "INSERT INTO cache (need_vip,exp,cid,ep,data) VALUES ($1,$2,$3,$4,$5)",
       [need_vip, deadline, Number(data.cid), Number(data.ep_id), res_data]
     );
   }
+  log.info({});
+  log.debug({ context: res_data });
 };
 
 export const delExpCache = async (
   cid?: number | undefined | null,
   ep_id?: number | undefined | null
 ) => {
-  await env.db_bitio_pool
-    .query("DELETE FROM cache WHERE exp <= $1", [
+  const log = loggerc.child({
+    module: "删除缓存",
+  });
+  if (env.db_local_enabled) db.clear();
+  else if (env.db_bitio_enabled)
+    await env.db_bitio_pool.query("DELETE FROM cache WHERE exp <= $1", [
       Math.round(Number(new Date()) / 1000),
-    ])
-    .then(() => env.log.str("删除所有过时缓存", "尝试中"));
+    ]);
+  log.info({});
 };

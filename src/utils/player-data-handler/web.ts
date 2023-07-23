@@ -1,8 +1,8 @@
 import qs from "qs";
-import * as env from "../../../../_config";
-import * as blacklist from "../../../../utils/_blacklist";
-import * as bili from "../../../../utils/_bili";
-import * as playerUtil from "../../../../utils/_player";
+import * as env from "../../_config";
+import * as blacklist from "../_blacklist";
+import * as bili from "../_bili";
+import * as playerUtil from "../_player";
 
 const checkBlackList = async (uid: number): Promise<[boolean, number]> => {
   //黑白名单验证
@@ -32,9 +32,15 @@ const checkBlackList = async (uid: number): Promise<[boolean, number]> => {
 export const middleware = async (
   url_data: string,
   cookies: any, //FIXME 未添加完整类型
-  PassWebOnCheck: 0 | 1
+  PassWebOnCheck: 0 | 1,
+  method?: string
 ): Promise<[boolean, number]> => {
-  env.log.obj("用户Cookies", cookies);
+  const log = env.logger.child({
+    action: "获取playurl(网页端)",
+    method: method || "unknown",
+    url: url_data,
+  });
+
   //请求头验证
   if (!env.web_on && PassWebOnCheck === 0) return [false, 1];
 
@@ -58,24 +64,18 @@ export const middleware = async (
     (data.access_key as string) || access_key
   );
   if (!info) return [false, 6]; //查询信息失败
-  env.log.obj("用户信息", {
-    access_key: data.access_key as string,
-    UID: info.uid,
-    vip_type: info.vip_type,
-    url: url_data,
-  });
-  await playerUtil.addNewLog_bitio({
+  const log_data = {
     access_key: (data.access_key as string) || access_key,
     UID: info.uid,
     vip_type: info.vip_type,
     url: url_data,
+  };
+  log.debug({
+    cookies,
+    user_info: log_data,
   });
-  await playerUtil.addNewLog_notion({
-    access_key: (data.access_key as string) || access_key,
-    UID: info.uid,
-    vip_type: info.vip_type,
-    url: url_data,
-  });
+  await playerUtil.addNewLog_bitio(log_data);
+  await playerUtil.addNewLog_notion(log_data);
 
   //黑白名单验证
   return checkBlackList(info.uid);
@@ -102,7 +102,8 @@ export const main = async (url_data: string, cookies) => {
       const res = (await fetch(
         env.api.main.web.playurl +
           url_data +
-          (access_key ? "&access_key=" + access_key : "")
+          (access_key ? "&access_key=" + access_key : ""),
+        env.fetch_config_UA
       ).then((res) => res.json())) as { code: number; result: object };
       if (res.code === 0) await playerUtil.addNewCache(url_data, res?.result);
       return env.try_unblock_CDN_speed_enabled
@@ -111,7 +112,7 @@ export const main = async (url_data: string, cookies) => {
     }
   } else {
     const res = (await fetch(env.api.main.web.playurl + url_data, {
-      headers: { cookie: bili.cookies2usable(cookies) },
+      headers: { "User-Agent": env.UA, cookie: bili.cookies2usable(cookies) },
     }).then((res) => res.json())) as { code: number; result: object };
     if (res.code === 0) await playerUtil.addNewCache(url_data, res?.result);
     return env.try_unblock_CDN_speed_enabled

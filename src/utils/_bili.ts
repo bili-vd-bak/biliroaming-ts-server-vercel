@@ -17,6 +17,8 @@ import qs from "qs";
 import md5 from "js-md5";
 import * as env from "../_config";
 
+const loggerc = env.logger.child({ action: "调用组件(_bili)" });
+
 const sorted = (params) => {
   const map = new Map();
   for (let k in params) {
@@ -33,7 +35,7 @@ const sorted = (params) => {
 };
 
 /**
- * Bilibili APP API签名
+ * Bilibili APP API 签名
  * @param params JSON 原请求数据
  * @param appkey 可不填
  * @param appsec 可不填
@@ -48,7 +50,13 @@ export const appsign = (
   const query = qs.stringify(params);
   const sign = md5(query + appsec);
   params.sign = sign;
-  return qs.stringify(params);
+  const to_return = qs.stringify(params);
+  const log = loggerc.child({
+    module: "Bilibili APP API 签名",
+  });
+  log.info({});
+  log.debug({ context: to_return });
+  return to_return;
 };
 
 /**
@@ -60,8 +68,13 @@ export const cookies2access_key = async (cookies: {
   SESSDATA: string;
   DedeUserID: string;
 }) => {
-  if (!cookies.SESSDATA) return;
-  if (!cookies.DedeUserID) return;
+  const log = loggerc.child({
+    module: "通过WEB端Cookies获取APP端access_key(IOS APPKEY)",
+  });
+  if (!cookies.SESSDATA || !cookies.DedeUserID) {
+    log.info({ status: "Failed" });
+    return;
+  }
   /* const sign = md5(
     "api=http://link.acg.tv/forum.php" + "c2ed53a74eeefe3cf99fbd01d8c9c375"
   ); */
@@ -89,23 +102,30 @@ export const cookies2access_key = async (cookies: {
           confirm_uri?: string;
         };
       }) => {
-        if (res.code !== 0) return;
-        if (!res.data) return;
-        if (!res.data.confirm_uri) return;
+        if (res.code !== 0 || !res?.data?.confirm_uri) {
+          log.info({ status: "Failed" });
+          return;
+        }
         return res.data.confirm_uri;
       }
     );
-  if (!uri) return;
+  if (!uri) {
+    log.info({ status: "Failed" });
+    return;
+  }
   return await fetch(uri, {
     redirect: "manual",
     headers: {
+      "User-Agent": env.UA,
       cookie: `DedeUserID=${cookies.DedeUserID}; SESSDATA=${cookies.SESSDATA}`,
     },
   }).then((res) => {
     const url = res.headers.get("Location");
     if (!url) return;
-    const params = new URL(url).searchParams.get("access_key");
-    return params;
+    const to_return = new URL(url).searchParams.get("access_key");
+    log.info({ status: "Success" });
+    log.debug({ context: to_return });
+    return to_return;
   });
 };
 
@@ -115,6 +135,9 @@ export const cookies2access_key = async (cookies: {
  * 查询不到，返回为 无会员(0,0)
  */
 export const access_key2info = async (access_key: string) => {
+  const log = loggerc.child({
+    module: "通过access_key查询个人信息",
+  });
   return await fetch(
     env.api.main.app.user_info +
       "/x/v2/account/myinfo?" +
@@ -123,17 +146,20 @@ export const access_key2info = async (access_key: string) => {
   )
     .then((res) => res.json())
     .then((res: { data?: any; code: number }) => {
+      let to_return = {
+        uid: 0,
+        vip_type: 0 as 0 | 1 | 2,
+      };
       if (res.code === 0) {
         const data = res.data;
-        return {
+        to_return = {
           uid: Number(data.mid),
           vip_type: Number(data.vip.type) as 0 | 1 | 2, //TODO 没有加类型判断校验
         };
-      } else
-        return {
-          uid: 0,
-          vip_type: 0 as 0,
-        };
+      }
+      log.info({});
+      log.debug({ context: to_return });
+      return to_return;
     });
 };
 
@@ -143,23 +169,29 @@ export const access_key2info = async (access_key: string) => {
  * 查询不到，返回为 无会员(0,0)
  */
 export const access_keyParams2info = async (params: string) => {
+  const log = loggerc.child({
+    module: "通过含access_key及sign的Params查询个人信息",
+  });
   return await fetch(
     env.api.main.app.user_info + "/x/v2/account/myinfo" + params,
     env.fetch_config_UA
   )
     .then((res) => res.json())
     .then((res: { data?: any; code: number }) => {
+      let to_return = {
+        uid: 0,
+        vip_type: 0 as 0 | 1 | 2,
+      };
       if (res.code === 0) {
         const data = res.data;
-        return {
+        to_return = {
           uid: Number(data.mid),
           vip_type: Number(data.vip.type) as 0 | 1 | 2, //TODO 没有加类型判断校验
         };
-      } else
-        return {
-          uid: 0,
-          vip_type: 0 as 0,
-        };
+      }
+      log.info({});
+      log.debug({ context: to_return });
+      return to_return;
     });
 };
 
@@ -169,24 +201,33 @@ export const access_keyParams2info = async (params: string) => {
  * 查询不到，返回为 无会员(0,0)
  */
 export const cookies2info = async (cookies: { SESSDATA: string }) => {
-  if (!cookies.SESSDATA) return;
+  const log = loggerc.child({
+    module: "通过cookie查询mid/vip",
+  });
+  if (!cookies.SESSDATA) {
+    log.info({ status: "Failed" });
+    return;
+  }
   return await fetch(env.api.main.web.user_info + "/x/vip/web/user/info?", {
     headers: { "User-Agent": env.UA, cookie: "SESSDATA=" + cookies.SESSDATA },
   })
     .then((res) => res.json())
     .then(
       (res: { data?: { mid: number; vip_type: 0 | 1 | 2 }; code: number }) => {
+        let to_return = {
+          uid: 0,
+          vip_type: 0 as 0 | 1 | 2,
+        };
         if (res.code === 0) {
           const data = res.data;
-          return {
+          to_return = {
             uid: Number(data.mid),
             vip_type: Number(data.vip_type) as 0 | 1 | 2, //TODO 没有加类型判断校验
           };
-        } else
-          return {
-            uid: 0,
-            vip_type: 0 as 0,
-          };
+        }
+        log.info({});
+        log.debug({ context: to_return });
+        return to_return;
       }
     );
 };
@@ -197,6 +238,9 @@ export const cookies2info = async (cookies: { SESSDATA: string }) => {
  * @param link 欲获取Cookies之链接
  */
 export const getCookies = async (uri = "https://www.bilibili.com/") => {
+  const log = loggerc.child({
+    module: "获取Bilibili网页版Cookies(游客)",
+  });
   return await fetch(uri, env.fetch_config_UA)
     .then((res) => {
       //代码来源
@@ -217,7 +261,10 @@ export const getCookies = async (uri = "https://www.bilibili.com/") => {
         )
         .replace(/,/gi, ";")
         .trim();
-      return real_cookie;
+      const to_return = real_cookie;
+      log.info({});
+      log.debug({ context: to_return });
+      return to_return;
     })
     .catch((err) => console.error(err));
 };

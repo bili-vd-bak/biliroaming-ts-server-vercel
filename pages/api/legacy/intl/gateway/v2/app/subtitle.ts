@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as env from "../../../../../_config";
+import * as env from "../../../../../../../src/_config";
 // import * as data_parse from "./_data";
 
 const main = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -11,9 +11,19 @@ const main = async (req: NextApiRequest, res: NextApiResponse) => {
   else res.json(await data_parse.main(req.url as string)); */
   fetch(env.api.intl.subtitle + req.url, {
     method: req.method,
+    headers: {
+      "User-Agent": env.UA,
+    },
   })
     .then((response) => response.json())
     .then((response) => {
+      const log = env.logger.child({
+        action: "字幕获取(国际版)",
+        method: req.method,
+        url: req.url,
+      });
+      log.info({});
+      log.debug({ context: response });
       res.json(response);
     });
 };

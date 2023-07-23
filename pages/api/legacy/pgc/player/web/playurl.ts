@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as env from "../../../../_config";
-import * as data_parse from "./_data";
+import * as env from "../../../../../../src/_config";
+import * as data_parse from "../../../../../../src/utils/player-data-handler/web";
 
 const main = async (req: NextApiRequest, res: NextApiResponse) => {
   let PassWebOnCheck: 0 | 1 = 0; //当检测到请求来自B站时不受web_on开关影响
@@ -23,7 +23,8 @@ const main = async (req: NextApiRequest, res: NextApiResponse) => {
   const continue_execute = await data_parse.middleware(
     req.url as string,
     req.cookies,
-    PassWebOnCheck
+    PassWebOnCheck,
+    req.method
   );
   if (continue_execute[0] == false) res.json(env.block(continue_execute[1]));
   else res.json(await data_parse.main(req.url as string, req.cookies));

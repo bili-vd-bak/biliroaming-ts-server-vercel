@@ -240,8 +240,8 @@ export const web_on: io = 0;
 //用BBDown的打开此选项
 export const pass_web_on_check: io = 1;
 //限制哔哩漫游最低版本 填写数字 0-不限制
-//1110为1.6.10的版本号
-export const ver_min: number = 1110;
+//1208为1.6.10的版本号
+export const ver_min: number = 1208;
 //锁区，填写的是支持的地区 cn-中国大陆 hk-中国香港 tw-中国台湾 th-泰国/新加坡/东南亚地区
 //TODO 暂时未加地区检测，访问不支持地区由B站服务器提示错误。
 export const block_region: _block_region = ["hk"];
@@ -273,13 +273,17 @@ export const block = (code: number) => {
 };
 //============================================================
 
-//===================日志函数(不用改)===========================
-export const log = {
-  str: (info: string, data: string) => console.log(info, data),
-  obj: (info: string, data: Object) => console.log(info, JSON.stringify(data)),
-};
+//===================信息展示(不用改)===========================
+export const version = `3.0.0[${
+  (
+    process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ||
+    process.env.VERCEL_GIT_COMMIT_SHA
+  )?.slice(0, 7) || "unknown"
+}]`;
 //============================================================
 
-//===================信息展示(不用改)===========================
-export const version = "2.3.9";
+//===================日志函数(不用改)===========================
+import pino from "pino";
+import pretty from "pino-pretty";
+export const logger = pino(pretty({ colorize: true })).child({ version });
 //============================================================

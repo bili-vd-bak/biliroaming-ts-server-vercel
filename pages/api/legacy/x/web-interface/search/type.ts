@@ -1,7 +1,7 @@
 // import type { VercelRequest, VercelResponse } from "@vercel/node";
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as env from "../../../../_config";
-import { getCookies } from "../../../../utils/_bili";
+import * as env from "../../../../../../src/_config";
+import { getCookies } from "../../../../../../src/utils/_bili";
 
 const api = env.api.main.web.search;
 const basic_res = {
@@ -72,22 +72,26 @@ const main = async (req: NextApiRequest, res: NextApiResponse) => {
   // console.log(
   //   api + "/x/web-interface/search/type" + new URL(req.url, api).search
   // );
-  await fetch(
-    api + req.url,
-    {
-      method: req.method,
-      headers: {
-        "User-Agent": env.UA,
-        cookie: cookies,
-      },
-    }
-  )
+  await fetch(api + req.url, {
+    method: req.method,
+    headers: {
+      "User-Agent": env.UA,
+      cookie: cookies,
+    },
+  })
     .then((response) => response.json())
     .then(
       (response: {
         data: { result: Array<object>; pagesize: number; numResults: number };
         code: number;
       }) => {
+        const log = env.logger.child({
+          action: "搜索(网页端)",
+          method: req.method,
+          url: req.url,
+        });
+        log.info({});
+        log.debug({ context: response });
         if (response.code === 0) {
           let m_res = response;
           if (m_res.data.result) {
