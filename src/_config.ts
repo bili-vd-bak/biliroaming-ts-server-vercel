@@ -284,6 +284,9 @@ export const version = `3.0.0[${
 
 //===================日志函数(不用改)===========================
 import pino from "pino";
-import pretty from "pino-pretty";
-export const logger = pino(pretty({ colorize: true })).child({ version });
+export const logger = pino();
+/* 由于包问题，默认不启用`pino-pretty`日志美化(不影响日志记录)
+若需本地使用本项目且需更好的日志体验，请`pnpm i pino-pretty`，并注释上面一行及解除下面两行的注释*/
+// import pretty from "pino-pretty";
+// export const logger = pino(pretty({ colorize: true })).child({ version });
 //============================================================
