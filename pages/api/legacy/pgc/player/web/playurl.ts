@@ -23,7 +23,8 @@ const main = async (req: NextApiRequest, res: NextApiResponse) => {
   const continue_execute = await data_parse.middleware(
     req.url as string,
     req.cookies,
-    PassWebOnCheck
+    PassWebOnCheck,
+    req.method
   );
   if (continue_execute[0] == false) res.json(env.block(continue_execute[1]));
   else res.json(await data_parse.main(req.url as string, req.cookies));

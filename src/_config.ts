@@ -273,13 +273,6 @@ export const block = (code: number) => {
 };
 //============================================================
 
-//===================日志函数(不用改)===========================
-export const log = {
-  str: (info: string, data: string) => console.log(info, data),
-  obj: (info: string, data: Object) => console.log(info, JSON.stringify(data)),
-};
-//============================================================
-
 //===================信息展示(不用改)===========================
 export const version = `3.0.0[${
   (
@@ -287,4 +280,10 @@ export const version = `3.0.0[${
     process.env.VERCEL_GIT_COMMIT_SHA
   )?.slice(0, 7) || "unknown"
 }]`;
+//============================================================
+
+//===================日志函数(不用改)===========================
+import pino from "pino";
+import pretty from "pino-pretty";
+export const logger = pino(pretty({ colorize: true })).child({ version });
 //============================================================

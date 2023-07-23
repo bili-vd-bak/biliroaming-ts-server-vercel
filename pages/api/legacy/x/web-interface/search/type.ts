@@ -85,6 +85,13 @@ const main = async (req: NextApiRequest, res: NextApiResponse) => {
         data: { result: Array<object>; pagesize: number; numResults: number };
         code: number;
       }) => {
+        const log = env.logger.child({
+          action: "搜索(网页端)",
+          method: req.method,
+          url: req.url,
+        });
+        log.info({});
+        log.debug({ context: response });
         if (response.code === 0) {
           let m_res = response;
           if (m_res.data.result) {

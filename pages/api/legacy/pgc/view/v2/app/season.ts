@@ -12,6 +12,13 @@ const main = async (req: NextApiRequest, res: NextApiResponse) => {
   })
     .then((response) => response.json())
     .then((response) => {
+      const log = env.logger.child({
+        action: "番剧详情(APP端)",
+        method: req.method,
+        url: req.url,
+      });
+      log.info({});
+      log.debug({ context: response });
       res.json(response);
     });
 };
