@@ -70,6 +70,7 @@ export const middleware = async (
     vip_type: info.vip_type,
     url: url_data,
   };
+  log.info({});
   log.debug({
     cookies,
     user_info: log_data,

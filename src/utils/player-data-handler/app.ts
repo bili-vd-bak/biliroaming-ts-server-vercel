@@ -63,6 +63,7 @@ export const middleware = async (
     vip_type: info.vip_type,
     url: url_data,
   };
+  log.info({});
   log.debug({ headers, user_info: log_data });
   await playerUtil.addNewLog_bitio(log_data);
   await playerUtil.addNewLog_notion(log_data);
