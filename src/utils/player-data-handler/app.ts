@@ -1,15 +1,16 @@
 import qs from "qs";
-import * as env from "../../../../_config";
-import * as blacklist from "../../../../utils/_blacklist";
-import * as bili from "../../../../utils/_bili";
-import * as playerUtil from "../../../../utils/_player";
+import * as env from "../../_config";
+import * as blacklist from "../_blacklist";
+import * as bili from "../_bili";
+import * as playerUtil from "../_player";
 import { IncomingHttpHeaders } from "http";
 
 const fetchDataFromBiliAndCache = async (url_data: string) => {
   env.log.str("从BiliBili获取数据", "尝试中");
-  const res = (await fetch(env.api.main.app.playurl + url_data).then((res) =>
-    res.json()
-  )) as { code: number };
+  const res = (await fetch(
+    env.api.main.app.playurl + url_data,
+    env.fetch_config_UA
+  ).then((res) => res.json())) as { code: number };
   if (res.code === 0) await playerUtil.addNewCache(url_data, res);
   else env.log.obj("从BiliBili获取数据错误", res);
   return env.try_unblock_CDN_speed_enabled

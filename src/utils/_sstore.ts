@@ -11,9 +11,7 @@ export async function isExpired(key: string) {
 }
 
 export async function get(
-  key: string,
-  ignoreMaxAge = false
-): Promise<string | Object | undefined> {
+{ key, ignoreMaxAge = false }: { key: string; ignoreMaxAge?: boolean; }): Promise<string | Object | undefined> {
   if (ignoreMaxAge !== true && (await isExpired(key))) {
     ss.del(key);
     return;

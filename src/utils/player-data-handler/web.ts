@@ -1,8 +1,8 @@
 import qs from "qs";
-import * as env from "../../../../_config";
-import * as blacklist from "../../../../utils/_blacklist";
-import * as bili from "../../../../utils/_bili";
-import * as playerUtil from "../../../../utils/_player";
+import * as env from "../../_config";
+import * as blacklist from "../_blacklist";
+import * as bili from "../_bili";
+import * as playerUtil from "../_player";
 
 const checkBlackList = async (uid: number): Promise<[boolean, number]> => {
   //黑白名单验证
@@ -102,7 +102,8 @@ export const main = async (url_data: string, cookies) => {
       const res = (await fetch(
         env.api.main.web.playurl +
           url_data +
-          (access_key ? "&access_key=" + access_key : "")
+          (access_key ? "&access_key=" + access_key : ""),
+        env.fetch_config_UA
       ).then((res) => res.json())) as { code: number; result: object };
       if (res.code === 0) await playerUtil.addNewCache(url_data, res?.result);
       return env.try_unblock_CDN_speed_enabled
@@ -111,7 +112,7 @@ export const main = async (url_data: string, cookies) => {
     }
   } else {
     const res = (await fetch(env.api.main.web.playurl + url_data, {
-      headers: { cookie: bili.cookies2usable(cookies) },
+      headers: { "User-Agent": env.UA, cookie: bili.cookies2usable(cookies) },
     }).then((res) => res.json())) as { code: number; result: object };
     if (res.code === 0) await playerUtil.addNewCache(url_data, res?.result);
     return env.try_unblock_CDN_speed_enabled

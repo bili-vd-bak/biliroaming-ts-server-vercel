@@ -1,6 +1,5 @@
 import * as env from "../../_config";
 import * as db from "./_db";
-import * as bili from "../_bili";
 
 export const query = async (UID: number) => {
   const res = await db.query(
