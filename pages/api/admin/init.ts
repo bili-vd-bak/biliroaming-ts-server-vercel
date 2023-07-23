@@ -1,11 +1,11 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+import type { NextApiRequest, NextApiResponse } from "next";
 import {
   local_cache_secret,
   db_bitio_enabled,
   db_bitio_pool,
-} from "../_config";
+} from "../../../src/_config";
 
-export default async function (req: VercelRequest, res: VercelResponse) {
+export default async function (req: NextApiRequest, res: NextApiResponse) {
   if (req.query.s !== local_cache_secret)
     res.status(403).send({ mes: "Secret Error!" });
   else if (db_bitio_enabled === 0) res.send({ mes: "未启用Postgresql数据库" });

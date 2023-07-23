@@ -1,12 +1,12 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
+import type { NextApiRequest, NextApiResponse } from "next";
 import fs from "fs";
 import { createHash } from "crypto";
-import { local_cache_secret } from "../_config";
+import { local_cache_secret } from "../../../src/_config";
 const confPath = `/tmp/conf/${createHash("md5")
   .update("conf.json", "utf8")
   .digest("hex")}`;
 
-export default async function (req: VercelRequest, res: VercelResponse) {
+export default async function (req: NextApiRequest, res: NextApiResponse) {
   if (req.query.s !== local_cache_secret)
     res.status(403).send({ mes: "Secret Error!" });
   else {

@@ -1,4 +1,4 @@
-import { version, ver_min } from "./api/_config";
+import { version, ver_min } from "../src/_config";
 
 function HomePage() {
   return (
@@ -6,7 +6,7 @@ function HomePage() {
       <div className="content">
         <h1>BiliRoaming Service (TS)</h1>
         <h2>信息展示</h2>
-        当前后端版本: {version}
+        当前后端版本: {version}(请以 [] 中 Git Hash 为准)
         <br />
         哔哩漫游最低版本限制: {ver_min} [
         <a
