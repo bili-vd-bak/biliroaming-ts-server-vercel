@@ -77,6 +77,13 @@ const main = async (req: NextApiRequest, res: NextApiResponse) => {
     .then((response) => response.json())
     .then((response: { data: { items: Array<object> }; code: number }) => {
       if (response.code === 0) {
+        const log = env.logger.child({
+          action: "搜索(国际版)",
+          method: req.method,
+          url: req.url,
+        });
+        log.info({});
+        log.debug({ context: response });
         let m_res = response;
         if (m_res.data.items) m_res["data"]["items"].splice(0, 0, basic_res);
         else m_res["data"]["items"] = [basic_res];
