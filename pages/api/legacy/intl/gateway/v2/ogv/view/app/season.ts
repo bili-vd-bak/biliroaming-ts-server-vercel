@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as env from "../../../../../../../_config";
+import * as env from "../../../../../../../../../src/_config";
 
 const api = env.api.intl.season_info;
 
@@ -32,8 +32,7 @@ const main = async (req: NextApiRequest, res: NextApiResponse) => {
             for (const ep of episodes) {
             }
           }
-        }
-        else res.json(response);
+        } else res.json(response);
       }
     );
 };

@@ -63,7 +63,7 @@ export const readCache = async (
 ) => {
   env.log.str("读取缓存", "尝试中");
   let c_vip: Object | null | undefined;
-  if (env.db_local_enabled) c_vip = await db.get(`c-vip-${cid}-${ep_id}`);
+  if (env.db_local_enabled) c_vip = await db.get({ key: `c-vip-${cid}-${ep_id}` });
   else if (env.db_bitio_enabled)
     c_vip = await env.db_bitio_pool
       .query(
@@ -80,7 +80,7 @@ export const readCache = async (
       return c_vip;
   } else {
     let c_normal: Object | null | undefined;
-    if (env.db_local_enabled) c_normal = await db.get(`c-${cid}-${ep_id}`);
+    if (env.db_local_enabled) c_normal = await db.get({ key: `c-${cid}-${ep_id}` });
     else if (env.db_bitio_enabled)
       c_normal = await env.db_bitio_pool
         .query(

@@ -1,6 +1,6 @@
 // import type { VercelRequest, VercelResponse } from '@vercel/node';
 import type { NextApiRequest, NextApiResponse } from "next";
-import * as env from "../../../../../../_config";
+import * as env from "../../../../../../../../src/_config";
 
 const api = env.api.intl.search;
 const basic_res = {
@@ -70,6 +70,9 @@ const basic_res = {
 const main = async (req: NextApiRequest, res: NextApiResponse) => {
   fetch(api + req.url, {
     method: req.method,
+    headers: {
+      "User-Agent": env.UA,
+    },
   })
     .then((response) => response.json())
     .then((response: { data: { items: Array<object> }; code: number }) => {
