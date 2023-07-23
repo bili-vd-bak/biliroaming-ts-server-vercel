@@ -22,7 +22,7 @@
 **注**：每个服务只可代理一个地区，若需代理多个地区，请再部署一个相同的服务修改配置。  
 查寻本地缓存和日志请访问`https://{yourDomain}/api/admin/log?s=${配置填写的secret}`  
 清理本地缓存和日志请访问`https://{yourDomain}/api/admin/clean?s=${配置填写的secret}`  
-**注**: 本地缓存和日志在Vercel环境里无法长期存储，你可以查看Vercel自带的函数日志。  
+**注**: 本地缓存和日志在Vercel Serverless环境里无法长期存储，你可以查看Vercel自带的函数日志。  
 
 ### Vercel
 
@@ -48,7 +48,7 @@ cd biliroaming-ts-server-vercel
 pnpm i
 ```
 
-修改`pages/api/_config.ts`。  
+修改`src/_config.ts`。  
 (可以在`package.json`中修改`"start": "next start -p $PORT"`以设置端口)  
 执行`pnpm run start`。  
 使用nginx等反向代理此接口，配置SSL。  
