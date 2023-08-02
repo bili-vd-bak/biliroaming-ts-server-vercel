@@ -1,33 +1,45 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
+import type { NextFetchEvent, NextRequest } from "next/server";
 import * as env from "../../../../../../src/_config";
 import * as data_parse from "../../../../../../src/utils/player-data-handler/web";
 
-const main = async (req: NextApiRequest, res: NextApiResponse) => {
-  let PassWebOnCheck: 0 | 1 = 0; //当检测到请求来自B站时不受web_on开关影响
-  res.setHeader("Access-Control-Allow-Credentials", "true");
+export const config = {
+  runtime: "edge",
+};
+
+const main = async (req: NextRequest, ctx: NextFetchEvent) => {
+  let PassWebOnCheck: 0 | 1 = 0, //当检测到请求来自B站时不受web_on开关影响
+    headers = {};
+  headers["Access-Control-Allow-Credentials"] = "true";
   if (
     new RegExp("^https?://([a-z]+.bilibili.com|bilibili.com)$", "g").test(
-      req.headers.origin
+      req.headers.get("origin")
     ) ||
     (env.pass_web_on_check &&
-      req.headers.referer === "https://www.bilibili.com")
+      req.headers.get("referer") === "https://www.bilibili.com")
   ) {
-    res.setHeader("Access-Control-Allow-Origin", req.headers.origin as string);
+    headers["Access-Control-Allow-Origin"] = req.headers.get(
+      "origin"
+    ) as string;
     PassWebOnCheck = 1;
   }
-  res.setHeader("Access-Control-Allow-Methods", "GET,OPTIONS,POST");
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version"
-  );
+  headers["Access-Control-Allow-Methods"] = "GET,OPTIONS,POST";
+  headers["Access-Control-Allow-Headers"] =
+    "X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version";
+  const url_str = req.nextUrl.pathname + req.nextUrl.search;
+  console.log(url_str)
   const continue_execute = await data_parse.middleware(
-    req.url as string,
+    url_str as string,
     req.cookies,
     PassWebOnCheck,
     req.method
   );
-  if (continue_execute[0] == false) res.json(env.block(continue_execute[1]));
-  else res.json(await data_parse.main(req.url as string, req.cookies));
+  if (continue_execute[0] == false)
+    return NextResponse.json(env.block(continue_execute[1]));
+  else
+    return NextResponse.json(
+      await data_parse.main(url_str as string, req.cookies)
+    );
 };
 
 export default main;

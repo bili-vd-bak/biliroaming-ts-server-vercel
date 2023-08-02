@@ -1,7 +1,11 @@
-// import type { VercelRequest, VercelResponse } from "@vercel/node";
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
+import type { NextFetchEvent, NextRequest } from "next/server";
 import * as env from "../../../../../../src/_config";
 import { getCookies } from "../../../../../../src/utils/_bili";
+
+export const config = {
+  runtime: "edge",
+};
 
 const api = env.api.main.web.search;
 const basic_res = {
@@ -66,13 +70,14 @@ const basic_res = {
   index_show: env.fs_label,
 };
 
-// const main = async (req: VercelRequest, res: VercelResponse) => {
-const main = async (req: NextApiRequest, res: NextApiResponse) => {
+const main = async (req: NextRequest, ctx: NextFetchEvent) => {
   const cookies = (await getCookies()) || "";
   // console.log(
   //   api + "/x/web-interface/search/type" + new URL(req.url, api).search
   // );
-  await fetch(api + req.url, {
+  // ---or---
+  // api + "/x/web-interface/search/type" + req.nextUrl.search
+  return fetch(api + req.nextUrl.pathname + req.nextUrl.search, {
     method: req.method,
     headers: {
       "User-Agent": env.UA,
@@ -99,8 +104,8 @@ const main = async (req: NextApiRequest, res: NextApiResponse) => {
           } else m_res["data"]["items"] = [basic_res];
           m_res.data.pagesize += 1;
           m_res.data.numResults += 1;
-          res.json(m_res);
-        } else res.json(response);
+          return NextResponse.json(m_res);
+        } else NextResponse.json(response);
       }
     );
 };

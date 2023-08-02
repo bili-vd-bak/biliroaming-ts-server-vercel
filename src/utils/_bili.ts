@@ -14,7 +14,7 @@ type cookies = Partial<{
 //Next Type End
 
 import qs from "qs";
-import md5 from "js-md5";
+import md5 from "blueimp-md5";
 import * as env from "../_config";
 
 const loggerc = env.logger.child({ action: "调用组件(_bili)" });

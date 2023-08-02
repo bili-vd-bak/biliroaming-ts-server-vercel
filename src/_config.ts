@@ -190,10 +190,7 @@ export const try_unblock_CDN_speed_enabled: io = 0;
 //注：本地模式 与 PostgreSQL 优先本地
 //缓存时间 单位：15分钟(min) 需打开缓存数据库 仅当deadline不存在时生效
 export const cache_time = 1000 * 60 * 15;
-//本地模式设置
-//本地模式开关
-export const db_local_enabled: io = 1;
-//本地数据库查询密钥
+//查询密钥
 export const local_cache_secret = process.env.local_cache_secret || "";
 //PostgreSQL配置(需Read/Write权限)
 import { Pool } from "@neondatabase/serverless"; //导入(不用改)
@@ -226,7 +223,7 @@ export const whitelist_vip_enabled: io = 0;
 
 //===================获取公共黑白名单============================
 //功能开关 1-开 0-关
-export const public_blacklist_enabled: io = 0;
+export const public_blacklist_enabled: io = 1;
 //公共黑名单地址 要求：URL后需可以直接加 UID/mid
 export const public_blacklist: string = "https://black.qimo.ink/api/users/";
 //============================================================
@@ -235,7 +232,7 @@ export const public_blacklist: string = "https://black.qimo.ink/api/users/";
 //要求登录 1-开 0-关
 export const need_login: io = 1;
 //允许WEB版使用(B站官网可直接请求,无需开启此选项) 1-开 0-关
-export const web_on: io = 0;
+export const web_on: io = 1;
 //允许Referer为 https://www.bilibili.com 的请求而无需打开web_on (解决BBDown问题) 1-开 0-关
 //用BBDown的打开此选项
 export const pass_web_on_check: io = 1;

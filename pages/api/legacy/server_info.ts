@@ -1,19 +1,18 @@
-//import type { VercelRequest, VercelResponse } from '@vercel/node';
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
+import type { NextFetchEvent, NextRequest } from "next/server";
 import { fetch_config_UA, logger } from "../../../src/_config";
+
+export const config = {
+  runtime: "edge",
+};
 
 const api = "https://api.bilibili.com";
 
-// const main = async (req: VercelRequest, res: VercelResponse) => {
-const main = async (req: NextApiRequest, res: NextApiResponse) => {
+const main = async (req: NextRequest, ctx: NextFetchEvent) => {
   logger
     .child({ action: "获取服务器IP", method: req.method, url: req.url })
     .info({});
-  fetch(api + "/client_info", fetch_config_UA)
-    .then((response) => response.json())
-    .then((response) => {
-      res.json(response);
-    });
+  return fetch(api + "/client_info", fetch_config_UA);
 };
 
 export default main;

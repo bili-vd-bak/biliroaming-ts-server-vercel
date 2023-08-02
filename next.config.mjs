@@ -7,6 +7,10 @@ const nextConfig = {
   async rewrites() {
     return [
       {
+        source: "/api/users/:uid",
+        destination: "/api/users/uid?uid=:uid",
+      },
+      {
         source: "/pgc/:path(.*)",
         destination: "/api/legacy/pgc/:path*",
       },
@@ -24,15 +28,18 @@ const nextConfig = {
       },
       {
         source: "/bilibili.app.playurl.v1.PlayURL/:path(.*)",
-        destination: "https://grpc.biliapi.net/api/grpc/bilibili.app.playurl.v1.PlayURL/:path*",
+        destination:
+          "https://grpc.biliapi.net/api/grpc/bilibili.app.playurl.v1.PlayURL/:path*",
       },
       {
         source: "/bilibili.pgc.gateway.player.v1.PlayURL/:path(.*)",
-        destination: "https://app.bilibili.com/api/grpc/bilibili.pgc.gateway.player.v1.PlayURL/:path*",
+        destination:
+          "https://app.bilibili.com/api/grpc/bilibili.pgc.gateway.player.v1.PlayURL/:path*",
       },
       {
         source: "/bilibili.community.service.dm.v1.DM/:path(.*)",
-        destination: "https://app.bilibili.com/api/grpc/bilibili.community.service.dm.v1.DM/:path*",
+        destination:
+          "https://app.bilibili.com/api/grpc/bilibili.community.service.dm.v1.DM/:path*",
       },
     ];
   },

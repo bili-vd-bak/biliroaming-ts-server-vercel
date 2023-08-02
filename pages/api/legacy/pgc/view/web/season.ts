@@ -1,10 +1,16 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
+import type { NextFetchEvent, NextRequest } from "next/server";
 import * as env from "../../../../../../src/_config";
+
+export const config = {
+  runtime: "edge",
+};
 
 const api = env.api.main.web.season_info;
 
-const main = async (req: NextApiRequest, res: NextApiResponse) => {
-  fetch(api + req.url, {
+const main = async (req: NextRequest, ctx: NextFetchEvent) => {
+  // api + "/pgc/view/web/season" + req.nextUrl.search
+  return fetch(api + req.nextUrl.pathname + req.nextUrl.search, {
     method: req.method,
     headers: {
       "User-Agent": env.UA,
@@ -19,7 +25,7 @@ const main = async (req: NextApiRequest, res: NextApiResponse) => {
       });
       log.info({});
       log.debug({ context: response });
-      res.json(response);
+      return NextResponse.json(response);
     });
 };
 

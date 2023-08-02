@@ -3,7 +3,6 @@ import * as env from "../../_config";
 import * as blacklist from "../_blacklist";
 import * as bili from "../_bili";
 import * as playerUtil from "../_player";
-import { IncomingHttpHeaders } from "http";
 
 const fetchDataFromBiliAndCache = async (url_data: string) => {
   // console.log("从BiliBili获取数据", "尝试中");
@@ -30,7 +29,7 @@ const fetchDataFromBiliAndCache = async (url_data: string) => {
  */
 export const middleware = async (
   url_data: string,
-  headers: IncomingHttpHeaders,
+  headers: Headers,
   method: string
 ): Promise<[boolean, number]> => {
   const log = env.logger.child({

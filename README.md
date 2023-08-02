@@ -76,6 +76,20 @@ pnpm i
 - Vercel Storage 的 Redis KV支持
 - pg管理数据库(管理黑白名单、查看日志)接口
 - [BETA]Vercel支持新加坡节点，可以为东南亚地区解锁。(然后就被风控用不了了)  
+- 提供 egde runtime 函数版，run faster(剔除`@beetcb/sstore`)
+- 支持Cloudflare Pages
+
+## Dev:API测试
+
+- IP信息:`/api/server_info`
+- 查询黑名单:`/api/users/1`
+- 搜索:`/x/web-interface/search/type?search_type=media_bangumi&keyword=86`
+- 搜索(无法测试):`/x/v2/search/type`
+- 番剧详情:`/pgc/view/web/season?season_id=3375`
+- 番剧详情(无法测试):`/pgc/view/v2/app/season`
+- 获取playurl:`/pgc/player/web/playurl?cid=646652`
+- 获取playurl(无法测试):`/pgc/player/api/playurl`
+- 所有intlAPI(暂未启用)
 
 ## 开源信息
 

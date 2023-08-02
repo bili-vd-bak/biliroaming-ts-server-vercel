@@ -1,14 +1,23 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
+import type { NextFetchEvent, NextRequest } from "next/server";
 import {
   local_cache_secret,
   db_bitio_enabled,
   db_bitio_pool,
 } from "../../../src/_config";
 
-export default async function (req: NextApiRequest, res: NextApiResponse) {
-  if (req.query.s !== local_cache_secret)
-    res.status(403).send({ mes: "Secret Error!" });
-  else if (db_bitio_enabled === 0) res.send({ mes: "未启用Postgresql数据库" });
+export const config = {
+  runtime: "edge",
+};
+
+export default async function (req: NextRequest, ctx: NextFetchEvent) {
+  if (req.nextUrl.searchParams.get("s") !== local_cache_secret)
+    return NextResponse.json({ mes: "Secret Error!" }, { status: 403 });
+  else if (db_bitio_enabled === 0)
+    return NextResponse.json(
+      { mes: "未启用Postgresql数据库" },
+      { status: 403 }
+    );
   else {
     await db_bitio_pool
       .query(
@@ -42,6 +51,6 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     )`
       )
       .catch((err) => console.error(err));
-    res.send({ mes: "Postgresql Init Done!" });
+    return NextResponse.json({ mes: "Postgresql Init Done!" });
   }
 }

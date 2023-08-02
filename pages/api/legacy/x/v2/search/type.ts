@@ -1,6 +1,10 @@
-// import type { VercelRequest, VercelResponse } from '@vercel/node';
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
+import type { NextFetchEvent, NextRequest } from "next/server";
 import * as env from "../../../../../../src/_config";
+
+export const config = {
+  runtime: "edge",
+};
 
 const api = env.api.main.app.search;
 const basic_res = {
@@ -21,7 +25,7 @@ const basic_res = {
   episodes: [
     { index: "1", param: "1", position: 1, uri: env.fs_watch_button_link },
   ],
-  episodes_new: new Function("return" + JSON.stringify(env.fs_episodes_app))(),
+  episodes_new: JSON.stringify(env.fs_episodes_app),
   follow_button: {
     icon: "http://i0.hdslb.com/bfs/bangumi/154b6898d2b2c20c21ccef9e41fcf809b518ebb4.png",
     status_report: "bangumi",
@@ -53,9 +57,8 @@ const basic_res = {
   },
 };
 
-// const main = async (req: VercelRequest, res: VercelResponse) => {
-const main = async (req: NextApiRequest, res: NextApiResponse) => {
-  fetch(api + req.url, {
+const main = async (req: NextRequest, ctx: NextFetchEvent) => {
+  return fetch(api + req.nextUrl.pathname + req.nextUrl.search, {
     method: req.method,
     headers: {
       "User-Agent": env.UA,
@@ -74,8 +77,8 @@ const main = async (req: NextApiRequest, res: NextApiResponse) => {
         let m_res = response;
         if (m_res.data.items) m_res["data"]["items"].splice(0, 0, basic_res);
         else m_res["data"]["items"] = [basic_res];
-        res.json(m_res);
-      } else res.json(response);
+        return NextResponse.json(m_res);
+      } else NextResponse.json(response);
     });
 };
 

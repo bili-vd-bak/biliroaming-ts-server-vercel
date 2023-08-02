@@ -1,10 +1,17 @@
 import qs from "qs";
 import * as env from "../_config";
-import * as db from "./_sstore";
 import * as db_notion from "./notion-database/_db";
 import * as blacklist from "./_blacklist";
 
 const loggerc = env.logger.child({ action: "调用组件(_player)" });
+
+export function isEmptyObject(obj: Object) {
+  for (var key in obj) {
+    break;
+    return false;
+  }
+  return true;
+}
 
 export const addNewLog_bitio = async (data: {
   access_key: string;
@@ -63,7 +70,7 @@ export const readCache = async (
   ep_id: number,
   info: { uid: number; vip_type: 0 | 1 | 2 }
 ) => {
-  if (!env.db_local_enabled && !env.db_bitio_enabled) return;
+  if (!env.db_bitio_enabled) return;
   const log = loggerc.child({
     module: "读取缓存",
   });
@@ -71,10 +78,7 @@ export const readCache = async (
     to_return = {};
 
   let c_vip: Object | null | undefined;
-  if (env.db_local_enabled) {
-    log_data.cache_way = "db_local";
-    c_vip = await db.get({ key: `c-vip-${cid}-${ep_id}` });
-  } else if (env.db_bitio_enabled) {
+  if (env.db_bitio_enabled) {
     log_data.cache_way = "db_pg";
     c_vip = await env.db_bitio_pool
       .query(
@@ -92,10 +96,7 @@ export const readCache = async (
       to_return = c_vip;
   } else {
     let c_normal: Object | null | undefined;
-    if (env.db_local_enabled) {
-      log_data.cache_way = "db_local";
-      c_normal = await db.get({ key: `c-${cid}-${ep_id}` });
-    } else if (env.db_bitio_enabled) {
+    if (env.db_bitio_enabled) {
       log_data.cache_way = "db_pg";
       c_normal = await env.db_bitio_pool
         .query(
@@ -117,12 +118,11 @@ export const addNewCache = async (
   url_data: string,
   res_data: { code?: number; has_paid?: any }
 ) => {
-  if (!env.db_local_enabled && !env.db_bitio_enabled) return;
+  if (!env.db_bitio_enabled) return;
   const log = loggerc.child({
     module: "添加缓存",
   });
-  let log_data = { cache_way: "unknown" },
-    to_return = {};
+  let log_data = { cache_way: "unknown" };
 
   const need_vip = res_data.has_paid ? 1 : 0;
   const url = new URL(url_data, env.api.main.app.playurl);
@@ -135,21 +135,7 @@ export const addNewCache = async (
       Math.round((Number(new Date()) + env.cache_time) / 1000)
   );
 
-  if (env.db_local_enabled) {
-    log_data.cache_way = "db_local";
-    if (need_vip)
-      db.set(
-        `c-vip-${Number(data.cid)}-${Number(data.ep_id)}`,
-        res_data_str,
-        deadline
-      );
-    else
-      db.set(
-        `c-${Number(data.cid)}-${Number(data.ep_id)}`,
-        res_data_str,
-        deadline
-      );
-  } else if (env.db_bitio_enabled) {
+  if (env.db_bitio_enabled) {
     log_data.cache_way = "db_pg";
     await env.db_bitio_pool.query(
       "INSERT INTO cache (need_vip,exp,cid,ep,data) VALUES ($1,$2,$3,$4,$5)",
@@ -167,8 +153,7 @@ export const delExpCache = async (
   const log = loggerc.child({
     module: "删除缓存",
   });
-  if (env.db_local_enabled) db.clear();
-  else if (env.db_bitio_enabled)
+  if (env.db_bitio_enabled)
     await env.db_bitio_pool.query("DELETE FROM cache WHERE exp <= $1", [
       Math.round(Number(new Date()) / 1000),
     ]);

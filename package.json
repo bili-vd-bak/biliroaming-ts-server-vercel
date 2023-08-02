@@ -4,30 +4,37 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "next dev --turbo",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "pages:build": "pnpm @cloudflare/next-on-pages@1",
+    "pages:deploy": "pnpm run pages:build && wrangler pages deploy .vercel/output/static",
+    "pages:watch": "pnpm @cloudflare/next-on-pages@1 --watch",
+    "pages:dev": "pnpm wrangler pages dev .vercel/output/static --compatibility-flag=nodejs_compat"
   },
   "keywords": [],
   "author": "",
   "license": "GPL-3.0",
   "devDependencies": {
+    "@types/blueimp-md5": "^2.18.0",
     "@types/js-md5": "^0.4.3",
     "@types/pg": "^8.10.2",
     "@types/qs": "^6.9.7",
     "@types/react": "18.0.26",
-    "@vercel/node": "^2.15.6",
+    "@vercel/node": "^2.15.7",
     "typescript": "^5.1.6"
   },
   "dependencies": {
     "@beetcb/sstore": "^0.3.0",
     "@neondatabase/serverless": "^0.4.26",
-    "js-md5": "^0.7.3",
+    "blueimp-md5": "^2.19.0",
     "next": "^13.4.12",
-    "pino": "^8.14.1",
+    "pino": "^8.14.2",
     "qs": "^6.11.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "wrangler": "^3.4.0",
+    "@cloudflare/next-on-pages": "1"
   }
 }
