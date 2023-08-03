@@ -19,6 +19,7 @@ function HomePage() {
         <a target="_blank" href="/api/server_info">
           服务器网络信息
         </a>
+        (当前位于:{process.env.VERCEL_REGION || "请点击左侧实时查询"})
         <br />
         <a
           target="_blank"
