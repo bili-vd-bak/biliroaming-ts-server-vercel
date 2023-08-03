@@ -35,7 +35,7 @@ const basic_res = {
   episodes: [
     { index: "1", param: "1", position: 1, uri: env.fs_watch_button_link },
   ],
-  episodes_new: JSON.stringify(env.fs_episodes_app),
+  episodes_new: JSON.stringify(env.fs_episodes_app), //FIXME
   follow_button: {
     icon: "http://i0.hdslb.com/bfs/bangumi/154b6898d2b2c20c21ccef9e41fcf809b518ebb4.png",
     status_report: "bangumi",

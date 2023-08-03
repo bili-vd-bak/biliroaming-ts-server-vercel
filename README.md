@@ -2,8 +2,8 @@
 
 ## 本分支目前为全edge函数，Vercel可使用部署，CFP正在修
 
-本服务部署在Vercel香港节点上，同时支持Next.js本地部署。  
-配置修改在 `src/_config.ts` 中，可以直接改里面的配置文本，也可在Vercel里添加对应名称变量。  
+本服务部署在 Vercel(`hkg1`)/Cloudflare Pages(`HKG`) 上，同时支持Next.js本地部署。  
+配置修改在 `src/_config.ts` 中，可以直接改里面的配置文本，也可在Vercel/CFP里添加对应名称变量。  
 使用环境变量更安全。  
 
 ## Features
@@ -34,10 +34,13 @@
 若需使用Vercel Storage的Postgresql数据库，请连接至此项目；或使用其它pg数据库。重部署后访问`https://{yourDomain}/api/admin/init?s=${配置填写的secret}`，并检查数据库是否已有`blacklist` `cache` `log`三个表。
 Tips: 环境变量设置后需下一次部署才可启用，故推荐导入时提前设置。  
 
-### Cloudflare Pages
+### Cloudflare Pages(理论可行)
 
-TODO  
---compatibility-flag=nodejs_compat  
+Fork,修改`src/_config.ts`
+注册[Cloudflare](https://dash.cloudflare.com)，导入本项目，在设置中配置 域名和环境变量(参照上文Vercel部署方法及CFP文档)。  
+注意：需在`Pages`-`你的项目`-`设置`-`函数`中设置`兼容日期(compatibility_date)`=`2022-11-30`,`兼容性标志(compatibility_flags)`添加`nodejs_compat`。  
+参考[本文](https://github.com/XIU2/CloudflareSpeedTest/issues/189)自选IP切换节点至 香港(`HKG`)/台湾(`TPE`/`KHH`)。  
+Tips:作者自选IP失败。  
 
 ### 本地
 
@@ -83,8 +86,8 @@ pnpm i
 - Vercel Storage 的 Redis KV支持
 - pg管理数据库(管理黑白名单、查看日志)接口
 - [BETA]Vercel支持新加坡节点，可以为东南亚地区解锁。(然后就被风控用不了了)  
-- 提供 egde runtime 函数版，run faster(剔除`@beetcb/sstore`)
-- 支持Cloudflare Pages
+- [BETA]提供 egde runtime 函数版，run faster(剔除`@beetcb/sstore`)
+- [BETA]支持Cloudflare Pages
 
 ## Dev:API测试
 
