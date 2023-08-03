@@ -1,4 +1,0 @@
-name = "biliroaming-ts-server"
-compatibility_date = "2023-08-03"
-compatibility_flags = ["nodejs_compat"]
-node_compat = true
