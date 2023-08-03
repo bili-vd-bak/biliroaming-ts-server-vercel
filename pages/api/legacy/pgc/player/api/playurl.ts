@@ -9,14 +9,15 @@ export const config = {
 
 const main = async (req: NextRequest, ctx: NextFetchEvent) => {
   //res.json(req.headers)
+  const url_str = req.nextUrl.pathname + req.nextUrl.search;
   const continue_execute = await data_parse.middleware(
-    req.url as string,
+    url_str as string,
     req.headers,
     req.method
   );
   if (continue_execute[0] == false)
     return NextResponse.json(env.block(continue_execute[1]));
-  else return NextResponse.json(await data_parse.main(req.url as string));
+  else return NextResponse.json(await data_parse.main(url_str as string));
   /*fetch(api + req.url, {
     method: req.method,
     body: req.body
