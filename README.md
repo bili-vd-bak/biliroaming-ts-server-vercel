@@ -32,6 +32,11 @@
 若需使用Vercel Storage的Postgresql数据库，请连接至此项目；或使用其它pg数据库。重部署后访问`https://{yourDomain}/api/admin/init?s=${配置填写的secret}`，并检查数据库是否已有`blacklist` `cache` `log`三个表。
 Tips: 环境变量设置后需下一次部署才可启用，故推荐导入时提前设置。  
 
+### Cloudflare Pages
+
+TODO  
+--compatibility-flag=nodejs_compat  
+
 ### 本地
 
 登录想要代理区域的服务器后台。  
