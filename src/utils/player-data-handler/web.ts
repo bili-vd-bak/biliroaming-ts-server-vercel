@@ -44,13 +44,14 @@ export const middleware = async (
   //请求头验证
   if (!env.web_on && PassWebOnCheck === 0) return [false, 1];
 
+  if (!env.need_login) return [true, 0]; //免登陆
+
   //信息获取
   const url = new URL(url_data, env.api.main.web.playurl);
   if (!url.search || !url.search) return [false, 7]; //缺少参数
   const data = qs.parse(url.search.slice(1));
   if (env.need_login && !data.access_key && !cookies.SESSDATA) {
-    if (!env.need_login) return [true, 0]; //免登陆
-    else return [false, 6]; //要求登录
+    return [false, 6]; //要求登录
   }
 
   //仅允许access_key或cookies鉴权
@@ -87,7 +88,8 @@ export const main = async (url_data: string, cookies) => {
   const url = new URL(url_data, env.api.main.web.playurl);
   const data = qs.parse(url.search.slice(1));
   //有access_key优先，否则若有cookies用cookies
-  if (data.access_key || cookies) {
+  const login = data.access_key || !playerUtil.isEmptyObject(cookies);
+  if (login) {
     let info: { uid: number; vip_type: 0 | 1 | 2 }, access_key: string;
     if (cookies) access_key = await bili.cookies2access_key(cookies);
     info = await bili.access_key2info(
@@ -112,9 +114,12 @@ export const main = async (url_data: string, cookies) => {
         : res; //尝试解除下载速度限制
     }
   } else {
+    cookies = bili.getCookies();
+    console.log(env.api.main.web.playurl + url_data);
     const res = (await fetch(env.api.main.web.playurl + url_data, {
-      headers: { "User-Agent": env.UA, cookie: bili.cookies2usable(cookies) },
+      headers: { "User-Agent": env.UA, cookie: cookies },
     }).then((res) => res.json())) as { code: number; result: object };
+    console.log(res);
     if (res.code === 0) await playerUtil.addNewCache(url_data, res?.result);
     return env.try_unblock_CDN_speed_enabled
       ? JSON.parse(JSON.stringify(res).replace(/bw=[^&]*/g, "bw=1280000"))

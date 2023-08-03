@@ -6,6 +6,18 @@ import * as blacklist from "./_blacklist";
 
 const loggerc = env.logger.child({ action: "调用组件(_player)" });
 
+/**
+ * 检测是否为空Object `{}`
+ * @param obj
+ */
+export function isEmptyObject(obj: Object) {
+  return (
+    obj &&
+    Object.getPrototypeOf(obj) === Object.prototype &&
+    Object.keys(obj).length === 0
+  );
+}
+
 export const addNewLog_bitio = async (data: {
   access_key: string;
   UID: number;
@@ -121,8 +133,7 @@ export const addNewCache = async (
   const log = loggerc.child({
     module: "添加缓存",
   });
-  let log_data = { cache_way: "unknown" },
-    to_return = {};
+  let log_data = { cache_way: "unknown" };
 
   const need_vip = res_data.has_paid ? 1 : 0;
   const url = new URL(url_data, env.api.main.app.playurl);
