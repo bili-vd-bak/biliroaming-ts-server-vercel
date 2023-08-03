@@ -7,11 +7,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "pages:build": "pnpm @cloudflare/next-on-pages@1",
-    "pages:deploy": "pnpm run pages:build && wrangler pages deploy .vercel/output/static",
-    "pages:watch": "pnpm @cloudflare/next-on-pages@1 --watch",
-    "pages:dev": "pnpm wrangler pages dev .vercel/output/static --compatibility-flag=nodejs_compat"
+    "lint": "next lint"
   },
   "keywords": [],
   "author": "",
@@ -33,8 +29,6 @@
     "pino": "^8.14.2",
     "qs": "^6.11.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "wrangler": "^3.4.0",
-    "@cloudflare/next-on-pages": "1"
+    "react-dom": "^18.2.0"
   }
 }
