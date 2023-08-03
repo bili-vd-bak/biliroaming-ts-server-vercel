@@ -1,0 +1,2 @@
+name = "biliroaming-ts-server"
+compatibility_flags = [ "nodejs_compat" ]
