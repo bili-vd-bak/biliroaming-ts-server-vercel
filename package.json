@@ -15,17 +15,17 @@
   "devDependencies": {
     "@types/js-md5": "^0.4.3",
     "@types/pg": "^8.10.2",
-    "@types/qs": "^6.9.7",
+    "@types/qs": "^6.9.8",
     "@types/react": "18.0.26",
-    "@vercel/node": "^2.15.6",
-    "typescript": "^5.1.6"
+    "@vercel/node": "^2.15.10",
+    "typescript": "^5.2.2"
   },
   "dependencies": {
     "@beetcb/sstore": "^0.3.0",
     "@neondatabase/serverless": "^0.4.26",
     "js-md5": "^0.7.3",
-    "next": "^13.4.12",
-    "pino": "^8.14.1",
+    "next": "^13.4.19",
+    "pino": "^8.15.1",
     "qs": "^6.11.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
