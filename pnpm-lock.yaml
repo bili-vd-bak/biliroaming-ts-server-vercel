@@ -11,9 +11,9 @@ dependencies:
   '@neondatabase/serverless':
     specifier: ^0.4.26
     version: registry.npmmirror.com/@neondatabase/serverless@0.4.26
-  js-md5:
-    specifier: ^0.7.3
-    version: registry.npmmirror.com/js-md5@0.7.3
+  hash-wasm:
+    specifier: ^4.9.0
+    version: registry.npmmirror.com/hash-wasm@4.9.0
   next:
     specifier: ^13.4.19
     version: registry.npmmirror.com/next@13.4.19(react-dom@18.2.0)(react@18.2.0)
@@ -31,9 +31,6 @@ dependencies:
     version: registry.npmmirror.com/react-dom@18.2.0(react@18.2.0)
 
 devDependencies:
-  '@types/js-md5':
-    specifier: ^0.4.3
-    version: registry.npmmirror.com/@types/js-md5@0.4.3
   '@types/pg':
     specifier: ^8.10.2
     version: registry.npmmirror.com/@types/pg@8.10.2
@@ -377,12 +374,6 @@ packages:
       '@types/minimatch': registry.npmmirror.com/@types/minimatch@5.1.2
       '@types/node': registry.npmmirror.com/@types/node@20.6.2
     dev: false
-
-  registry.npmmirror.com/@types/js-md5@0.4.3:
-    resolution: {integrity: sha512-BIga/WEqTi35ccnGysOuO4RmwVnpajv9oDB/sDQSY2b7/Ac7RyYR30bv7otZwByMvOJV9Vqq6/O1DFAnOzE4Pg==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/js-md5/-/js-md5-0.4.3.tgz}
-    name: '@types/js-md5'
-    version: 0.4.3
-    dev: true
 
   registry.npmmirror.com/@types/json-schema@7.0.13:
     resolution: {integrity: sha512-RbSSoHliUbnXj3ny0CNFOoxrIDV6SUGyStHsvDqosw6CkdPV8TtWGlfecuK4ToyMEAql6pzNxgCFKanovUzlgQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/@types/json-schema/-/json-schema-7.0.13.tgz}
@@ -1579,6 +1570,12 @@ packages:
       function-bind: registry.npmmirror.com/function-bind@1.1.1
     dev: false
 
+  registry.npmmirror.com/hash-wasm@4.9.0:
+    resolution: {integrity: sha512-7SW7ejyfnRxuOc7ptQHSf4LDoZaWOivfzqw+5rpcQku0nHfmicPKE51ra9BiRLAmT8+gGLestr1XroUkqdjL6w==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/hash-wasm/-/hash-wasm-4.9.0.tgz}
+    name: hash-wasm
+    version: 4.9.0
+    dev: false
+
   registry.npmmirror.com/http-signature@1.2.0:
     resolution: {integrity: sha512-CAbnr6Rz4CYQkLYUtSNXxQPUH2gK8f3iWexVlsnMeD+GjlsQ0Xsy1cOX+mN3dtxYomRy21CiOzU8Uhw6OwncEQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/http-signature/-/http-signature-1.2.0.tgz}
     name: http-signature
@@ -1694,12 +1691,6 @@ packages:
     resolution: {integrity: sha512-Yljz7ffyPbrLpLngrMtZ7NduUgVvi6wG9RJ9IUcyCd59YQ911PBJphODUcbOVbqYfxe1wuYf/LJ8PauMRwsM/g==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/isstream/-/isstream-0.1.2.tgz}
     name: isstream
     version: 0.1.2
-    dev: false
-
-  registry.npmmirror.com/js-md5@0.7.3:
-    resolution: {integrity: sha512-ZC41vPSTLKGwIRjqDh8DfXoCrdQIyBgspJVPXHBGu4nZlAEvG3nf+jO9avM9RmLiGakg7vz974ms99nEV0tmTQ==, registry: https://registry.npm.taobao.org/, tarball: https://registry.npmmirror.com/js-md5/-/js-md5-0.7.3.tgz}
-    name: js-md5
-    version: 0.7.3
     dev: false
 
   registry.npmmirror.com/js-tokens@4.0.0:

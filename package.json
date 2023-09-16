@@ -13,7 +13,6 @@
   "author": "",
   "license": "GPL-3.0",
   "devDependencies": {
-    "@types/js-md5": "^0.4.3",
     "@types/pg": "^8.10.2",
     "@types/qs": "^6.9.8",
     "@types/react": "18.0.26",
@@ -23,7 +22,7 @@
   "dependencies": {
     "@beetcb/sstore": "^0.3.0",
     "@neondatabase/serverless": "^0.4.26",
-    "js-md5": "^0.7.3",
+    "hash-wasm": "^4.9.0",
     "next": "^13.4.19",
     "pino": "^8.15.1",
     "qs": "^6.11.2",
