@@ -6,7 +6,7 @@
 
 ## Features
 
-- 支持软件：BiliRoaming、油猴脚本、哔哩(Bili.uwp)、BBDown
+- 支持软件：BiliRoaming、油猴脚本、哔哩(Bili.uwp)、BBDown(请包含以下cookies:SESSDATA;DedeUserID;bili_jct;buvid3;buvid4以解决未登录报错)
 - 支持仅Cookie鉴权(目前未发现其他支持此功能服务)
 - 尝试解除下载速度限制(方法见[BiliRoaming](https://github.com/yujincheng08/BiliRoaming/pull/1045/commits/bb8bbc5bd0fdb2b61b23f957658ebf7cb064e30f))
 - 代理HK地区番剧(目前Vercel仅提供`hkg1`节点)
@@ -62,6 +62,7 @@ pnpm i
 
 - Vercel无法本地缓存，故自带缓存功能仅在本地部署时有效。  
 - 使用`pnpm dev`开发时，所有搜索API内`req.url`会错误获取`next.config.mjs`中`rewrites`后的函数路径，导致错误。(`pnpm build`产物正常)(错误由nextjs框架导致)
+- 暂未查明cookies(`DedeUserID` `bili_jct` `buvid3` `buvid4`)的作用，故目前强制要求以防止风控
 
 ## 更新方法
 
@@ -87,7 +88,7 @@ pnpm i
 - 搜索(无法测试):`/x/v2/search/type`
 - 番剧详情:`/pgc/view/web/season?season_id=3375`
 - 番剧详情(无法测试):`/pgc/view/v2/app/season`
-- 获取playurl:`/pgc/player/web/playurl?cid=646652`
+- 获取playurl:`/pgc/player/web/playurl?cid=3629601`
 - 获取playurl(无法测试):`/pgc/player/api/playurl`
 - 所有intlAPI(暂未启用)
 
