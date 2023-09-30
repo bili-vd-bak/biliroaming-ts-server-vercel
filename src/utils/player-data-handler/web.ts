@@ -56,7 +56,7 @@ export const middleware = async (
 
   //仅允许access_key或cookies鉴权
   let access_key: string;
-  if (cookies.SESSDATA) {
+  if (!data.access_key && cookies.SESSDATA) {
     //拯救一下只传cookies的BBDown
     if (!cookies.DedeUserID) return [false, 6]; //FIXME DedeUserID处理问题
     access_key = await bili.cookies2access_key(cookies);
@@ -91,7 +91,8 @@ export const main = async (url_data: string, cookies) => {
   const login = data.access_key || !playerUtil.isEmptyObject(cookies);
   if (login) {
     let info: { uid: number; vip_type: 0 | 1 | 2 }, access_key: string;
-    if (cookies) access_key = await bili.cookies2access_key(cookies);
+    if (!data.access_key && cookies)
+      access_key = await bili.cookies2access_key(cookies);
     info = await bili.access_key2info(
       (data.access_key as string) || access_key
     );
