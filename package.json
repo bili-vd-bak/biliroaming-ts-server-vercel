@@ -13,7 +13,7 @@
   "author": "",
   "license": "GPL-3.0",
   "devDependencies": {
-    "@types/pg": "^8.10.2",
+    "@types/pg": "^8.10.3",
     "@types/qs": "^6.9.8",
     "@types/react": "18.0.26",
     "@vercel/node": "^2.15.10",
@@ -23,7 +23,7 @@
     "@beetcb/sstore": "^0.3.0",
     "@neondatabase/serverless": "^0.4.26",
     "hash-wasm": "^4.9.0",
-    "next": "^13.4.19",
+    "next": "^13.5.3",
     "pino": "^8.15.1",
     "qs": "^6.11.2",
     "react": "^18.2.0",
