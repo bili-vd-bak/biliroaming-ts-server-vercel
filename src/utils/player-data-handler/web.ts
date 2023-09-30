@@ -58,6 +58,7 @@ export const middleware = async (
   let access_key: string;
   if (!data.access_key && cookies.SESSDATA) {
     //拯救一下只传cookies的BBDown
+    //TODO 查明DedeUserID,bili_jct,buvid3,buvid4影响
     if (!cookies.DedeUserID) return [false, 6]; //FIXME DedeUserID处理问题
     access_key = await bili.cookies2access_key(cookies);
   }
