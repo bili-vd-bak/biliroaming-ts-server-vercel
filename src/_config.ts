@@ -274,7 +274,7 @@ export const block = (code: number) => {
 //============================================================
 
 //===================信息展示(不用改)===========================
-export const version = `3.0.3[${
+export const version = `3.0.4[${
   (
     process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ||
     process.env.VERCEL_GIT_COMMIT_SHA
