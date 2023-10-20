@@ -46,6 +46,17 @@ export const middleware = async (
   //信息获取
   const url = new URL(url_data, env.api.main.app.playurl);
   if (!url.search || !url.search) return [false, 7]; //缺少参数
+  const data = qs.parse(url.search.slice(1));
+  //自定义请求参数验证
+  if (data.ep_id)
+    for (const i of env.block_bangumi.ep)
+      if (Number(data.ep_id) === i) return [false, 8];
+  if (data.cid)
+    for (const i of env.block_bangumi.cid)
+      if (Number(data.cid) === i) return [false, 8];
+  if (data.avid)
+    for (const i of env.block_bangumi.avid)
+      if (Number(data.avid) === i) return [false, 8];
   //免登陆
   const info = await bili.access_keyParams2info(url.search);
   if (info.uid === 0) {
@@ -54,7 +65,6 @@ export const middleware = async (
     else return [false, 6];
   }
   //信息获取
-  const data = qs.parse(url.search.slice(1));
   if (!data.access_key) return [false, 7]; //缺少参数 need_login=1才需此行
   if (env.need_login && !data.access_key) return [false, 6]; //need_login强制为1
   const log_data = {
