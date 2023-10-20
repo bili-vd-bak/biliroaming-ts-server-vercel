@@ -240,8 +240,9 @@ export const web_on: io = 0;
 //用BBDown的打开此选项(虽然似乎没用)
 export const pass_web_on_check: io = 1;
 //限制哔哩漫游最低版本 填写数字 0-不限制
-//1208为1.6.10的版本号
-export const ver_min: number = 1208;
+//1289为1.7.0的版本号,默认限制会定期更新至最新版。
+//1290为目前最新测试版(CI)。
+export const ver_min: number = 1290;
 //锁区，填写的是支持的地区 cn-中国大陆 hk-中国香港 tw-中国台湾 th-泰国/新加坡/东南亚地区
 //TODO 暂时未加地区检测，访问不支持地区由B站服务器提示错误。
 export const block_region: _block_region = ["hk"];
