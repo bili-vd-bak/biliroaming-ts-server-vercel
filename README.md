@@ -16,6 +16,7 @@
 ## 部署方法
 
 请看完整篇README文档再动手。  
+**请务必开启黑名单功能，建议同步公共黑名单!!!**  
 **请配置Postgresql数据库以减少B站API请求，防止Vercel IP过多请求被禁。**  
 查看Wiki：  
 [配置文档填写说明](https://github.com/bili-vd-bak/biliroaming-ts-server-vercel/wiki/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6)  
