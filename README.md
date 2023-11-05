@@ -4,6 +4,10 @@
 配置修改在 `src/_config.ts` 中，可以直接改里面的配置文本，也可在Vercel里添加对应名称变量。  
 使用环境变量更安全。  
 
+## 请旧版用户立即更新！
+
+新版会修复一些多余请求、API失效问题。  
+
 ## Features
 
 - 支持软件：BiliRoaming、油猴脚本、哔哩(Bili.uwp)、BBDown(请包含以下cookies:SESSDATA;DedeUserID;bili_jct;buvid3;buvid4以解决未登录报错)
