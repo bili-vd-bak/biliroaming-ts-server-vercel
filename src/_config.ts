@@ -61,26 +61,26 @@ export const fetch_config_UA = { headers: { "User-Agent": UA } };
 //===========================替换搜索 Fuck Search================================
 //添加假番剧作公告板
 //标题 <em class="keyword">标签可以重点标注
-export const fs_title: string = '功能测试 <em class="keyword">xrz</em>';
+export const fs_title: string = '<em class="keyword">xrz</em>的哔哩漫游服务';
 //封面
 export const fs_cover: string =
   "https://i0.hdslb.com/bfs/face/046974d6dde4af386f7eb4f231b84ec08bad693b.jpg";
 //用处不明
 export const fs_uri: string = "https://xrz.cool";
 //标签-副标题1
-export const fs_style: string = "标签1 | 测试";
+export const fs_style: string = "禁止在B站等社交平台公开";
 //标签-副标题2
-export const fs_label: string = "标签2 | test";
+export const fs_label: string = "违者将进入黑名单";
 //描述(WEB版API)
 export const fs_desc: string = "这是一个公告哦！";
 //番剧分数
-export const fs_rating: number = 10;
+export const fs_rating: number = 99999;
 //打分人数
 export const fs_vote: number = 1;
 //立即观看按钮-主选项标题
-export const fs_watch_button_title: string = "立即观看";
+export const fs_watch_button_title: string = "bili-vd-bak项目";
 //立即观看按钮-主选项链接
-export const fs_watch_button_link: string = "https://cn.bing.com";
+export const fs_watch_button_link: string = "https://b23.xrzyun.top";
 //追番按钮-追番
 export const fs_follow_button_title: string = "别点";
 //追番按钮-取消追番
@@ -188,7 +188,7 @@ export const fs_episodes_web = [
 
 //===========================小工具============================
 //尝试解除下载速度限制(替换下载链接中bw=1280000),略影响性能
-export const try_unblock_CDN_speed_enabled: io = 0;
+export const try_unblock_CDN_speed_enabled: io = 1;
 //============================================================
 
 //===========================数据库============================
@@ -198,12 +198,12 @@ export const try_unblock_CDN_speed_enabled: io = 0;
 export const cache_time = 1000 * 60 * 15;
 //本地模式设置
 //本地模式开关
-export const db_local_enabled: io = 1;
+export const db_local_enabled: io = 0;
 //本地数据库查询密钥
 export const local_cache_secret = process.env.local_cache_secret || "";
 //PostgreSQL配置(需Read/Write权限)
 import { Pool } from "@neondatabase/serverless"; //导入(不用改)
-export const db_bitio_enabled: io = 0; //启用postgresql数据库
+export const db_bitio_enabled: io = 1; //启用postgresql数据库
 const connectionString = //三种配置方法
   process.env.POSTGRES_URL || //在Vercel项目Storage里连接数据库，并将上方 db_bitio_enabled 设为1
   process.env.db_bitio_pool || //配置环境变量 db_bitio_pool 为下方格式
@@ -241,7 +241,7 @@ export const public_blacklist: string = "https://black.qimo.ink/api/users/";
 //要求登录 1-开 0-关
 export const need_login: io = 1;
 //允许WEB版使用(B站官网可直接请求,无需开启此选项) 1-开 0-关
-export const web_on: io = 0;
+export const web_on: io = 1;
 //允许Referer为 https://www.bilibili.com 的请求而无需打开web_on (解决BBDown问题) 1-开 0-关
 //用BBDown的打开此选项(虽然似乎没用)
 export const pass_web_on_check: io = 1;
