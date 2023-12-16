@@ -68,13 +68,14 @@ export const middleware = async (
   }
 
   //仅允许access_key或cookies鉴权
+  //旧cookies2accesskey失效，新API会产生登录信息，故删除仅cookies鉴权
   let access_key: string;
-  if (!data.access_key && cookies.SESSDATA) {
-    //拯救一下只传cookies的BBDown
-    //TODO 查明DedeUserID,bili_jct,buvid3,buvid4影响
-    if (!cookies.DedeUserID) return [false, 6]; //FIXME DedeUserID处理问题
-    access_key = await bili.cookies2access_key(cookies);
-  }
+  // if (!data.access_key && cookies.SESSDATA) {
+  //   //拯救一下只传cookies的BBDown
+  //   //TODO 查明DedeUserID,bili_jct,buvid3,buvid4影响
+  //   if (!cookies.DedeUserID) return [false, 6]; //FIXME DedeUserID处理问题
+  //   access_key = await bili.cookies2access_key(cookies);
+  // }
   const info = await bili.access_key2info(
     (data.access_key as string) || access_key
   );
