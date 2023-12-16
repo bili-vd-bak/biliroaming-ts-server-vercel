@@ -4,14 +4,20 @@
 配置修改在 `src/_config.ts` 中，可以直接改里面的配置文本，也可在Vercel里添加对应名称变量。  
 使用环境变量更安全。  
 
-## 请旧版用户立即更新！
+## 请旧版用户立即更新
 
 新版会修复一些多余请求、API失效问题。  
+
+## 请网页端用户留心，您需要手动为油猴脚本鉴权
+
+因B站废弃旧API,当前版本的油猴脚本无法正常生成`access_key`,且本软件无法为每个仅Cookies鉴权的请求生成`access_key`。  
+本软件使用新的`access_key`生成方法,但会产生一条登录信息。  
+网页端手动鉴权方法见 任意部署了本服务的网站首页帮助。  
 
 ## Features
 
 - 支持软件：BiliRoaming、油猴脚本、哔哩(Bili.uwp)、BBDown(请包含以下cookies:SESSDATA;DedeUserID;bili_jct;buvid3;buvid4以解决未登录报错)
-- 支持仅Cookie鉴权(目前未发现其他支持此功能服务)
+- 支持仅Cookies生成Access_key
 - 尝试解除下载速度限制(方法见[BiliRoaming](https://github.com/yujincheng08/BiliRoaming/pull/1045/commits/bb8bbc5bd0fdb2b61b23f957658ebf7cb064e30f))
 - 代理HK地区番剧(目前Vercel仅提供`hkg1`节点)
 - 搜索替换(配置中fs开头配置)
@@ -81,6 +87,7 @@ pnpm i
 
 - Vercel Storage 的 Redis KV支持
 - pg管理数据库(管理黑白名单、查看日志)接口
+- 修复番剧屏蔽
 - [BETA]Vercel支持新加坡节点，可以为东南亚地区解锁。(然后就被风控用不了了)  
 - [BETA]Edge函数版(见cfp分支)
 - [BETA]CloudFlare支持(见cfp分支)
@@ -102,7 +109,7 @@ pnpm i
 - [Next.js](https://nextjs.org/)
 - pg
 - @neondatabase/serverless
-- js-md5
+- hash-wasm
 - qs
 - @beetcb/sstore
 - pino
