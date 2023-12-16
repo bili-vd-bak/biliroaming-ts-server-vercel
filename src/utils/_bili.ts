@@ -19,7 +19,7 @@ import * as env from "../_config";
 
 const loggerc = env.logger.child({ action: "调用组件(_bili)" });
 
-const sorted = (params) => {
+const sorted = (params: { [x: string]: any }) => {
   const map = new Map();
   for (let k in params) {
     map.set(k, params[k]);
@@ -40,19 +40,61 @@ const sorted = (params) => {
  * @param appkey 可不填
  * @param appsec 可不填
  */
-export const appsign = (
+export const appsign = async (
   params: any,
-  appkey = "27eb53fc9058f8c3",
-  appsec = "c2ed53a74eeefe3cf99fbd01d8c9c375"
-): string => {
+  appkey = "1d8b6e7d45233436",
+  appsec = "560c52ccd288fed045859ed18bffd973"
+  /**
+   * 常用key:
+   * 783bbb7264451d82 / 2653583c8873dea268ab9386918b1d65 (Android)
+   * 1d8b6e7d45233436 / 560c52ccd288fed045859ed18bffd973 (IOS)
+   */
+) => {
   params.appkey = appkey;
   params = sorted(params);
   const query = qs.stringify(params);
-  const sign = md5(query + appsec);
+  const sign = await md5(query + appsec);
   params.sign = sign;
   const to_return = qs.stringify(params);
   const log = loggerc.child({
     module: "Bilibili APP API 签名",
+  });
+  log.info({});
+  log.debug({ context: to_return });
+  return to_return;
+};
+
+/**
+ * 生成CorrespondPath算法
+ */
+export const CorrespondPath = async () => {
+  const publicKey = await crypto.subtle.importKey(
+    "jwk",
+    {
+      kty: "RSA",
+      n: "y4HdjgJHBlbaBN04VERG4qNBIFHP6a3GozCl75AihQloSWCXC5HDNgyinEnhaQ_4-gaMud_GF50elYXLlCToR9se9Z8z433U3KjM-3Yx7ptKkmQNAMggQwAVKgq3zYAoidNEWuxpkY_mAitTSRLnsJW-NCTa0bqBFF6Wm1MxgfE",
+      e: "AQAB",
+    },
+    { name: "RSA-OAEP", hash: "SHA-256" },
+    true,
+    ["encrypt"]
+  );
+
+  async function getCorrespondPath(timestamp) {
+    const data = new TextEncoder().encode(`refresh_${timestamp}`);
+    const encrypted = new Uint8Array(
+      await crypto.subtle.encrypt({ name: "RSA-OAEP" }, publicKey, data)
+    );
+    return encrypted.reduce(
+      (str, c) => str + c.toString(16).padStart(2, "0"),
+      ""
+    );
+  }
+
+  const ts = Date.now();
+  const to_return = await getCorrespondPath(ts);
+  const log = loggerc.child({
+    module: "Bilibili 生成CorrespondPath",
   });
   log.info({});
   log.debug({ context: to_return });
@@ -67,24 +109,29 @@ export const appsign = (
 export const cookies2access_key = async (cookies: {
   SESSDATA: string;
   DedeUserID: string;
+  bili_jct: string; //即`csrf token`
 }) => {
   const log = loggerc.child({
     module: "通过WEB端Cookies获取APP端access_key(IOS APPKEY)",
   });
-  if (!cookies.SESSDATA || !cookies.DedeUserID) {
-    log.info({ status: "Failed" });
+  if (!cookies.SESSDATA || !cookies.DedeUserID || !cookies.bili_jct) {
+    log.info({ status: "Failed: No cookies" });
     return;
   }
-  /* const sign = md5(
-    "api=http://link.acg.tv/forum.php" + "c2ed53a74eeefe3cf99fbd01d8c9c375"
-  ); */
-  const uri = await fetch(
-    env.api.main.web.third_login +
-      "/login/app/third?appkey=27eb53fc9058f8c3&api=http://link.acg.tv/forum.php&sign=67ec798004373253d60114caaad89a8c",
+  const auth_code = await fetch(
+    // 第三方登陆法失效，现使用TV登陆法(会产生登陆信息)
+    env.api.main.web.third_login + "/x/passport-tv-login/qrcode/auth_code",
     {
+      method: "POST",
+      body: await appsign(
+        { appkey: "783bbb7264451d82", local_id: 0, ts: Date.now() },
+        "783bbb7264451d82",
+        "2653583c8873dea268ab9386918b1d65"
+      ),
       headers: {
         "User-Agent": env.UA,
-        cookie: `DedeUserID=${cookies.DedeUserID}; SESSDATA=${cookies.SESSDATA}`,
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        // cookie: `DedeUserID=${cookies.DedeUserID}; SESSDATA=${cookies.SESSDATA}`,
       },
     }
   )
@@ -92,41 +139,80 @@ export const cookies2access_key = async (cookies: {
     .then(
       (res: {
         code: number;
-        status: boolean;
-        ts: number;
-        data: {
-          api_host: string;
-          has_login: 0 | 1;
-          direct_login?: 0 | 1;
-          user_info?: { mid: string; uname: string; face: string };
-          confirm_uri?: string;
+        message: string;
+        ttl: number;
+        data?: {
+          url: string;
+          auth_code: string;
         };
       }) => {
-        if (res.code !== 0 || !res?.data?.confirm_uri) {
-          log.info({ status: "Failed" });
+        if (res.code !== 0 || !res?.data?.auth_code) {
+          log.info({ status: "Failed: No auth_code" });
           return;
         }
-        return res.data.confirm_uri;
+        return res.data.auth_code;
       }
     );
-  if (!uri) {
-    log.info({ status: "Failed" });
+  if (!auth_code) {
+    log.info({ status: "Failed: No auth_code" });
     return;
   }
-  return await fetch(uri, {
-    redirect: "manual",
-    headers: {
-      "User-Agent": env.UA,
-      cookie: `DedeUserID=${cookies.DedeUserID}; SESSDATA=${cookies.SESSDATA}`,
-    },
-  }).then((res) => {
-    const url = res.headers.get("Location");
-    if (!url) return;
-    const to_return = new URL(url).searchParams.get("access_key");
-    log.info({ status: "Success" });
-    log.debug({ context: to_return });
-    return to_return;
-  });
+  return await fetch(
+    env.api.main.web.third_login + "/x/passport-tv-login/h5/qrcode/confirm",
+    {
+      method: "POST",
+      body: qs.stringify({ auth_code, build: 7082000, csrf: cookies.bili_jct }),
+      headers: {
+        "User-Agent": env.UA,
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        cookie: `DedeUserID=${cookies.DedeUserID}; SESSDATA=${cookies.SESSDATA}`,
+      },
+    }
+  ).then(
+    async () =>
+      await fetch(
+        env.api.main.web.third_login + "/x/passport-tv-login/qrcode/poll",
+        {
+          method: "POST",
+          body: await appsign(
+            {
+              appkey: "783bbb7264451d82",
+              local_id: 0,
+              auth_code,
+              ts: Date.now(),
+            },
+            "783bbb7264451d82",
+            "2653583c8873dea268ab9386918b1d65"
+          ),
+          headers: {
+            "User-Agent": env.UA,
+            "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+          },
+        }
+      )
+        .then((res) => res.json())
+        .then(
+          (res: {
+            code: number;
+            message: string;
+            ttl: number;
+            data?: {
+              access_token: string;
+              refresh_token: string;
+              expires_in: number;
+            };
+          }) => {
+            if (res.code !== 0 || !res?.data?.access_token) {
+              log.info({ status: "Failed: No access_token" });
+              return;
+            }
+            const to_return = res.data.access_token;
+            log.info({ status: "Success" });
+            log.debug({ context: to_return });
+            return to_return;
+          }
+        )
+  );
 };
 
 /**
@@ -141,7 +227,7 @@ export const access_key2info = async (access_key: string) => {
   return await fetch(
     env.api.main.app.user_info +
       "/x/v2/account/myinfo?" +
-      appsign({ access_key: access_key, ts: Date.now() }),
+      (await appsign({ access_key: access_key, ts: Date.now() })),
     env.fetch_config_UA
   )
     .then((res) => res.json())
