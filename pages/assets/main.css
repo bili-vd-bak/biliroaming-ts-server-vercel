@@ -43,3 +43,197 @@ a,
     padding: 0 2rem;
   }
 }
+
+/* 
+  copy from markdown.css
+  use for <pre> <code> etc.
+  BEGIN
+ */
+
+pre {
+  overflow: auto;
+}
+
+code,
+kbd,
+pre,
+samp {
+  font-family: monospace, monospace;
+  font-size: 1em;
+}
+
+code,
+pre,
+samp {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
+  font-size: 12px;
+}
+
+pre {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+code,
+samp {
+  padding: 0;
+  padding-top: 0.2em;
+  padding-bottom: 0.2em;
+  margin: 0;
+  font-size: 85%;
+  background-color: rgba(0, 0, 0, 0.04);
+  border-radius: 3px;
+}
+
+code:before,
+code:after {
+  letter-spacing: -0.2em;
+}
+
+pre[language]::before {
+  content: attr(language);
+  position: absolute;
+  top: 0;
+  right: 5px;
+  padding: 2px 1px;
+  text-transform: uppercase;
+  color: #666;
+  font-size: 8.5px;
+}
+
+pre:not([language]) {
+  padding: 6px 10px;
+}
+
+code {
+  padding: 5px 5px;
+  font-size: 90%;
+  color: #c7254e;
+  background-color: #f9f2f4;
+  white-space: pre-wrap;
+  border-radius: 4px;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  word-wrap: break-word;
+}
+
+pre code {
+  padding: 0;
+  white-wrap: pre-wrap;
+  white-space: pre;
+  background-color: transparent;
+  border-radius: 0;
+  position: relative;
+  line-height: 1.45;
+}
+
+pre {
+  display: block;
+  padding: 14px 10px;
+  margin: 0 0 10px;
+  font-size: 13px;
+  line-height: 1.42857143;
+  color: #333;
+  background-color: #f6f8fa;
+  border: 0;
+  border-radius: 3px;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+  overflow: auto;
+  position: relative;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  position: relative;
+  margin-top: 0.2em;
+  margin-bottom: 16px;
+  font-weight: bold;
+  line-height: 1.4;
+}
+
+h1 .headeranchor,
+h2 .headeranchor,
+h3 .headeranchor,
+h4 .headeranchor,
+h5 .headeranchor,
+h6 .headeranchor {
+  display: none;
+  color: #000;
+  vertical-align: middle;
+}
+
+h1:hover .headeranchor-link,
+h2:hover .headeranchor-link,
+h3:hover .headeranchor-link,
+h4:hover .headeranchor-link,
+h5:hover .headeranchor-link,
+h6:hover .headeranchor-link {
+  height: 1em;
+  padding-left: 8px;
+  margin-left: -30px;
+  line-height: 1;
+  text-decoration: none;
+}
+
+h1:hover .headeranchor-link .headeranchor,
+h2:hover .headeranchor-link .headeranchor,
+h3:hover .headeranchor-link .headeranchor,
+h4:hover .headeranchor-link .headeranchor,
+h5:hover .headeranchor-link .headeranchor,
+h6:hover .headeranchor-link .headeranchor {
+  display: inline-block;
+}
+
+h1 {
+  padding-bottom: 0.3em;
+  font-size: 2.25em;
+  line-height: 1.2;
+  border-bottom: 1px solid #eee;
+}
+
+h2 {
+  padding-bottom: 0.3em;
+  font-size: 1.75em;
+  line-height: 1.225;
+  border-bottom: 1px solid #eee;
+}
+
+h3 {
+  font-size: 1.5em;
+  line-height: 1.43;
+}
+
+h4 {
+  font-size: 1.25em;
+}
+
+h5 {
+  font-size: 1em;
+}
+
+h6 {
+  font-size: 1em;
+  color: #777;
+}
+
+ul,
+ol {
+  padding-left: 2em;
+}
+
+ul ul,
+ul ol,
+ol ol,
+ol ul {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+li > p {
+  margin-top: 16px;
+}
+
+/* END */
