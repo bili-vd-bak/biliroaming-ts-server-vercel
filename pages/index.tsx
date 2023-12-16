@@ -36,14 +36,14 @@ function HomePage() {
         (详情自行搜索)在<code>bilibili.com</code>打开 console(控制台) ,输入{" "}
         <code>document.cookie</code> 即可获取当前的Cookies。
         <br />
-        访问 <code>/api/cookies2accesskey?cookies=&#123;cookies&#125;</code>
+        访问 <code>/api/tools/cookies2accesskey?cookies=&#123;cookies&#125;</code>
         即可生成<code>access_key</code>。
         <br />
         若您需解决WEB(网页)端无法授权大会员的问题，请在 console 输入{" "}
         <code>localStorage.access_key = '&#123;access_key&#125;'</code>
         <br />
         <h3>Access_key获取账户信息</h3>
-        访问 <code>/api/my_info?access_key=&#123;access_key&#125;</code>即可
+        访问 <code>/api/tools/my_info?access_key=&#123;access_key&#125;</code>即可
         <br />
         <h3>支持黑/白名单查询</h3>
         访问 <code>/api/users/&#123;uid&#125;</code> 即可查询
