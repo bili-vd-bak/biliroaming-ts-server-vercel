@@ -9,8 +9,18 @@ const main = async (req: NextApiRequest, res: NextApiResponse) => {
     req.headers,
     req.method
   );
-  if (continue_execute[0] == false) res.json(env.block(continue_execute[1]));
-  else res.json(await data_parse.main(req.url as string));
+  if (continue_execute[0] == false)
+    res.json(env.block(continue_execute[1], continue_execute[2] || ""));
+  else
+    res.json(
+      await data_parse.main(
+        req.url as string,
+        continue_execute[2] as {
+          uid: number;
+          vip_type: 0 | 1 | 2;
+        }
+      )
+    );
   /*fetch(api + req.url, {
     method: req.method,
     body: req.body

@@ -32,7 +32,7 @@ export const middleware = async (
   url_data: string,
   headers: IncomingHttpHeaders,
   method: string
-): Promise<[boolean, number]> => {
+): Promise<[boolean, number, any?]> => {
   const log = env.logger.child({
     action: "获取playurl(APP端)",
     method: method || "unknown",
@@ -49,18 +49,18 @@ export const middleware = async (
   const data = qs.parse(url.search.slice(1));
   //自定义请求参数验证
   if (data.ep_id && env.block_bangumi.ep.includes(Number(data.ep_id)))
-    return [false, 8];
+    return [false, 8, "ep_id" + data.ep_id];
   if (data.cid && env.block_bangumi.cid.includes(Number(data.cid)))
-    return [false, 8];
+    return [false, 8, "cid" + data.cid];
   if (data.avid && env.block_bangumi.avid.includes(Number(data.avid)))
-    return [false, 8];
+    return [false, 8, "avid" + data.avid];
   if (data.bvid && env.block_bangumi.bvid.includes(data.bvid as string))
-    return [false, 8];
+    return [false, 8, "bvid" + data.bvid];
   //免登陆
   const info = await bili.access_keyParams2info(url.search);
   if (info.uid === 0) {
     //查询信息失败
-    if (!env.need_login) return [true, 0];
+    if (!env.need_login) return [true, 0, info];
     else return [false, 6];
   }
   //信息获取
@@ -81,20 +81,26 @@ export const middleware = async (
   if (blacklist_data.code != 0) return [false, 3];
   else {
     if (env.whitelist_enabled) {
-      if (blacklist_data.data.is_whitelist) return [true, 0];
+      if (blacklist_data.data.is_whitelist) return [true, 0, info];
       else return [false, 5];
     }
     if (env.blacklist_enabled && blacklist_data.data.is_blacklist)
       return [false, 4];
-    return [true, 0];
+    return [true, 0, info];
   }
 };
 
-export const main = async (url_data: string) => {
+export const main = async (
+  url_data: string,
+  info_cahce?: {
+    uid: number;
+    vip_type: 0 | 1 | 2;
+  }
+) => {
   //信息获取
   const url = new URL(url_data, env.api.main.app.playurl);
   const data = qs.parse(url.search.slice(1));
-  const info = await bili.access_keyParams2info(url.search);
+  const info = info_cahce || (await bili.access_keyParams2info(url.search));
   if (env.need_login && info.uid === 0) return env.block(6);
   const rCache = await playerUtil.readCache(
     Number(data.cid),
