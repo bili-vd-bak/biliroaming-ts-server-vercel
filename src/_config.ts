@@ -283,11 +283,13 @@ export enum block_type {
   "缺少参数",
   "当前番剧/视频在黑名单中，拒绝解析！",
 }
-export const block = (code: number) => {
+export const block = (code: number, mes?: string) => {
   return {
     code: -412,
     message: `${
-      block_type[code] + (code === 2 ? `至${ver_min}(版本号)以上` : "")
+      block_type[code] +
+      (code === 2 ? `至${ver_min}(版本号)以上` : "") +
+      `(${mes})`
     }(E=${code})`,
   };
 };

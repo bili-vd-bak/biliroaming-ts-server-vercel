@@ -34,7 +34,7 @@ export const middleware = async (
   cookies: any, //FIXME 未添加完整类型
   PassWebOnCheck: 0 | 1,
   method?: string
-): Promise<[boolean, number]> => {
+): Promise<[boolean, number, any?]> => {
   const log = env.logger.child({
     action: "获取playurl(网页端)",
     method: method || "unknown",
@@ -50,16 +50,16 @@ export const middleware = async (
   const data = qs.parse(url.search.slice(1));
   //自定义请求参数验证
   if (data.ep_id && env.block_bangumi.ep.includes(Number(data.ep_id)))
-    return [false, 8];
+    return [false, 8, "ep_id" + data.ep_id];
   if (data.cid && env.block_bangumi.cid.includes(Number(data.cid)))
-    return [false, 8];
+    return [false, 8, "cid" + data.cid];
   if (data.avid && env.block_bangumi.avid.includes(Number(data.avid)))
-    return [false, 8];
+    return [false, 8, "avid" + data.avid];
   if (data.bvid && env.block_bangumi.bvid.includes(data.bvid as string))
-    return [false, 8];
+    return [false, 8, "bvid" + data.bvid];
 
   //免登陆
-  if (!env.need_login) return [true, 0];
+  if (!env.need_login) return [true, 0, { uid: 0, vip_type: 0 }];
 
   //信息获取
   if (env.need_login && !data.access_key && !cookies.accesskey) {
@@ -93,21 +93,32 @@ export const middleware = async (
   await playerUtil.addNewLog_notion(log_data);
 
   //黑白名单验证
-  return checkBlackList(info.uid);
+  const checked_res = await checkBlackList(info.uid);
+
+  return [...checked_res, info];
 };
 
-export const main = async (url_data: string, cookies) => {
+export const main = async (
+  url_data: string,
+  cookies,
+  info_cache?: {
+    uid: number;
+    vip_type: 0 | 1 | 2;
+  }
+) => {
   //信息获取
   const url = new URL(url_data, env.api.main.web.playurl);
   const data = qs.parse(url.search.slice(1));
   //有access_key优先，否则若有cookies用cookies
   const login = data.access_key || !playerUtil.isEmptyObject(cookies);
   if (login) {
-    let info: { uid: number; vip_type: 0 | 1 | 2 }, access_key: string;
+    let info = info_cache || null,
+      access_key: string;
     if (!data.access_key && cookies) access_key = cookies.access_key;
-    info = await bili.access_key2info(
-      (data.access_key as string) || access_key
-    );
+    if (!info)
+      info = await bili.access_key2info(
+        (data.access_key as string) || access_key
+      );
     const rCache = await playerUtil.readCache(
       Number(data.cid),
       Number(data.ep_id),
