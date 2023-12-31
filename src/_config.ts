@@ -5,6 +5,7 @@ type _block_bangumi = {
   ep?: number[];
   cid?: number[];
   avid?: number[];
+  bvid?: string[];
 };
 type _block_region = ["cn" | "hk" | "tw" | "th"];
 //=============================================================================
@@ -254,9 +255,10 @@ export const ver_min: number = 1290;
 //默认屏蔽部分番剧/视频，建议保持
 export const block_bangumi: _block_bangumi = {
   ss: [], //暂不支持ss屏蔽
-  ep: [778998, 778292, 769927, 778044, 779739, 780016],
-  cid: [],
-  avid: [],
+  ep: [778998, 778292, 769927, 778044, 779739, 780016], //数字
+  cid: [], //数字
+  avid: [], //数字
+  bvid: [], //字符，eg. ["BV1Wz4y1t7g4"]
 };
 //锁区，填写的是支持的地区 cn-中国大陆 hk-中国香港 tw-中国台湾 th-泰国/新加坡/东南亚地区
 //TODO 暂时未加地区检测，访问不支持地区由B站服务器提示错误。

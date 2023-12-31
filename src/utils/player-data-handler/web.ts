@@ -55,6 +55,8 @@ export const middleware = async (
     return [false, 8];
   if (data.avid && env.block_bangumi.avid.includes(Number(data.avid)))
     return [false, 8];
+  if (data.bvid && env.block_bangumi.bvid.includes(data.bvid as string))
+    return [false, 8];
 
   //免登陆
   if (!env.need_login) return [true, 0];
