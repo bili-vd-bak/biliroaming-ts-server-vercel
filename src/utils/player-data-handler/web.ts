@@ -49,15 +49,12 @@ export const middleware = async (
   if (!url.search || !url.search) return [false, 7]; //缺少参数
   const data = qs.parse(url.search.slice(1));
   //自定义请求参数验证
-  if (data.ep_id)
-    for (const i of env.block_bangumi.ep)
-      if (Number(data.ep_id) === i) return [false, 8];
-  if (data.cid)
-    for (const i of env.block_bangumi.cid)
-      if (Number(data.cid) === i) return [false, 8];
-  if (data.avid)
-    for (const i of env.block_bangumi.avid)
-      if (Number(data.avid) === i) return [false, 8];
+  if (data.ep_id && env.block_bangumi.ep.includes(Number(data.ep_id)))
+    return [false, 8];
+  if (data.cid && env.block_bangumi.cid.includes(Number(data.cid)))
+    return [false, 8];
+  if (data.avid && env.block_bangumi.avid.includes(Number(data.avid)))
+    return [false, 8];
 
   //免登陆
   if (!env.need_login) return [true, 0];
@@ -131,11 +128,11 @@ export const main = async (url_data: string, cookies) => {
     }
   } else {
     cookies = bili.getCookies();
-    console.log(env.api.main.web.playurl + url_data);
+    // console.log(env.api.main.web.playurl + url_data);
     const res = (await fetch(env.api.main.web.playurl + url_data, {
       headers: { "User-Agent": env.UA, cookie: cookies },
     }).then((res) => res.json())) as { code: number; result: object };
-    console.log(res);
+    // console.log(res);
     if (res.code === 0) await playerUtil.addNewCache(url_data, res?.result);
     return env.try_unblock_CDN_speed_enabled
       ? JSON.parse(JSON.stringify(res).replace(/bw=[^&]*/g, "bw=1280000"))
