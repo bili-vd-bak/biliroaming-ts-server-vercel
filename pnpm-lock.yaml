@@ -301,8 +301,8 @@ packages:
   /@types/glob@7.2.0:
     resolution: {integrity: sha512-ZUxbzKl0IfJILTS6t7ip5fQQM/J3TJYubDm3nMbgubNNYS62eXeUpoLUC8/7fJNiFYHTrGPQn7hspDUzIHX3UA==, tarball: https://registry.npmmirror.com/@types/glob/-/glob-7.2.0.tgz}
     dependencies:
-      '@types/minimatch': registry.npmmirror.com/@types/minimatch@5.1.2
-      '@types/node': registry.npmmirror.com/@types/node@20.4.4
+      '@types/minimatch': 5.1.2
+      '@types/node': 20.10.6
     dev: false
 
   /@types/json-schema@7.0.15:
