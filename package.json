@@ -1,6 +1,6 @@
 {
   "name": "server-ts-vercel",
-  "version": "3.0.0",
+  "version": "3.0.3",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -13,20 +13,18 @@
   "author": "",
   "license": "GPL-3.0",
   "devDependencies": {
-    "@types/blueimp-md5": "^2.18.0",
-    "@types/js-md5": "^0.4.3",
-    "@types/pg": "^8.10.2",
-    "@types/qs": "^6.9.7",
+    "@types/pg": "^8.10.9",
+    "@types/qs": "^6.9.11",
     "@types/react": "18.0.26",
-    "@vercel/node": "^2.15.7",
-    "typescript": "^5.1.6"
+    "@vercel/node": "^2.15.10",
+    "typescript": "^5.3.3"
   },
   "dependencies": {
     "@beetcb/sstore": "^0.3.0",
     "@neondatabase/serverless": "^0.4.26",
-    "blueimp-md5": "^2.19.0",
-    "next": "^13.4.12",
-    "pino": "^8.14.2",
+    "hash-wasm": "^4.11.0",
+    "next": "^14.0.4",
+    "pino": "^8.17.2",
     "qs": "^6.11.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

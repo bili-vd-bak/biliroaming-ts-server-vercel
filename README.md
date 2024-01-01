@@ -6,10 +6,20 @@
 配置修改在 `src/_config.ts` 中，可以直接改里面的配置文本，也可在Vercel/CFP里添加对应名称变量。  
 使用环境变量更安全。  
 
+## 请旧版用户立即更新
+
+新版会修复一些多余请求、API失效问题。  
+
+## 请网页端用户留心，您需要手动为油猴脚本鉴权
+
+因B站废弃旧API,当前版本的油猴脚本无法正常生成`access_key`,且本软件无法为每个仅Cookies鉴权的请求生成`access_key`。  
+本软件使用新的`access_key`生成方法,但会产生一条登录信息。  
+网页端手动鉴权方法见 任意部署了本服务的网站首页帮助。  
+
 ## Features
 
-- 支持软件：BiliRoaming、油猴脚本、哔哩(Bili.uwp)、BBDown
-- 支持仅Cookie鉴权(目前未发现其他支持此功能服务)
+- 支持软件：BiliRoaming、油猴脚本、哔哩(Bili.uwp)、BBDown(请包含以下cookies:`accesskey`(手机客户端accesskey,可使用WEB端漫游脚本获取)以解决未登录报错)
+- 支持仅Cookies生成Access_key
 - 尝试解除下载速度限制(方法见[BiliRoaming](https://github.com/yujincheng08/BiliRoaming/pull/1045/commits/bb8bbc5bd0fdb2b61b23f957658ebf7cb064e30f))
 - 代理HK地区番剧(目前Vercel仅提供`hkg1`节点)
 - 搜索替换(配置中fs开头配置)
@@ -18,6 +28,7 @@
 ## 部署方法
 
 请看完整篇README文档再动手。  
+**请务必开启黑名单功能，建议同步公共黑名单!!!**  
 **请配置Postgresql数据库以减少B站API请求，防止Vercel IP过多请求被禁。**  
 查看Wiki：  
 [配置文档填写说明](https://github.com/bili-vd-bak/biliroaming-ts-server-vercel/wiki/%E9%85%8D%E7%BD%AE%E6%96%87%E4%BB%B6)  
@@ -72,6 +83,7 @@ pnpm i
 
 - Vercel无法本地缓存，故自带缓存功能仅在本地部署时有效。  
 - 使用`pnpm dev`开发时，所有搜索API内`req.url`会错误获取`next.config.mjs`中`rewrites`后的函数路径，导致错误。(`pnpm build`产物正常)(错误由nextjs框架导致)
+- 暂未查明cookies(`DedeUserID` `bili_jct` `buvid3` `buvid4`)的作用，故目前强制要求以防止风控
 
 ## 更新方法
 
@@ -85,6 +97,7 @@ pnpm i
 
 - Vercel Storage 的 Redis KV支持
 - pg管理数据库(管理黑白名单、查看日志)接口
+- 修复番剧屏蔽
 - [BETA]Vercel支持新加坡节点，可以为东南亚地区解锁。(然后就被风控用不了了)  
 - [BETA]提供 egde runtime 函数版，run faster(剔除`@beetcb/sstore`)
 - [BETA]支持Cloudflare Pages
@@ -101,12 +114,24 @@ pnpm i
 - 获取playurl(无法测试):`/pgc/player/api/playurl`
 - 所有intlAPI(暂未启用)
 
+## Dev:API测试
+
+- IP信息:`/api/server_info`
+- 查询黑名单:`/api/users/1`
+- 搜索:`/x/web-interface/search/type?search_type=media_bangumi&keyword=86`
+- 搜索(无法测试):`/x/v2/search/type`
+- 番剧详情:`/pgc/view/web/season?season_id=3375`
+- 番剧详情(无法测试):`/pgc/view/v2/app/season`
+- 获取playurl:`/pgc/player/web/playurl?cid=3629601`
+- 获取playurl(无法测试):`/pgc/player/api/playurl`
+- 所有intlAPI(暂未启用)
+
 ## 开源信息
 
 - [Next.js](https://nextjs.org/)
 - pg
 - @neondatabase/serverless
-- js-md5
+- hash-wasm
 - qs
 - @beetcb/sstore
 - pino

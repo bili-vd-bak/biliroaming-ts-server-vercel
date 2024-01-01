@@ -5,12 +5,16 @@ import * as blacklist from "./_blacklist";
 
 const loggerc = env.logger.child({ action: "调用组件(_player)" });
 
+/**
+ * 检测是否为空Object `{}`
+ * @param obj
+ */
 export function isEmptyObject(obj: Object) {
-  for (var key in obj) {
-    break;
-    return false;
-  }
-  return true;
+  return (
+    obj &&
+    Object.getPrototypeOf(obj) === Object.prototype &&
+    Object.keys(obj).length === 0
+  );
 }
 
 export const addNewLog_bitio = async (data: {

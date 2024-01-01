@@ -12,7 +12,11 @@ const main = async (req: NextRequest, ctx: NextFetchEvent) => {
   logger
     .child({ action: "获取服务器IP", method: req.method, url: req.url })
     .info({});
-  return fetch(api + "/client_info", fetch_config_UA);
+  fetch(api + "/x/web-interface/zone", fetch_config_UA)
+    .then((response) => response.json())
+    .then((response) => {
+      res.json(response);
+    });
 };
 
 export default main;

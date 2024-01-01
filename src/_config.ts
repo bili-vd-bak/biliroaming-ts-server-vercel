@@ -1,5 +1,12 @@
 //=============================类型定义区(不用改)=================================
 type io = 0 | 1;
+type _block_bangumi = {
+  ss?: number[];
+  ep?: number[];
+  cid?: number[];
+  avid?: number[];
+  bvid?: string[];
+};
 type _block_region = ["cn" | "hk" | "tw" | "th"];
 //=============================================================================
 
@@ -234,11 +241,22 @@ export const need_login: io = 1;
 //允许WEB版使用(B站官网可直接请求,无需开启此选项) 1-开 0-关
 export const web_on: io = 1;
 //允许Referer为 https://www.bilibili.com 的请求而无需打开web_on (解决BBDown问题) 1-开 0-关
-//用BBDown的打开此选项
+//用BBDown的打开此选项(虽然似乎没用)
 export const pass_web_on_check: io = 1;
 //限制哔哩漫游最低版本 填写数字 0-不限制
-//1208为1.6.10的版本号
-export const ver_min: number = 1208;
+//1289为1.7.0的版本号,默认限制会定期更新至最新版。
+//1290为目前最新测试版(CI)。
+export const ver_min: number = 1290;
+//限制播放特定番剧/视频
+//限制采用"或"策略，满足任意一项即封锁
+//默认屏蔽部分番剧/视频，建议保持
+export const block_bangumi: _block_bangumi = {
+  ss: [], //暂不支持ss屏蔽
+  ep: [778998, 778292, 769927, 778044, 779739, 780016], //数字
+  cid: [], //数字
+  avid: [], //数字
+  bvid: [], //字符，eg. ["BV1Wz4y1t7g4"]
+};
 //锁区，填写的是支持的地区 cn-中国大陆 hk-中国香港 tw-中国台湾 th-泰国/新加坡/东南亚地区
 //TODO 暂时未加地区检测，访问不支持地区由B站服务器提示错误。
 export const block_region: _block_region = ["hk"];
@@ -251,27 +269,31 @@ export const th_subtitle_api: string = "";
 //============================================================
 
 //===================封锁类型(不用改)===========================
+//TODO 显示黑名单持续时间
 export enum block_type {
   "web_on已关闭，请使用BiliRoaming" = 1,
   "BiliRoaming版本过低，请更新",
   "黑/白名单数据获取错误，请稍后再试",
-  "宁已进入黑名单，请不要再传播漫游",
+  "宁已进入黑名单，请不要再传播漫游(别问封到什么时候)",
   "白名单模式已启用，您未在白名单中",
   "已设置登录可用，请登录",
   "缺少参数",
+  "当前番剧/视频在黑名单中，拒绝解析！",
 }
-export const block = (code: number) => {
+export const block = (code: number, mes?: string) => {
   return {
-    code: Number(`-${code}`),
+    code: -412,
     message: `${
-      block_type[code] + (code === 2 ? `至${ver_min}(版本号)以上` : "")
+      block_type[code] +
+      (code === 2 ? `至${ver_min}(版本号)以上` : "") +
+      `(${mes})`
     }(E=${code})`,
   };
 };
 //============================================================
 
 //===================信息展示(不用改)===========================
-export const version = `3.0.0[${
+export const version = `3.1.5[${
   (
     process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ||
     process.env.VERCEL_GIT_COMMIT_SHA
