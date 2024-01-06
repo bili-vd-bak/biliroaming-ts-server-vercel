@@ -8,12 +8,6 @@
 
 新版会修复一些多余请求、API失效问题。  
 
-## 请网页端用户留心，您需要手动为油猴脚本鉴权
-
-因B站废弃旧API,当前版本的油猴脚本无法正常生成`access_key`,且本软件无法为每个仅Cookies鉴权的请求生成`access_key`。  
-本软件使用新的`access_key`生成方法,但会产生一条登录信息。  
-网页端手动鉴权方法见 任意部署了本服务的网站首页帮助。  
-
 ## Features
 
 - 支持软件：BiliRoaming、油猴脚本、哔哩(Bili.uwp)、BBDown(请包含以下cookies:`accesskey`(手机客户端accesskey,可使用WEB端漫游脚本获取)以解决未登录报错)
@@ -87,10 +81,11 @@ pnpm i
 
 - Vercel Storage 的 Redis KV支持
 - pg管理数据库(管理黑白名单、查看日志)接口
-- 修复番剧屏蔽
+- [Done]修复番剧屏蔽(理论有效)
+- [alpha]grpc-api请求(见`grpc`分支)
 - [BETA]Vercel支持新加坡节点，可以为东南亚地区解锁。(然后就被风控用不了了)  
-- [BETA]Edge函数版(见cfp分支)
-- [BETA]CloudFlare支持(见cfp分支)
+- [BETA]Edge函数版(见`cfp`分支)
+- [BETA]CloudFlare支持(见`cfp`分支)
 
 ## Dev:API测试
 
