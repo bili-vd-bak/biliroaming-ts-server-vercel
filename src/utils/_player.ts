@@ -3,6 +3,8 @@ import * as env from "../_config";
 import * as db from "./_sstore";
 import * as db_notion from "./notion-database/_db";
 import * as blacklist from "./_blacklist";
+import grpc from "./grpc/api";
+import type PlayUrlMessages from "./grpc/gen/bilibili/pgc/gateway/player/v2/playurl_pb";
 
 const loggerc = env.logger.child({ action: "调用组件(_player)" });
 
@@ -184,4 +186,118 @@ export const delExpCache = async (
       Math.round(Number(new Date()) / 1000),
     ]);
   log.info({});
+};
+
+export const playurl = {
+  app: async (url_data: string) => {
+    //信息获取
+    const url = new URL(url_data, env.api.main.app.playurl);
+    const data = qs.parse(url.search.slice(1));
+    if (env.need_login && Number(data.fnval) <= 1) {
+      return await grpc.player.pgc(data.access_key as string, {
+        ep_id: Number(data.ep_id) || 0,
+        cid: Number(data.cid) || 0,
+        qn: Number(data.qn),
+        fnval: Number(data.fnval),
+        download: (Number(data.download) || 0) as 0 | 1 | 2,
+      });
+    } else
+      return (await fetch(
+        env.api.main.app.playurl + url_data,
+        env.fetch_config_UA
+      ).then((res) => res.json())) as { code: number };
+  },
+  format: (
+    grpc_json: PlayUrlMessages.PlayViewReply.AsObject,
+    url_data: { fnval }
+  ) => {
+    const grpc_data = grpc_json.videoInfo;
+    return {
+      accept_format: "hdflv2,flv,flv720,flv480,mp4",
+      code: 0,
+      seek_param: "start",
+      is_preview: grpc_json.business.isPreview,
+      fnval: Number(url_data.fnval),
+      video_project: true,
+      fnver: 0,
+      type: "DASH",
+      bp: 0,
+      result: "suee",
+      seek_type: "offset",//dash/flv - offset , mp4 - second
+      from: "local",
+      video_codecid: grpc_data.videoCodecid,
+      record_info: grpc_json.business.recordInfo,
+      is_drm: grpc_json.business.isDrm,
+      no_rexcode: 0,
+      format: grpc_data.format,
+      support_formats: [
+        {
+          display_desc: "1080P",
+          superscript: "高码率",
+          need_login: true,
+          codecs: ["avc1.640028", "hev1.1.6.L120.90"],
+          format: "hdflv2",
+          description: "高清 1080P+",
+          need_vip: true,
+          quality: 112,
+          new_description: "1080P 高码率",
+        },
+        {
+          display_desc: "1080P",
+          superscript: "",
+          need_login: true,
+          codecs: ["avc1.640028", "hev1.1.6.L120.90"],
+          format: "flv",
+          description: "高清 1080P",
+          quality: 80,
+          new_description: "1080P 高清",
+        },
+        {
+          display_desc: "720P",
+          superscript: "",
+          need_login: true,
+          codecs: ["avc1.64001F", "hev1.1.6.L120.90"],
+          format: "flv720",
+          description: "高清 720P",
+          quality: 64,
+          new_description: "720P 高清",
+        },
+        {
+          display_desc: "480P",
+          superscript: "",
+          codecs: ["avc1.64001E", "hev1.1.6.L120.90"],
+          format: "flv480",
+          description: "清晰 480P",
+          quality: 32,
+          new_description: "480P 清晰",
+        },
+        {
+          display_desc: "360P",
+          superscript: "",
+          codecs: ["avc1.64001E", "hev1.1.6.L120.90"],
+          format: "mp4",
+          description: "流畅 360P",
+          quality: 16,
+          new_description: "360P 流畅",
+        },
+      ],
+      message: "",
+      accept_quality: [112, 80, 64, 32, 16],
+      quality: grpc_data.quality,
+      timelength: grpc_data.timelength,
+      durls: [],
+      has_paid: grpc_json.business.vipStatus === 0 ? false : true,
+      vip_status: grpc_json.business.vipStatus,
+      dash:[],//TODO
+      clip_info_list: grpc_json.business.clipInfoList,
+      accept_description: [
+        "高清 1080P+",
+        "高清 1080P",
+        "高清 720P",
+        "清晰 480P",
+        "流畅 360P",
+      ],
+      status: 13,
+    };
+  },
 };

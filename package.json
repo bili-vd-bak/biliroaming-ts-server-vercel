@@ -17,11 +17,15 @@
     "@types/qs": "^6.9.11",
     "@types/react": "18.0.26",
     "@vercel/node": "^2.15.10",
+    "pino-pretty": "^10.3.1",
     "typescript": "^5.3.3"
   },
   "dependencies": {
     "@beetcb/sstore": "^0.3.0",
+    "@grpc/grpc-js": "^1.9.13",
+    "@grpc/proto-loader": "^0.7.10",
     "@neondatabase/serverless": "^0.4.26",
+    "google-protobuf": "^3.21.2",
     "hash-wasm": "^4.11.0",
     "next": "^14.0.4",
     "pino": "^8.17.2",

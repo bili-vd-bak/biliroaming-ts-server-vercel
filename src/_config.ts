@@ -39,12 +39,13 @@ export const api = {
     season_info: "https://app.biliintl.com",
   },
   grpc: {
-    web: {
-      playurl: "https://app.bilibili.com",
+    main: {
+      playurl: "grpc.biliapi.net",
+      search: "app.bilibili.com",
     },
     app: {
-      playurl: "https://grpc.biliapi.net",
-      subtitle: "https://app.bilibili.com",
+      playurl: "grpc.biliapi.net",
+      subtitle: "app.bilibili.com",
     },
   },
 };

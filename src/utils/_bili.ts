@@ -243,8 +243,8 @@ export const access_key2info = async (access_key: string) => {
           vip_type: Number(data.vip.type) as 0 | 1 | 2, //TODO 没有加类型判断校验
         };
       }
-      log.info({});
-      log.debug({ context: to_return });
+      // log.info({});
+      log.info({ context: to_return });
       return to_return;
     });
 };
@@ -275,8 +275,8 @@ export const access_keyParams2info = async (params: string) => {
           vip_type: Number(data.vip.type) as 0 | 1 | 2, //TODO 没有加类型判断校验
         };
       }
-      log.info({});
-      log.debug({ context: to_return });
+      // log.info({});
+      log.info({ context: to_return });
       return to_return;
     });
 };
@@ -311,8 +311,8 @@ export const cookies2info = async (cookies: { SESSDATA: string }) => {
             vip_type: Number(data.vip_type) as 0 | 1 | 2, //TODO 没有加类型判断校验
           };
         }
-        log.info({});
-        log.debug({ context: to_return });
+        // log.info({});
+        log.info({ context: to_return });
         return to_return;
       }
     );

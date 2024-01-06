@@ -7,10 +7,7 @@ import { IncomingHttpHeaders } from "http";
 
 const fetchDataFromBiliAndCache = async (url_data: string) => {
   // console.log("从BiliBili获取数据", "尝试中");
-  const res = (await fetch(
-    env.api.main.app.playurl + url_data,
-    env.fetch_config_UA
-  ).then((res) => res.json())) as { code: number };
+  const res = (await playerUtil.playurl.app(url_data)) as { code: number };
   if (res.code === 0) await playerUtil.addNewCache(url_data, res);
   // else console.log("从BiliBili获取数据错误", res);
   return env.try_unblock_CDN_speed_enabled
