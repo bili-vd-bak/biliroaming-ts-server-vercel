@@ -1,17 +1,16 @@
-//import type { VercelRequest, VercelResponse } from '@vercel/node';
-import type { NextApiRequest, NextApiResponse } from "next";
+import { NextResponse } from "next/server";
+import type { NextFetchEvent, NextRequest } from "next/server";
 import { logger } from "../../../src/_config";
 import qs from "qs";
 import * as env from "../../../src/_config";
 import { cookies2access_key } from "../../../src/utils/_bili";
 
-// const main = async (req: VercelRequest, res: VercelResponse) => {
-const main = async (req: NextApiRequest, res: NextApiResponse) => {
+const main = async (req: NextRequest, ctx: NextFetchEvent) => {
   logger.child({ action: "", method: req.method, url: req.url }).info({});
   const url = new URL(req.url, env.api.main.web.playurl);
   const data = qs.parse(url.search.slice(1));
   const cookies = cookieToJson(data.cookies as string);
-  res.json({
+  return NextResponse.json({
     // cookies: cookies,
     access_key: await cookies2access_key(cookies as any),
   });
