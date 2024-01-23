@@ -14,7 +14,10 @@ type cookies = Partial<{
 //Next Type End
 
 import qs from "qs";
-import { md5 } from "hash-wasm";
+// 此项目无大数据hash需求，故不用wasm,还可保持edge-runtime兼容性
+// import { md5 } from "hash-wasm";
+import { Md5 } from "ts-md5";
+const md5 = Md5.hashStr;
 import * as env from "../_config";
 
 const loggerc = env.logger.child({ action: "调用组件(_bili)" });
