@@ -15,7 +15,7 @@ const main = async (req: NextRequest, ctx: NextFetchEvent) => {
   fetch(api + "/x/web-interface/zone", fetch_config_UA)
     .then((response) => response.json())
     .then((response) => {
-      res.json(response);
+      return NextResponse.json(response);
     });
 };
 
