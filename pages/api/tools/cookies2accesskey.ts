@@ -5,6 +5,10 @@ import qs from "qs";
 import * as env from "../../../src/_config";
 import { cookies2access_key } from "../../../src/utils/_bili";
 
+export const config = {
+  runtime: "edge",
+};
+
 const main = async (req: NextRequest, ctx: NextFetchEvent) => {
   logger.child({ action: "", method: req.method, url: req.url }).info({});
   const url = new URL(req.url, env.api.main.web.playurl);
