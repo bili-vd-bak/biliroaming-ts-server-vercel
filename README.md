@@ -102,9 +102,8 @@ pnpm i
 ## 开源信息
 
 - [Next.js](https://nextjs.org/)
-- pg
 - @neondatabase/serverless
-- hash-wasm
+- ts-md5
 - qs
 - @beetcb/sstore
 - pino
