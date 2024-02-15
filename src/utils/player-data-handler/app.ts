@@ -60,7 +60,7 @@ export const middleware = async (
   const info = await bili.access_keyParams2info(url.search);
   if (info.uid === 0) {
     //查询信息失败
-    if (!env.need_login) return [true, 0, info];
+    if (!env.need_login) return [true, 0, JSON.stringify(info)];
     else return [false, 6];
   }
   //信息获取
@@ -81,12 +81,13 @@ export const middleware = async (
   if (blacklist_data.code != 0) return [false, 3];
   else {
     if (env.whitelist_enabled) {
-      if (blacklist_data.data.is_whitelist) return [true, 0, info];
+      if (blacklist_data.data.is_whitelist)
+        return [true, 0, JSON.stringify(info)];
       else return [false, 5];
     }
     if (env.blacklist_enabled && blacklist_data.data.is_blacklist)
       return [false, 4];
-    return [true, 0, info];
+    return [true, 0, JSON.stringify(info)];
   }
 };
 

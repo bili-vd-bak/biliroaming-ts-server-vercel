@@ -16,8 +16,7 @@ type cookies = Partial<{
 import qs from "qs";
 // 此项目无大数据hash需求，故不用wasm,还可保持edge-runtime兼容性
 // import { md5 } from "hash-wasm";
-import { Md5 } from "ts-md5";
-const md5 = Md5.hashStr;
+import { md5 } from "js-md5";
 import * as env from "../_config";
 
 const loggerc = env.logger.child({ action: "调用组件(_bili)" });
@@ -56,7 +55,7 @@ export const appsign = async (
   params.appkey = appkey;
   params = sorted(params);
   const query = qs.stringify(params);
-  const sign = await md5(query + appsec);
+  const sign = md5(query + appsec);
   params.sign = sign;
   const to_return = qs.stringify(params);
   const log = loggerc.child({
@@ -83,7 +82,7 @@ export const CorrespondPath = async () => {
     ["encrypt"]
   );
 
-  async function getCorrespondPath(timestamp) {
+  async function getCorrespondPath(timestamp: number) {
     const data = new TextEncoder().encode(`refresh_${timestamp}`);
     const encrypted = new Uint8Array(
       await crypto.subtle.encrypt({ name: "RSA-OAEP" }, publicKey, data)
