@@ -64,17 +64,17 @@ export const middleware = async (
   if (!env.need_login) return [true, 0, { uid: 0, vip_type: 0 }];
 
   //信息获取
-  if (env.need_login && !data.access_key && !cookies.accesskey) {
+  if (env.need_login && !data.access_key && !cookies.access_key) {
     return [false, 6]; //要求登录
   }
 
   //仅允许access_key或cookies鉴权
   //旧cookies2accesskey失效，新API会产生登录信息，故删除仅cookies鉴权
   let access_key: string;
-  if (!data.access_key && cookies.accesskey) {
+  if (!data.access_key && cookies.access_key) {
     //拯救一下只传cookies的BBDown
-    //需手动为BBDown的请求带上特定cookie-'accesskey'
-    access_key = cookies.accesskey;
+    //需手动为BBDown的请求带上特定cookie-'access_key'
+    access_key = cookies.access_key;
   }
   const info = await bili.access_key2info(
     (data.access_key as string) || access_key
