@@ -10,7 +10,7 @@
 
 ## Features
 
-- 支持软件：BiliRoaming、油猴脚本、哔哩(Bili.uwp)、BBDown(请包含以下cookies:`accesskey`(手机客户端accesskey,可使用WEB端漫游脚本获取)以解决未登录报错)
+- 支持软件：BiliRoaming、油猴脚本、哔哩(Bili.uwp)、BBDown(请包含以下cookies:`access_key`(手机客户端accesskey,可使用WEB端漫游脚本获取)以解决未登录报错)
 - 支持仅Cookies生成Access_key
 - 尝试解除下载速度限制(方法见[BiliRoaming](https://github.com/yujincheng08/BiliRoaming/pull/1045/commits/bb8bbc5bd0fdb2b61b23f957658ebf7cb064e30f))
 - 代理HK地区番剧(目前Vercel仅提供`hkg1`节点)
