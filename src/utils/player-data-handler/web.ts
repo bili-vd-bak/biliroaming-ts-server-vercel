@@ -95,7 +95,7 @@ export const middleware = async (
   //黑白名单验证
   const checked_res = await checkBlackList(info.uid);
 
-  return [...checked_res, info];
+  return [...checked_res, JSON.stringify(info)];
 };
 
 export const main = async (
