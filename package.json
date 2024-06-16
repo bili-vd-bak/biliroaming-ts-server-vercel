@@ -13,20 +13,20 @@
   "author": "",
   "license": "GPL-3.0",
   "devDependencies": {
-    "@types/pg": "^8.10.9",
-    "@types/qs": "^6.9.11",
-    "@types/react": "^18.2.48",
-    "@vercel/node": "^3.0.17",
-    "typescript": "^5.3.3"
+    "@types/pg": "^8.11.6",
+    "@types/qs": "^6.9.15",
+    "@types/react": "^18.3.3",
+    "@vercel/node": "^3.1.7",
+    "typescript": "^5.4.5"
   },
   "dependencies": {
     "@beetcb/sstore": "^0.3.0",
     "@neondatabase/serverless": "^0.7.2",
     "js-md5": "^0.8.3",
-    "next": "^14.1.0",
-    "pino": "^8.17.2",
-    "qs": "^6.11.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "next": "^14.2.4",
+    "pino": "^8.21.0",
+    "qs": "^6.12.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
   }
 }
