@@ -26,6 +26,10 @@ const nextConfig = {
   async headers() {
     return [
       {
+        source: "/(.*)",
+        headers: cache_control(86400),
+      },
+      {
         source: "/api/users/(.*)",
         headers: cache_control(86400),
       },
