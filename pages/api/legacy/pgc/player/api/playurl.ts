@@ -12,15 +12,23 @@ const main = async (req: NextApiRequest, res: NextApiResponse) => {
   if (continue_execute[0] == false)
     res.json(env.block(continue_execute[1], continue_execute[2] || ""));
   else
-    res.json(
-      await data_parse.main(
-        req.url as string,
-        continue_execute[2] as {
-          uid: number;
-          vip_type: 0 | 1 | 2;
-        }
+    res
+      .setHeader(
+        "Cache-Control",
+        "max-age=3600, s-maxage=3600, stale-while-revalidate=3600"
       )
-    );
+      .setHeader("CDN-Cache-Control", "max-age=3600")
+      .setHeader("Cloudflare-CDN-Cache-Control", "max-age=3600")
+      .setHeader("Vercel-CDN-Cache-Control", "max-age=3600")
+      .json(
+        await data_parse.main(
+          req.url as string,
+          continue_execute[2] as {
+            uid: number;
+            vip_type: 0 | 1 | 2;
+          }
+        )
+      );
   /*fetch(api + req.url, {
     method: req.method,
     body: req.body
