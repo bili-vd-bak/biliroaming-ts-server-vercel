@@ -287,16 +287,16 @@ export const block = (code: number, mes?: string) => {
   return {
     code: -412,
     message: `${
-      block_type[code] +
-      (code === 2 ? `至${ver_min}(版本号)以上` : "") +
-      `(${mes})`
+      block_type[code] + (code === 2 ? `至${ver_min}(版本号)以上` : "") + mes
+        ? `(${mes})`
+        : "" + "(请等待1min再试)"
     }(E=${code})`,
   };
 };
 //============================================================
 
 //===================信息展示(不用改)===========================
-export const version = `3.3.0[${
+export const version = `3.3.2[${
   (
     process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ||
     process.env.VERCEL_GIT_COMMIT_SHA ||
