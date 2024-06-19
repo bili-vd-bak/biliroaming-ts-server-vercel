@@ -51,7 +51,7 @@ function HomePage() {
         <h3>使用BBDown下载</h3>
         获取<code>accesskey</code>(手机客户端),手动在BBDown的登录数据
         <code>BBDown.data</code>文件后加上
-        <code>;accesskey=&#123;accesskey&#125;</code>,此后即可正常使用该服务。
+        <code>;access_key=&#123;accesskey&#125;</code>,此后即可正常使用该服务。
         <br />
         <h3>支持黑/白名单查询</h3>
         访问 <code>/api/users/&#123;uid&#125;</code> 即可查询
