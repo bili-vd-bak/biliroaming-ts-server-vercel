@@ -27,7 +27,15 @@ const main = async (req: NextApiRequest, res: NextApiResponse) => {
     req.method
   );
   if (continue_execute[0] == false)
-    res.json(env.block(continue_execute[1], continue_execute[2] || ""));
+    res
+      .setHeader(
+        "Cache-Control",
+        "max-age=30, s-maxage=30, stale-while-revalidate=30"
+      )
+      .setHeader("CDN-Cache-Control", "max-age=30")
+      .setHeader("Cloudflare-CDN-Cache-Control", "max-age=30")
+      .setHeader("Vercel-CDN-Cache-Control", "max-age=30")
+      .json(env.block(continue_execute[1], continue_execute[2] || ""));
   else
     res
       .setHeader(
