@@ -110,6 +110,7 @@ export const main = async (
   const url = new URL(url_data, env.api.main.web.playurl);
   const data = qs.parse(url.search.slice(1));
   //有access_key优先，否则若有cookies用cookies
+  //TODO 转发cookies做验证：1. 支持cookies2info 2. cookies(JSON2string)
   const login = data.access_key || !playerUtil.isEmptyObject(cookies);
   if (login) {
     let info = info_cache || null,
