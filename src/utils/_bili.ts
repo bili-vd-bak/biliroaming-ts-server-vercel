@@ -44,12 +44,13 @@ const sorted = (params: { [x: string]: any }) => {
  */
 export const appsign = async (
   params: any,
-  appkey = "1d8b6e7d45233436",
-  appsec = "560c52ccd288fed045859ed18bffd973"
+  appkey = "27eb53fc9058f8c3",
+  appsec = "c2ed53a74eeefe3cf99fbd01d8c9c375"
   /**
    * 常用key:
    * 783bbb7264451d82 / 2653583c8873dea268ab9386918b1d65 (Android)
    * 1d8b6e7d45233436 / 560c52ccd288fed045859ed18bffd973 (IOS)
+   * 27eb53fc9058f8c3 / c2ed53a74eeefe3cf99fbd01d8c9c375 (3rd auth web/ios)
    */
 ) => {
   params.appkey = appkey;
