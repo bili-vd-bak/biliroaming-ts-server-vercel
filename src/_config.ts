@@ -199,30 +199,26 @@ export const try_unblock_CDN_speed_enabled: io = 0;
 export const cache_time = 1000 * 60 * 15;
 //本地模式设置
 //本地模式开关
-export const db_local_enabled: io = 1;
+export const db_local_enabled: io = 0;
 //本地数据库查询密钥
 export const local_cache_secret = process.env.local_cache_secret || "";
 //PostgreSQL配置(需Read/Write权限)
 import { Pool } from "@neondatabase/serverless"; //导入(不用改)
-export const db_bitio_enabled: io = 0; //启用postgresql数据库
-const connectionString = //三种配置方法
-  process.env.POSTGRES_URL || //在Vercel项目Storage里连接数据库，并将上方 db_bitio_enabled 设为1
-  process.env.db_bitio_pool || //配置环境变量 db_bitio_pool 为下方格式
-  "postgresql://用户名:秘钥@服务器域名:端口/数据库名"; //配置数据库链接
+export const db_bitio_enabled: io = 1; //启用postgresql数据库
+const connectionString = process.env.POSTGRES_URL 
 export const db_bitio_pool = new Pool({ connectionString, ssl: true }); //导出(不用改)
 //NOTION数据库配置
 //NOTION KEY
-export const NOTION_KEY =
-  process.env.NOTION_KEY || "secret_***BUrz1***********eknk*****gm";
+export const NOTION_KEY = process.env.NOTION_KEY;
 //NOTION DATABASES
 //为空""且不添加环境变量即禁用该功能
-export const db_NOTION_blacklist = process.env.NOTION_db_blacklist || "";
-export const db_NOTION_log = process.env.NOTION_db_log || "";
+export const db_NOTION_blacklist = "";
+export const db_NOTION_log = "";
 //============================================================
 
 //======================黑白名单设置============================
 //黑名单模式 1-开 0-关
-export const blacklist_enabled: io = 1;
+export const blacklist_enabled: io = 0;
 //白名单模式 1-开 0-关
 export const whitelist_enabled: io = 0;
 //验证vip与视频要求 1-开 0-关
@@ -233,7 +229,7 @@ export const whitelist_vip_enabled: io = 0;
 
 //===================获取公共黑白名单============================
 //功能开关 1-开 0-关
-export const public_blacklist_enabled: io = 1;
+export const public_blacklist_enabled: io = 0;
 //公共黑名单地址 要求：URL后需可以直接加 UID/mid
 export const public_blacklist: string = "https://black.qimo.ink/api/users/";
 //============================================================
@@ -249,7 +245,7 @@ export const pass_web_on_check: io = 1;
 //限制哔哩漫游最低版本 填写数字 0-不限制
 //1289为1.7.0的版本号,默认限制会定期更新至最新版。
 //1290为目前最新测试版(CI)。
-export const ver_min: number = 1290;
+export const ver_min: number = 0;
 //限制播放特定番剧/视频
 //限制采用"或"策略，满足任意一项即封锁
 //默认屏蔽部分番剧/视频，建议保持
