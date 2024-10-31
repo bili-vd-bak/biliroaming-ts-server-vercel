@@ -1,7 +1,7 @@
-# biliroaming-serve-ts-vercel
+# br-serve-ts-vercel
 
-本服务部署在Vercel香港节点上，同时支持Next.js本地部署。  
-配置修改在 `src/_config.ts` 中，可以直接改里面的配置文本，也可在Vercel里添加对应名称变量。  
+本服务支持Next.js本地部署。  
+配置修改在 `src/_config.ts` 中，可以直接改里面的配置文本，也可在添加对应名称变量。  
 使用环境变量更安全。  
 
 ## 请旧版用户立即更新
@@ -10,10 +10,9 @@
 
 ## Features
 
-- 支持软件：BiliRoaming、油猴脚本、哔哩(Bili.uwp)、BBDown(请包含以下cookies:`access_key`(手机客户端accesskey,可使用WEB端漫游脚本获取)以解决未登录报错)
+- 支持软件：油猴脚本、哔哩(Bili.uwp)、BBDown(请包含以下cookies:`access_key`(手机客户端accesskey,可使用WEB端漫游脚本获取)以解决未登录报错)
 - 支持仅Cookies生成Access_key
-- 尝试解除下载速度限制(方法见[BiliRoaming](https://github.com/yujincheng08/BiliRoaming/pull/1045/commits/bb8bbc5bd0fdb2b61b23f957658ebf7cb064e30f))
-- 代理HK地区番剧(目前Vercel仅提供`hkg1`节点)
+- 尝试解除下载速度限制
 - 搜索替换(配置中fs开头配置)
 - 自部署黑/白名单(使用NOTION/PostgreSQL作数据库)
 
@@ -27,13 +26,13 @@
 **注**：每个服务只可代理一个地区，若需代理多个地区，请再部署一个相同的服务修改配置。  
 查寻本地缓存和日志请访问`https://{yourDomain}/api/admin/log?s=${配置填写的secret}`  
 清理本地缓存和日志请访问`https://{yourDomain}/api/admin/clean?s=${配置填写的secret}`  
-**注**: 本地缓存和日志在Vercel Serverless环境里无法长期存储，你可以查看Vercel自带的函数日志。  
+**注**: 本地缓存和日志在Serverless环境里无法长期存储，你可以查看Serverless自带的函数日志。  
 
-### Vercel
+### Serverless
 
 先Fork到自己的仓库，再修改自己仓库里`src/_config.ts`，  
-修改`vercel.json`的`regions`：若需代理hk香港地区，则填写`hkg1`(默认)。  
-注册[Vercel](https://vercel.com)，导入本项目，在设置中配置 域名和环境变量。  
+修改`regions`：若需代理hk香港地区，则填写`hkg1`(默认)。  
+在设置中配置 域名和环境变量。  
 若需使用Vercel Storage的Postgresql数据库，请连接至此项目；或使用其它pg数据库。重部署后访问`https://{yourDomain}/api/admin/init?s=${配置填写的secret}`，并检查数据库是否已有`blacklist` `cache` `log`三个表。
 Tips: 环境变量设置后需下一次部署才可启用，故推荐导入时提前设置。  
 
@@ -60,18 +59,18 @@ pnpm i
 
 ### 其它
 
-参考Vercel的部署，你可以将此项目部署至任何支持Next.js的Serverless服务商。  
+参考部署。  
 由于细节差异，不保证在其它平台上的可用性，请自行调整，也欢迎PR。  
 
 ## 已知问题
 
-- Vercel无法本地缓存，故自带缓存功能仅在本地部署时有效。  
+- Serverless无法本地缓存，故自带缓存功能仅在本地部署时有效。  
 - 使用`pnpm dev`开发时，所有搜索API内`req.url`会错误获取`next.config.mjs`中`rewrites`后的函数路径，导致错误。(`pnpm build`产物正常)(错误由nextjs框架导致)
 - 暂未查明cookies(`DedeUserID` `bili_jct` `buvid3` `buvid4`)的作用，故目前强制要求以防止风控
 
 ## 更新方法
 
-### Vercel
+### Serverless
 
 进入你Fork的仓库，点击代码区域上面的提示`Sync fork`，点击下面的`Update branch`，即可自动升级。  
 若只有`Discard n commit(s)`，则需重新部署，或创建新合并，手动修改。  
