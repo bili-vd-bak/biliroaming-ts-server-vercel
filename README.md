@@ -106,3 +106,7 @@ pnpm i
 - qs
 - @beetcb/sstore
 - pino
+
+## Sponsors
+
+[<img src="https://api.gitsponsors.com/api/badge/img?id=560656015" height="20">](https://api.gitsponsors.com/api/badge/link?p=6u8VaIsrrPfL95+s7eK+ukl1WNjMNW8oeWBEEB6ppjhRMOz4mb832rgz9rx0q8WdT5DbJIzXJW8Ji0uDtsegN/nSPw23F0Uck6R1raDszs2d8UVyNBLMV4xzgorNsjpiB7ABwWSj+kCv7rIWGaQ3GA==)
