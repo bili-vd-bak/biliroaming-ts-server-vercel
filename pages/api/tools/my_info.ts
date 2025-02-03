@@ -3,7 +3,10 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { logger } from "../../../src/_config";
 import qs from "qs";
 import * as env from "../../../src/_config";
-import { access_key2info } from "../../../src/utils/_bili";
+import {
+  access_key2info,
+  access_keyParams2info,
+} from "../../../src/utils/_bili";
 
 // const main = async (req: VercelRequest, res: VercelResponse) => {
 const main = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -12,7 +15,11 @@ const main = async (req: NextApiRequest, res: NextApiResponse) => {
   const data = qs.parse(url.search.slice(1));
   res.json({
     accesskey: data.access_key,
-    me: await access_key2info(data.access_key as string),
+    appkey: data.appkey || "default",
+    params_query_mode: !!data.sign,
+    me: await (data.sign
+      ? access_keyParams2info("?" + qs.stringify(data))
+      : access_key2info(data.access_key as string)),
   });
 };
 

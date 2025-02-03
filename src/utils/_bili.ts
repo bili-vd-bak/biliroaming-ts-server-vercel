@@ -36,6 +36,120 @@ const sorted = (params: { [x: string]: any }) => {
   return obj;
 };
 
+const appsignMap = [
+  {
+    APPKEY: "9d5889cf67e615cd",
+    APPSEC: "8fd9bb32efea8cef801fd895bef2713d",
+  },
+  {
+    APPKEY: "1d8b6e7d45233436",
+    APPSEC: "560c52ccd288fed045859ed18bffd973",
+  },
+  {
+    APPKEY: "783bbb7264451d82",
+    APPSEC: "2653583c8873dea268ab9386918b1d65",
+  },
+  {
+    APPKEY: "57263273bc6b67f6",
+    APPSEC: "a0488e488d1567960d3a765e8d129f90",
+  },
+  {
+    APPKEY: "07da50c9a0bf829f",
+    APPSEC: "25bdede4e1581c836cab73a48790ca6e",
+  },
+  {
+    APPKEY: "191c3b6b975af184",
+    APPSEC: "1673b15a09ef5e4427627f47b03a0578",
+  },
+  {
+    APPKEY: "178cf125136ca8ea",
+    APPSEC: "34381a26236dd1171185c0beb042e1c6",
+  },
+  {
+    APPKEY: "7d336ec01856996b",
+    APPSEC: "a1ce6983bc89e20a36c37f40c4f1a0dd",
+  },
+  {
+    APPKEY: "dfca71928277209b",
+    APPSEC: "b5475a8825547a4fc26c7d518eaaa02e",
+  },
+  {
+    APPKEY: "bb3101000e232e27",
+    APPSEC: "36efcfed79309338ced0380abd824ac1",
+  },
+  {
+    APPKEY: "ae57252b0c09105d",
+    APPSEC: "c75875c596a69eb55bd119e74b07cfe3",
+  },
+  {
+    APPKEY: "8e16697a1b4f8121",
+    APPSEC: "f5dd03b752426f2e623d7badb28d190a",
+  },
+  {
+    APPKEY: "7d089525d3611b1c",
+    APPSEC: "acd495b248ec528c2eed1e862d393126",
+  },
+  {
+    APPKEY: "iVGUTjsxvpLeuDCf",
+    APPSEC: "aHRmhWMLkdeMuILqORnYZocwMBpMEOdt",
+  },
+  {
+    APPKEY: "YvirImLGlLANCLvM",
+    APPSEC: "JNlZNgfNGKZEpaDTkCdPQVXntXhuiJEM",
+  },
+  {
+    APPKEY: "27eb53fc9058f8c3",
+    APPSEC: "c2ed53a74eeefe3cf99fbd01d8c9c375",
+  },
+  {
+    APPKEY: "84956560bc028eb7",
+    APPSEC: "94aba54af9065f71de72f5508f1cd42e",
+  },
+  {
+    APPKEY: "85eb6835b0a1034e",
+    APPSEC: "2ad42749773c441109bdc0191257a664",
+  },
+  {
+    APPKEY: "4ebafd7c4951b366",
+    APPSEC: "8cb98205e9b2ad3669aad0fce12a4c13",
+  },
+  {
+    APPKEY: "8d23902c1688a798",
+    APPSEC: "710f0212e62bd499b8d3ac6e1db9302a",
+  },
+  {
+    APPKEY: "4c6e1021617d40d9",
+    APPSEC: "e559a59044eb2701b7a8628c86aa12ae",
+  },
+  {
+    APPKEY: "c034e8b74130a886",
+    APPSEC: "e4e8966b1e71847dc4a3830f2d078523",
+  },
+  {
+    APPKEY: "4409e2ce8ffd12b8",
+    APPSEC: "59b43e04ad6965f34319062b478f83dd",
+  },
+  {
+    APPKEY: "37207f2beaebf8d7",
+    APPSEC: "e988e794d4d4b6dd43bc0e89d6e90c43",
+  },
+  {
+    APPKEY: "9a75abf7de2d8947",
+    APPSEC: "35ca1c82be6c2c242ecc04d88c735f31",
+  },
+  {
+    APPKEY: "aae92bc66f3edfab",
+    APPSEC: "af125a0d5279fd576c1b4418a3e8276d",
+  },
+  {
+    APPKEY: "bca7e84c2d947ac6",
+    APPSEC: "60698ba2f68e01ce44738920a0ffe768",
+  },
+  {
+    APPKEY: "h9Ejat5tFh81cq8V",
+    APPSEC: "BdiI92bjmZ9QRcjJBWv2EEssyjekAGKt",
+  },
+];
 /**
  * Bilibili APP API 签名
  * @param params JSON 原请求数据
@@ -54,6 +168,7 @@ export const appsign = async (
    */
 ) => {
   params.appkey = appkey;
+  appsec = appsignMap.find((i) => i.APPKEY === appkey).APPSEC || appsec;
   params = sorted(params);
   const query = qs.stringify(params);
   const sign = md5(query + appsec);
@@ -63,7 +178,7 @@ export const appsign = async (
     module: "Bilibili APP API 签名",
   });
   log.info({});
-  log.debug({ context: to_return });
+  log.debug({ context: to_return, appkey, appsec });
   return to_return;
 };
 
@@ -223,14 +338,14 @@ export const cookies2access_key = async (cookies: {
  * @param access_key Bilibili access key \
  * 查询不到，返回为 无会员(0,0)
  */
-export const access_key2info = async (access_key: string) => {
+export const access_key2info = async (access_key: string, appkey?: string) => {
   const log = loggerc.child({
     module: "通过access_key查询个人信息",
   });
   return await fetch(
     env.api.main.app.user_info +
       "/x/v2/account/myinfo?" +
-      (await appsign({ access_key: access_key, ts: Date.now() })),
+      (await appsign({ access_key, appkey, ts: Date.now() })),
     env.fetch_config_UA
   )
     .then((res) => res.json())
@@ -247,7 +362,7 @@ export const access_key2info = async (access_key: string) => {
         };
       }
       log.info({});
-      log.debug({ context: to_return });
+      log.debug({ context: to_return, res });
       return to_return;
     });
 };

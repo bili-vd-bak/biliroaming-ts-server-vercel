@@ -20,7 +20,13 @@ function HomePage() {
         <a target="_blank" href="/api/server_info">
           服务器网络信息
         </a>
-        (当前位于:{process.env.VERCEL_REGION || "请点击左侧实时查询"})
+        (当前位于:
+        <code>
+          {process.env.NEXT_PUBLIC_VERCEL_REGION ||
+            process.env.VERCEL_REGION ||
+            "请点击左侧实时查询"}
+        </code>
+        )
         <br />
         <a
           target="_blank"
@@ -47,6 +53,9 @@ function HomePage() {
         <h3>Access_key获取账户信息</h3>
         访问 <code>/api/tools/my_info?access_key=&#123;access_key&#125;</code>
         即可
+        <br />
+        接受<code>access_key</code> <code>appkey</code>
+        参数，或直接传入任意已构建好的完整B站API请求params字符串(带签名sign)。
         <br />
         <h3>使用BBDown下载</h3>
         获取<code>accesskey</code>(手机客户端),手动在BBDown的登录数据
