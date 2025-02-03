@@ -296,7 +296,8 @@ export const block = (code: number, mes?: string) => {
 //============================================================
 
 //===================信息展示(不用改)===========================
-export const version = `3.3.2[${
+import pkg from "../package.json";
+export const version = `${pkg.version}[${
   (
     process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA ||
     process.env.VERCEL_GIT_COMMIT_SHA ||
