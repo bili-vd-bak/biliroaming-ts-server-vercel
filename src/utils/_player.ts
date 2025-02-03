@@ -76,6 +76,8 @@ export const readCache = async (
   info: { uid: number; vip_type: 0 | 1 | 2 }
 ) => {
   if (!env.db_local_enabled && !env.db_bitio_enabled) return;
+  if (!cid) cid = 0;
+  if (!ep_id) ep_id = 0;
   const log = loggerc.child({
     module: "读取缓存",
   });
@@ -150,13 +152,13 @@ export const addNewCache = async (
     log_data.cache_way = "db_local";
     if (need_vip)
       db.set(
-        `c-vip-${Number(data.cid)}-${Number(data.ep_id)}`,
+        `c-vip-${Number(data.cid) || 0}-${Number(data.ep_id) || 0}`,
         res_data_str,
         deadline
       );
     else
       db.set(
-        `c-${Number(data.cid)}-${Number(data.ep_id)}`,
+        `c-${Number(data.cid) || 0}-${Number(data.ep_id) || 0}`,
         res_data_str,
         deadline
       );
@@ -164,7 +166,13 @@ export const addNewCache = async (
     log_data.cache_way = "db_pg";
     await env.db_bitio_pool.query(
       "INSERT INTO cache (need_vip,exp,cid,ep,data) VALUES ($1,$2,$3,$4,$5)",
-      [need_vip, deadline, Number(data.cid), Number(data.ep_id), res_data]
+      [
+        need_vip,
+        deadline,
+        Number(data.cid) || 0,
+        Number(data.ep_id) || 0,
+        res_data,
+      ]
     );
   }
   log.info({});
