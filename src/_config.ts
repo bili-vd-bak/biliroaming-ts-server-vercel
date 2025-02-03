@@ -287,10 +287,11 @@ export const block = (code: number, mes?: string) => {
   return {
     code: -412,
     message: `${
-      block_type[code] + (code === 2 ? `至${ver_min}(版本号)以上` : "") + mes
-        ? `(${mes})`
-        : "" + "(请等待1min再试)"
-    }(E=${code})`,
+      block_type[code] +
+      (code === 2 ? `至${ver_min}(版本号)以上` : "") +
+      (mes ? `(${mes})` : "") +
+      "(请等待1min再试)"
+    }[E=${code}]`,
   };
 };
 //============================================================
