@@ -90,10 +90,14 @@ export const readCache = async (
     c_vip = await db.get({ key: `c-vip-${cid}-${ep_id}` });
   } else if (env.db_bitio_enabled) {
     log_data.cache_way = "db_pg";
+    let queryWhere = "";
+    if (cid && !ep_id) queryWhere = `cid = ${cid}`;
+    else if (ep_id && !cid) queryWhere = `ep = ${ep_id}`;
+    else queryWhere = `(cid = ${cid || 0} OR ep = ${ep_id || 0})`;
     c_vip = await env.db_bitio_pool
       .query(
-        "SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 1 AND (cid = $2 OR ep = $3)",
-        [Math.round(Number(new Date()) / 1000), cid, ep_id]
+        `SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 1 AND ${queryWhere}`,
+        [Math.round(Number(new Date()) / 1000)]
       )
       .then((res) => res.rows[0]?.data || undefined);
   }
