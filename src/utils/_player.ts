@@ -96,7 +96,7 @@ export const readCache = async (
     else queryWhere = `(cid = ${cid} AND ep = ${ep_id})`;
     c_vip = await env.db_bitio_pool
       .query(
-        `SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 1 AND ${queryWhere}`,
+        `SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = true AND ${queryWhere}`,
         [Math.round(Number(new Date()) / 1000)]
       )
       .then((res) => res.rows[0]?.data || undefined);
@@ -121,7 +121,7 @@ export const readCache = async (
       else queryWhere = `(cid = ${cid} AND ep = ${ep_id})`;
       c_normal = await env.db_bitio_pool
         .query(
-          `SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 0 AND ${queryWhere}`,
+          `SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = false AND ${queryWhere}`,
           [Math.round(Number(new Date()) / 1000)]
         )
         .then((res) => res.rows[0]?.data || undefined);
