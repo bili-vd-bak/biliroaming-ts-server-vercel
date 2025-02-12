@@ -93,7 +93,7 @@ export const readCache = async (
     let queryWhere = "";
     if (cid && !ep_id) queryWhere = `cid = ${cid}`;
     else if (ep_id && !cid) queryWhere = `ep = ${ep_id}`;
-    else queryWhere = `(cid = ${cid || 0} OR ep = ${ep_id || 0})`;
+    else queryWhere = `(cid = ${cid} AND ep = ${ep_id})`;
     c_vip = await env.db_bitio_pool
       .query(
         `SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 1 AND ${queryWhere}`,
@@ -118,7 +118,7 @@ export const readCache = async (
       let queryWhere = "";
       if (cid && !ep_id) queryWhere = `cid = ${cid}`;
       else if (ep_id && !cid) queryWhere = `ep = ${ep_id}`;
-      else queryWhere = `(cid = ${cid || 0} OR ep = ${ep_id || 0})`;
+      else queryWhere = `(cid = ${cid} AND ep = ${ep_id})`;
       c_normal = await env.db_bitio_pool
         .query(
           `SELECT (data) FROM cache WHERE exp >= $1 AND need_vip = 0 AND ${queryWhere}`,
