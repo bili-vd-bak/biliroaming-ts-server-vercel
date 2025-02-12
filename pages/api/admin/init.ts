@@ -13,8 +13,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     await db_bitio_pool
       .query(
         `CREATE TABLE blacklist(
-      uid INT8 PRIMARY KEY     NOT NULL,
-      type            INT8     NOT NULL,
+      uid             BIGINT      PRIMARY KEY,
+      type            SMALLINT    NOT NULL,
       reason          TEXT,
       ban_until       INT8
     )`
@@ -23,22 +23,22 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
     await db_bitio_pool
       .query(
         `CREATE TABLE cache(
-      cid             INT8,
-      ep              INT8,
-      need_vip        INT8,
-      exp             INT8,
-      data            JSON
+      cid             BIGINT,
+      ep              BIGINT,
+      need_vip        BOOLEAN     NOT NULL     DEFAULT false,
+      exp             BIGINT      NOT NULL,
+      data            JSON        NOT NULL
     )`
       )
       .catch((err) => console.error(err));
     await db_bitio_pool
       .query(
         `CREATE TABLE log(
-      uid             INT8,
-      vip_type        INT8,
+      uid             BIGINT,
+      vip_type        BIGINT,
       access_key      TEXT,
       url             TEXT,
-      visit_time      INT8
+      visit_time      BIGINT     NOT NULL
     )`
       )
       .catch((err) => console.error(err));
