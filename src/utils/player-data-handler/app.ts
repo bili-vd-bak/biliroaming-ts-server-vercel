@@ -109,6 +109,6 @@ export const main = async (
     info
   );
   // if (rCache) return JSON.parse(rCache);
-  if (rCache) return rCache;
+  if (rCache?.c) return rCache.c;
   else return fetchDataFromBiliAndCache(url_data);
 };

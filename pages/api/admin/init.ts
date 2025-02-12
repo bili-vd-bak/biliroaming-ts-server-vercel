@@ -15,6 +15,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         `CREATE TABLE blacklist(
       uid             BIGINT      PRIMARY KEY,
       type            SMALLINT    NOT NULL,
+      uid             BIGINT      PRIMARY KEY,
+      type            SMALLINT    NOT NULL,
       reason          TEXT,
       ban_until       INT8
     )`
@@ -27,7 +29,8 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
       ep              BIGINT,
       need_vip        BOOLEAN     NOT NULL     DEFAULT false,
       exp             BIGINT      NOT NULL,
-      data            JSON        NOT NULL
+      data            JSON        NOT NULL,
+      data_web        JSON
     )`
       )
       .catch((err) => console.error(err));
@@ -36,8 +39,11 @@ export default async function (req: NextApiRequest, res: NextApiResponse) {
         `CREATE TABLE log(
       uid             BIGINT,
       vip_type        BIGINT,
+      uid             BIGINT,
+      vip_type        BIGINT,
       access_key      TEXT,
       url             TEXT,
+      visit_time      BIGINT     NOT NULL
       visit_time      BIGINT     NOT NULL
     )`
       )

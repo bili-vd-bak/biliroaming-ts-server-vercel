@@ -123,17 +123,28 @@ export const main = async (
     const rCache = await playerUtil.readCache(
       Number(data.cid),
       Number(data.ep_id),
-      info
+      info,
+      true
     );
-    if (rCache) return { code: 0, message: "success", result: rCache };
+    if (rCache?.ccw && rCache.ccw !== "need_refresh")
+      return { code: 0, message: "success", result: rCache.ccw };
     else {
       const res = (await fetch(
         env.api.main.web.playurl +
           url_data +
           (access_key ? "&access_key=" + access_key : ""),
         env.fetch_config_UA
-      ).then((res) => res.json())) as { code: number; result: object };
-      if (res.code === 0) await playerUtil.addNewCache(url_data, res?.result);
+      ).then((res) => res.json())) as {
+        code: number;
+        result: playerUtil.data_web;
+      };
+      if (res.code === 0)
+        await playerUtil.addNewCache(
+          url_data,
+          res?.result.video_info,
+          res?.result,
+          rCache?.ccw === "need_refresh"
+        );
       return env.try_unblock_CDN_speed_enabled
         ? JSON.parse(JSON.stringify(res).replace(/bw=[^&]*/g, "bw=1280000"))
         : res; //尝试解除下载速度限制
@@ -143,9 +154,17 @@ export const main = async (
     // console.log(env.api.main.web.playurl + url_data);
     const res = (await fetch(env.api.main.web.playurl + url_data, {
       headers: { "User-Agent": env.UA, cookie: cookies },
-    }).then((res) => res.json())) as { code: number; result: object };
+    }).then((res) => res.json())) as {
+      code: number;
+      result: playerUtil.data_web;
+    };
     // console.log(res);
-    if (res.code === 0) await playerUtil.addNewCache(url_data, res?.result);
+    if (res.code === 0)
+      await playerUtil.addNewCache(
+        url_data,
+        res?.result.video_info,
+        res?.result
+      );
     return env.try_unblock_CDN_speed_enabled
       ? JSON.parse(JSON.stringify(res).replace(/bw=[^&]*/g, "bw=1280000"))
       : res; //尝试解除下载速度限制
